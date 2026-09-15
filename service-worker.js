@@ -13,7 +13,7 @@
    viendo la versión anterior (es el precio de "cache-first").
    ========================================================================== */
 
-const CACHE_VERSION = 'v2026-09-15-1652';
+const CACHE_VERSION = 'v2026-09-15-1716';
 const CACHE_NAME = 'metrocdmx-' + CACHE_VERSION;
 
 // Archivos que se precargan al instalar. Rutas relativas al service worker.
