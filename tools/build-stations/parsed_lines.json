@@ -1,0 +1,1099 @@
+{
+ "1": [
+  {
+   "article": "Observatorio (estación del Metro de la Ciudad de México)",
+   "display": "Observatorio",
+   "corr": []
+  },
+  {
+   "article": "Tacubaya (estación)",
+   "display": "Tacubaya",
+   "corr": []
+  },
+  {
+   "article": "Juanacatlán (estación)",
+   "display": "Juanacatlán",
+   "corr": []
+  },
+  {
+   "article": "Chapultepec (estación)",
+   "display": "Chapultepec",
+   "corr": []
+  },
+  {
+   "article": "Sevilla (estación del Metro de Ciudad de México)",
+   "display": "Sevilla",
+   "corr": []
+  },
+  {
+   "article": "Insurgentes (estación)",
+   "display": "Insurgentes",
+   "corr": []
+  },
+  {
+   "article": "Cuauhtémoc (estación del Metro de la Ciudad de México)",
+   "display": "Cuauhtémoc",
+   "corr": []
+  },
+  {
+   "article": "Balderas (estación)",
+   "display": "Balderas",
+   "corr": []
+  },
+  {
+   "article": "Salto del Agua (estación)",
+   "display": "Salto del Agua",
+   "corr": []
+  },
+  {
+   "article": "Isabel la Católica (estación)",
+   "display": "Isabel la Católica",
+   "corr": []
+  },
+  {
+   "article": "Pino Suárez (estación del Metro de Ciudad de México)",
+   "display": "Pino Suárez",
+   "corr": []
+  },
+  {
+   "article": "Merced (estación)",
+   "display": "Merced",
+   "corr": []
+  },
+  {
+   "article": "Candelaria (estación del Metro de Ciudad de México)",
+   "display": "Candelaria",
+   "corr": []
+  },
+  {
+   "article": "San Lázaro (estación)",
+   "display": "San Lázaro",
+   "corr": []
+  },
+  {
+   "article": "Moctezuma (estación)",
+   "display": "Moctezuma",
+   "corr": []
+  },
+  {
+   "article": "Balbuena (estación)",
+   "display": "Balbuena",
+   "corr": []
+  },
+  {
+   "article": "Bulevar Puerto Aéreo (estación)",
+   "display": "Boulevard Puerto Aéreo",
+   "corr": []
+  },
+  {
+   "article": "Gómez Farías (estación)",
+   "display": "Gómez Farías",
+   "corr": []
+  },
+  {
+   "article": "Zaragoza (estación del Metro de la Ciudad de México)",
+   "display": "Zaragoza",
+   "corr": []
+  },
+  {
+   "article": "Pantitlán (estación)",
+   "display": "Pantitlán",
+   "corr": []
+  }
+ ],
+ "2": [
+  {
+   "article": "Cuatro Caminos (estación del Metro de Ciudad de México)",
+   "display": "Cuatro Caminos",
+   "corr": []
+  },
+  {
+   "article": "Panteones (estación)",
+   "display": "Panteones",
+   "corr": []
+  },
+  {
+   "article": "Tacuba (estación)",
+   "display": "Tacuba",
+   "corr": [
+    "7"
+   ]
+  },
+  {
+   "article": "Cuitláhuac (estación)",
+   "display": "Cuitláhuac",
+   "corr": []
+  },
+  {
+   "article": "Popotla (estación)",
+   "display": "Popotla",
+   "corr": []
+  },
+  {
+   "article": "Colegio Militar (estación)",
+   "display": "Colegio Militar",
+   "corr": []
+  },
+  {
+   "article": "Normal (estación)",
+   "display": "Normal",
+   "corr": []
+  },
+  {
+   "article": "San Cosme (estación)",
+   "display": "San Cosme",
+   "corr": []
+  },
+  {
+   "article": "Revolución (estación)",
+   "display": "Revolución",
+   "corr": []
+  },
+  {
+   "article": "Hidalgo (estación)",
+   "display": "Hidalgo",
+   "corr": [
+    "3"
+   ]
+  },
+  {
+   "article": "Bellas Artes (estación del Metro de Ciudad de México)",
+   "display": "Bellas Artes",
+   "corr": [
+    "8"
+   ]
+  },
+  {
+   "article": "Allende (estación)",
+   "display": "Allende",
+   "corr": []
+  },
+  {
+   "article": "Zócalo/Tenochtitlan (estación)",
+   "display": "Zócalo/Tenochtitlan",
+   "corr": []
+  },
+  {
+   "article": "Pino Suárez (estación del Metro de Ciudad de México)",
+   "display": "Pino Suárez",
+   "corr": [
+    "1"
+   ]
+  },
+  {
+   "article": "San Antonio Abad (estación)",
+   "display": "San Antonio Abad",
+   "corr": []
+  },
+  {
+   "article": "Chabacano (estación)",
+   "display": "Chabacano",
+   "corr": [
+    "8",
+    "9"
+   ]
+  },
+  {
+   "article": "Viaducto (estación)",
+   "display": "Viaducto",
+   "corr": []
+  },
+  {
+   "article": "Xola (estación)",
+   "display": "Xola",
+   "corr": []
+  },
+  {
+   "article": "Villa de Cortés (estación)",
+   "display": "Villa de Cortés",
+   "corr": []
+  },
+  {
+   "article": "Nativitas (estación)",
+   "display": "Nativitas",
+   "corr": []
+  },
+  {
+   "article": "Portales (estación Metro de Ciudad de México)",
+   "display": "Portales",
+   "corr": []
+  },
+  {
+   "article": "Ermita (estación)",
+   "display": "Ermita",
+   "corr": [
+    "12"
+   ]
+  },
+  {
+   "article": "General Anaya (estación)",
+   "display": "General Anaya",
+   "corr": []
+  },
+  {
+   "article": "Tasqueña (estación del Metro de Ciudad de México)",
+   "display": "Tasqueña",
+   "corr": []
+  }
+ ],
+ "3": [
+  {
+   "article": "Indios Verdes (estación de metro)",
+   "display": "Indios Verdes",
+   "corr": []
+  },
+  {
+   "article": "Deportivo 18 de Marzo (estación)",
+   "display": "Deportivo 18 de Marzo",
+   "corr": [
+    "6"
+   ]
+  },
+  {
+   "article": "Potrero (estación)",
+   "display": "Potrero",
+   "corr": []
+  },
+  {
+   "article": "La Raza (estación)",
+   "display": "La Raza",
+   "corr": [
+    "5"
+   ]
+  },
+  {
+   "article": "Tlatelolco (estación)",
+   "display": "Tlatelolco",
+   "corr": []
+  },
+  {
+   "article": "Guerrero (estación)",
+   "display": "Guerrero",
+   "corr": [
+    "B"
+   ]
+  },
+  {
+   "article": "Hidalgo (estación)",
+   "display": "Hidalgo",
+   "corr": [
+    "2"
+   ]
+  },
+  {
+   "article": "Juárez (estación)",
+   "display": "Juárez",
+   "corr": []
+  },
+  {
+   "article": "Balderas (estación)",
+   "display": "Balderas",
+   "corr": [
+    "1"
+   ]
+  },
+  {
+   "article": "Niños Héroes-Poder Judicial CDMX (estación)",
+   "display": "Niños Héroes/Poder Judicial CDMX",
+   "corr": []
+  },
+  {
+   "article": "Hospital General (estación)",
+   "display": "Hospital General",
+   "corr": []
+  },
+  {
+   "article": "Centro Médico (estación)",
+   "display": "Centro Médico",
+   "corr": [
+    "9"
+   ]
+  },
+  {
+   "article": "Etiopía-Plaza de la Transparencia (estación)",
+   "display": "Etiopía/Plaza de la Trasparencia",
+   "corr": []
+  },
+  {
+   "article": "Eugenia (estación)",
+   "display": "Eugenia",
+   "corr": []
+  },
+  {
+   "article": "División del Norte (estación del Metro de la Ciudad de México)",
+   "display": "División del Norte",
+   "corr": []
+  },
+  {
+   "article": "Zapata (estación)",
+   "display": "Zapata",
+   "corr": [
+    "12"
+   ]
+  },
+  {
+   "article": "Coyoacán (estación)",
+   "display": "Coyoacán",
+   "corr": []
+  },
+  {
+   "article": "Viveros-Derechos Humanos (estación)",
+   "display": "Viveros/Derechos Humanos",
+   "corr": []
+  },
+  {
+   "article": "Miguel Ángel de Quevedo (estación)",
+   "display": "Miguel Ángel de Quevedo",
+   "corr": []
+  },
+  {
+   "article": "Copilco (estación)",
+   "display": "Copilco",
+   "corr": []
+  },
+  {
+   "article": "Universidad (estación del Metro de la Ciudad de México)",
+   "display": "Universidad",
+   "corr": []
+  }
+ ],
+ "4": [
+  {
+   "article": "Martín Carrera (estación)",
+   "display": "Martín Carrera",
+   "corr": [
+    "6"
+   ]
+  },
+  {
+   "article": "Talismán (estación)",
+   "display": "Talismán",
+   "corr": []
+  },
+  {
+   "article": "Bondojito (estación)",
+   "display": "Bondojito",
+   "corr": []
+  },
+  {
+   "article": "Consulado (estación)",
+   "display": "Consulado",
+   "corr": [
+    "5"
+   ]
+  },
+  {
+   "article": "Canal del Norte (estación)",
+   "display": "Canal del Norte",
+   "corr": []
+  },
+  {
+   "article": "Morelos (estación)",
+   "display": "Morelos",
+   "corr": [
+    "B"
+   ]
+  },
+  {
+   "article": "Candelaria (estación del Metro de Ciudad de México)",
+   "display": "Candelaria/Palacio Legislativo",
+   "corr": [
+    "1"
+   ]
+  },
+  {
+   "article": "Fray Servando (estación)",
+   "display": "Fray Servando",
+   "corr": []
+  },
+  {
+   "article": "Jamaica (estación del Metro de Ciudad de México)",
+   "display": "Jamaica",
+   "corr": [
+    "9"
+   ]
+  },
+  {
+   "article": "Santa Anita (estación)",
+   "display": "Santa Anita",
+   "corr": [
+    "8"
+   ]
+  }
+ ],
+ "5": [
+  {
+   "article": "Pantitlán (estación)",
+   "display": "Pantitlán",
+   "corr": [
+    "1"
+   ]
+  },
+  {
+   "article": "Hangares (estación)",
+   "display": "Hangares",
+   "corr": []
+  },
+  {
+   "article": "Terminal Aérea (estación)",
+   "display": "Terminal Aérea",
+   "corr": []
+  },
+  {
+   "article": "Oceanía (estación)",
+   "display": "Oceanía",
+   "corr": [
+    "B"
+   ]
+  },
+  {
+   "article": "Aragón (estación)",
+   "display": "Aragón",
+   "corr": []
+  },
+  {
+   "article": "Eduardo Molina (estación)",
+   "display": "Eduardo Molina",
+   "corr": []
+  },
+  {
+   "article": "Consulado (estación)",
+   "display": "Consulado",
+   "corr": [
+    "4"
+   ]
+  },
+  {
+   "article": "Valle Gómez (estación)",
+   "display": "Valle Gómez",
+   "corr": []
+  },
+  {
+   "article": "Misterios (estación)",
+   "display": "Misterios",
+   "corr": []
+  },
+  {
+   "article": "La Raza (estación)",
+   "display": "La Raza",
+   "corr": [
+    "3"
+   ]
+  },
+  {
+   "article": "Autobuses del Norte (estación)",
+   "display": "Autobuses del Norte",
+   "corr": []
+  },
+  {
+   "article": "Instituto del Petróleo (estación)",
+   "display": "Instituto del Petróleo",
+   "corr": [
+    "6"
+   ]
+  },
+  {
+   "article": "Politécnico (estación)",
+   "display": "Politécnico",
+   "corr": []
+  }
+ ],
+ "6": [
+  {
+   "article": "El Rosario (estación)",
+   "display": "El Rosario",
+   "corr": [
+    "7"
+   ]
+  },
+  {
+   "article": "Tezozómoc (estación)",
+   "display": "Tezozómoc",
+   "corr": []
+  },
+  {
+   "article": "UAM-Azcapotzalco (estación)",
+   "display": "UAM-Azcapotzalco",
+   "corr": []
+  },
+  {
+   "article": "Ferrería/Arena Ciudad de México (estación)",
+   "display": "Ferrería/Arena Ciudad de México",
+   "corr": []
+  },
+  {
+   "article": "Norte 45 (estación)",
+   "display": "Norte 45",
+   "corr": []
+  },
+  {
+   "article": "Vallejo (estación)",
+   "display": "Vallejo",
+   "corr": []
+  },
+  {
+   "article": "Instituto del Petróleo (estación)",
+   "display": "Instituto del Petróleo",
+   "corr": [
+    "5"
+   ]
+  },
+  {
+   "article": "Lindavista (estación)",
+   "display": "Lindavista",
+   "corr": []
+  },
+  {
+   "article": "Deportivo 18 de Marzo (estación)",
+   "display": "Deportivo 18 de Marzo",
+   "corr": [
+    "3"
+   ]
+  },
+  {
+   "article": "La Villa-Basílica (estación)",
+   "display": "La Villa-Basílica",
+   "corr": []
+  },
+  {
+   "article": "Martín Carrera (estación)",
+   "display": "Martín Carrera",
+   "corr": [
+    "4"
+   ]
+  }
+ ],
+ "7": [
+  {
+   "article": "El Rosario (estación)",
+   "display": "El Rosario",
+   "corr": [
+    "6"
+   ]
+  },
+  {
+   "article": "Aquiles Serdán (estación)",
+   "display": "Aquiles Serdán",
+   "corr": []
+  },
+  {
+   "article": "Camarones (estación)",
+   "display": "Camarones",
+   "corr": []
+  },
+  {
+   "article": "Refinería (estación)",
+   "display": "Refinería",
+   "corr": []
+  },
+  {
+   "article": "Tacuba (estación)",
+   "display": "Tacuba",
+   "corr": [
+    "2"
+   ]
+  },
+  {
+   "article": "San Joaquín (estación del Metro de Ciudad de México)",
+   "display": "San Joaquín",
+   "corr": []
+  },
+  {
+   "article": "Polanco (estación)",
+   "display": "Polanco",
+   "corr": []
+  },
+  {
+   "article": "Auditorio (estación del Metro de Ciudad de México)",
+   "display": "Auditorio",
+   "corr": []
+  },
+  {
+   "article": "Constituyentes (estación)",
+   "display": "Constituyentes",
+   "corr": []
+  },
+  {
+   "article": "Tacubaya (estación)",
+   "display": "Tacubaya",
+   "corr": [
+    "1"
+   ]
+  },
+  {
+   "article": "San Pedro de los Pinos (estación)",
+   "display": "San Pedro de los Pinos",
+   "corr": []
+  },
+  {
+   "article": "San Antonio (estación del Metro de Ciudad de México)",
+   "display": "San Antonio",
+   "corr": []
+  },
+  {
+   "article": "Mixcoac (estación)",
+   "display": "Mixcoac",
+   "corr": []
+  },
+  {
+   "article": "Barranca del Muerto (estación)",
+   "display": "Barranca del Muerto",
+   "corr": []
+  }
+ ],
+ "8": [
+  {
+   "article": "Garibaldi/Lagunilla (estación)",
+   "display": "Garibaldi/Lagunilla",
+   "corr": [
+    "B"
+   ]
+  },
+  {
+   "article": "Bellas Artes (estación del Metro de Ciudad de México)",
+   "display": "Bellas Artes",
+   "corr": [
+    "2"
+   ]
+  },
+  {
+   "article": "San Juan de Letrán (estación)",
+   "display": "San Juan de Letrán",
+   "corr": []
+  },
+  {
+   "article": "Salto del Agua (estación)",
+   "display": "Salto del Agua",
+   "corr": [
+    "1"
+   ]
+  },
+  {
+   "article": "Doctores (estación)",
+   "display": "Doctores",
+   "corr": []
+  },
+  {
+   "article": "Obrera (estación)",
+   "display": "Obrera",
+   "corr": []
+  },
+  {
+   "article": "Chabacano (estación)",
+   "display": "Chabacano",
+   "corr": [
+    "2"
+   ]
+  },
+  {
+   "article": "La Viga (estación)",
+   "display": "La Viga",
+   "corr": []
+  },
+  {
+   "article": "Santa Anita (estación)",
+   "display": "Santa Anita",
+   "corr": [
+    "4"
+   ]
+  },
+  {
+   "article": "Coyuya (estación)",
+   "display": "Coyuya",
+   "corr": []
+  },
+  {
+   "article": "Iztacalco (estación)",
+   "display": "Iztacalco",
+   "corr": []
+  },
+  {
+   "article": "Apatlaco (estación)",
+   "display": "Apatlaco",
+   "corr": []
+  },
+  {
+   "article": "Aculco (estación)",
+   "display": "Aculco",
+   "corr": []
+  },
+  {
+   "article": "Escuadrón 201 (estación)",
+   "display": "Escuadrón 201",
+   "corr": []
+  },
+  {
+   "article": "Atlalilco (estación)",
+   "display": "Atlalilco",
+   "corr": [
+    "12"
+   ]
+  },
+  {
+   "article": "Iztapalapa (estación)",
+   "display": "Iztapalapa",
+   "corr": []
+  },
+  {
+   "article": "Cerro de la Estrella (estación)",
+   "display": "Cerro de la Estrella",
+   "corr": []
+  },
+  {
+   "article": "UAM-I (estación)",
+   "display": "UAM-I",
+   "corr": []
+  },
+  {
+   "article": "Constitución de 1917 (estación)",
+   "display": "Constitución de 1917",
+   "corr": []
+  }
+ ],
+ "9": [
+  {
+   "article": "Tacubaya (estación)",
+   "display": "Tacubaya",
+   "corr": []
+  },
+  {
+   "article": "Patriotismo (estación)",
+   "display": "Patriotismo",
+   "corr": []
+  },
+  {
+   "article": "Chilpancingo (estación)",
+   "display": "Chilpancingo",
+   "corr": []
+  },
+  {
+   "article": "Centro Médico (estación)",
+   "display": "Centro Médico",
+   "corr": []
+  },
+  {
+   "article": "Lázaro Cárdenas (estación del Metro de la Ciudad de México)",
+   "display": "Lázaro Cárdenas",
+   "corr": []
+  },
+  {
+   "article": "Chabacano (estación)",
+   "display": "Chabacano",
+   "corr": [
+    "2",
+    "8"
+   ]
+  },
+  {
+   "article": "Jamaica (estación del Metro de Ciudad de México)",
+   "display": "Jamaica",
+   "corr": [
+    "4"
+   ]
+  },
+  {
+   "article": "Mixiuhca (estación)",
+   "display": "Mixiuhca",
+   "corr": []
+  },
+  {
+   "article": "Velódromo (estación)",
+   "display": "Velódromo",
+   "corr": []
+  },
+  {
+   "article": "Ciudad Deportiva (estación)",
+   "display": "Ciudad Deportiva",
+   "corr": []
+  },
+  {
+   "article": "Puebla (estación)",
+   "display": "Puebla",
+   "corr": []
+  },
+  {
+   "article": "Pantitlán (estación)",
+   "display": "Pantitlán",
+   "corr": [
+    "5"
+   ]
+  }
+ ],
+ "A": [
+  {
+   "article": "Pantitlán (estación)",
+   "display": "Pantitlán",
+   "corr": []
+  },
+  {
+   "article": "Agrícola Oriental (estación)",
+   "display": "Agrícola Oriental",
+   "corr": []
+  },
+  {
+   "article": "Canal de San Juan (estación)",
+   "display": "Canal de San Juan",
+   "corr": []
+  },
+  {
+   "article": "Tepalcates (estación)",
+   "display": "Tepalcates",
+   "corr": []
+  },
+  {
+   "article": "Guelatao (estación)",
+   "display": "Guelatao",
+   "corr": []
+  },
+  {
+   "article": "Peñón Viejo (estación)",
+   "display": "Peñón Viejo",
+   "corr": []
+  },
+  {
+   "article": "Acatitla (estación)",
+   "display": "Acatitla",
+   "corr": []
+  },
+  {
+   "article": "Santa Marta (estación)",
+   "display": "Santa Marta",
+   "corr": []
+  },
+  {
+   "article": "Los Reyes (estación)",
+   "display": "Los Reyes",
+   "corr": []
+  },
+  {
+   "article": "La Paz (estación del Metro de Ciudad de México)",
+   "display": "La Paz",
+   "corr": []
+  }
+ ],
+ "B": [
+  {
+   "article": "Ciudad Azteca (estación)",
+   "display": "Ciudad Azteca",
+   "corr": []
+  },
+  {
+   "article": "Plaza Aragón (estación)",
+   "display": "Plaza Aragón",
+   "corr": []
+  },
+  {
+   "article": "Olímpica (estación)",
+   "display": "Olímpica",
+   "corr": []
+  },
+  {
+   "article": "Ecatepec (estación)",
+   "display": "Ecatepec",
+   "corr": []
+  },
+  {
+   "article": "Múzquiz (estación)",
+   "display": "Múzquiz",
+   "corr": []
+  },
+  {
+   "article": "Río de los Remedios (estación)",
+   "display": "Río de los Remedios",
+   "corr": []
+  },
+  {
+   "article": "Impulsora (estación)",
+   "display": "Impulsora",
+   "corr": []
+  },
+  {
+   "article": "Nezahualcóyotl (estación)",
+   "display": "Nezahualcóyotl",
+   "corr": []
+  },
+  {
+   "article": "Villa de Aragón (estación)",
+   "display": "Villa de Aragón",
+   "corr": []
+  },
+  {
+   "article": "Bosque de Aragón (estación)",
+   "display": "Bosque de Aragón",
+   "corr": []
+  },
+  {
+   "article": "Deportivo Oceanía (estación)",
+   "display": "Deportivo Oceanía",
+   "corr": []
+  },
+  {
+   "article": "Oceanía (estación)",
+   "display": "Oceanía",
+   "corr": []
+  },
+  {
+   "article": "Romero Rubio (estación)",
+   "display": "Romero Rubio",
+   "corr": []
+  },
+  {
+   "article": "Ricardo Flores Magón (estación)",
+   "display": "Ricardo Flores Magón",
+   "corr": []
+  },
+  {
+   "article": "San Lázaro (estación)",
+   "display": "San Lázaro",
+   "corr": [
+    "1"
+   ]
+  },
+  {
+   "article": "Morelos (estación)",
+   "display": "Morelos",
+   "corr": [
+    "4"
+   ]
+  },
+  {
+   "article": "Tepito (estación)",
+   "display": "Tepito",
+   "corr": []
+  },
+  {
+   "article": "Lagunilla (estación)",
+   "display": "Lagunilla",
+   "corr": []
+  },
+  {
+   "article": "Garibaldi/Lagunilla (estación)",
+   "display": "Garibaldi/Lagunilla",
+   "corr": [
+    "8"
+   ]
+  },
+  {
+   "article": "Guerrero (estación)",
+   "display": "Guerrero",
+   "corr": [
+    "3"
+   ]
+  },
+  {
+   "article": "Buenavista (estación)",
+   "display": "Buenavista",
+   "corr": []
+  }
+ ],
+ "12": [
+  {
+   "article": "Mixcoac (estación)",
+   "display": "Mixcoac",
+   "corr": [
+    "7"
+   ]
+  },
+  {
+   "article": "Insurgentes Sur (estación)",
+   "display": "Insurgentes Sur",
+   "corr": []
+  },
+  {
+   "article": "Hospital 20 de Noviembre (estación)",
+   "display": "Hospital 20 de Noviembre",
+   "corr": []
+  },
+  {
+   "article": "Zapata (estación)",
+   "display": "Zapata",
+   "corr": [
+    "3"
+   ]
+  },
+  {
+   "article": "Parque de los venados (estación)",
+   "display": "Parque de los Venados",
+   "corr": []
+  },
+  {
+   "article": "Eje Central (estación)",
+   "display": "Eje Central",
+   "corr": []
+  },
+  {
+   "article": "Ermita (estación)",
+   "display": "Ermita",
+   "corr": [
+    "2"
+   ]
+  },
+  {
+   "article": "Mexicaltzingo (estación del Metro de Ciudad de México)",
+   "display": "Mexicaltzingo",
+   "corr": []
+  },
+  {
+   "article": "Atlalilco (estación)",
+   "display": "Atlalilco",
+   "corr": [
+    "8"
+   ]
+  },
+  {
+   "article": "Culhuacán (estación)",
+   "display": "Culhuacán",
+   "corr": []
+  },
+  {
+   "article": "San Andrés Tomatlán (estación)",
+   "display": "San Andrés Tomatlán",
+   "corr": []
+  },
+  {
+   "article": "Lomas Estrella (estación)",
+   "display": "Lomas Estrella",
+   "corr": []
+  },
+  {
+   "article": "Calle 11 (estación)",
+   "display": "Calle 11",
+   "corr": []
+  },
+  {
+   "article": "Periférico Oriente (estación)",
+   "display": "Periférico Oriente",
+   "corr": []
+  },
+  {
+   "article": "Tezonco (estación)",
+   "display": "Tezonco",
+   "corr": []
+  },
+  {
+   "article": "Olivos (estación)",
+   "display": "Olivos",
+   "corr": []
+  },
+  {
+   "article": "Nopalera (estación)",
+   "display": "Nopalera",
+   "corr": []
+  },
+  {
+   "article": "Zapotitlán (estación)",
+   "display": "Zapotitlán",
+   "corr": []
+  },
+  {
+   "article": "Tlaltenco (estación)",
+   "display": "Tlaltenco",
+   "corr": []
+  },
+  {
+   "article": "Tláhuac (estación)",
+   "display": "Tláhuac",
+   "corr": []
+  }
+ ]
+}

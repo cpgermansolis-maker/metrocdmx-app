@@ -1,0 +1,821 @@
+{
+ "qids": {
+  "Barranca del Muerto (estación)": "Q2885482",
+  "Constitución de 1917 (estación)": "Q6824546",
+  "Chapultepec (estación)": "Q3357035",
+  "Cuatro Caminos (estación del Metro de Ciudad de México)": "Q3356908",
+  "Cuitláhuac (estación)": "Q3357029",
+  "Colegio Militar (estación)": "Q3356873",
+  "Bellas Artes (estación del Metro de Ciudad de México)": "Q2541953",
+  "Cuauhtémoc (estación del Metro de la Ciudad de México)": "Q3356912",
+  "Balderas (estación)": "Q3356947",
+  "Candelaria (estación del Metro de Ciudad de México)": "Q2936246",
+  "Balbuena (estación)": "Q3356881",
+  "Buenavista (estación)": "Q3431142",
+  "Allende (estación)": "Q3287760",
+  "Doctores (estación)": "Q2837042",
+  "Consulado (estación)": "Q6824549",
+  "Chabacano (estación)": "Q3317707",
+  "Ecatepec (estación)": "Q11681253",
+  "Ciudad Azteca (estación)": "Q3431176",
+  "Bosque de Aragón (estación)": "Q6824508",
+  "Deportivo Oceanía (estación)": "Q6824555",
+  "Deportivo 18 de Marzo (estación)": "Q3431319",
+  "Bulevar Puerto Aéreo (estación)": "Q2630441",
+  "El Rosario (estación)": "Q3429496",
+  "Ermita (estación)": "Q5256668",
+  "Copilco (estación)": "Q6824550",
+  "Centro Médico (estación)": "Q5810513",
+  "Aquiles Serdán (estación)": "Q6824477",
+  "Camarones (estación)": "Q6824514",
+  "Apatlaco (estación)": "Q6824476",
+  "División del Norte (estación del Metro de la Ciudad de México)": "Q6824558",
+  "Coyoacán (estación)": "Q3366731",
+  "Bondojito (estación)": "Q6824506",
+  "Canal del Norte (estación)": "Q6824521",
+  "Autobuses del Norte (estación)": "Q6824496",
+  "Eduardo Molina (estación)": "Q6824560",
+  "Aragón (estación)": "Q6824481",
+  "Auditorio (estación del Metro de Ciudad de México)": "Q6824492",
+  "Constituyentes (estación)": "Q5944586",
+  "Coyuya (estación)": "Q6824553",
+  "Aculco (estación)": "Q6824471",
+  "Atlalilco (estación)": "Q6824487",
+  "Cerro de la Estrella (estación)": "Q8344273",
+  "Chilpancingo (estación)": "Q3431073",
+  "Ciudad Deportiva (estación)": "Q6824544",
+  "Agrícola Oriental (estación)": "Q8191806",
+  "Canal de San Juan (estación)": "Q6824517",
+  "Acatitla (estación)": "Q6824469",
+  "Eje Central (estación)": "Q5644140",
+  "Culhuacán (estación)": "Q5794406",
+  "Calle 11 (estación)": "Q5740298",
+  "Juanacatlán (estación)": "Q3356938",
+  "Martín Carrera (estación)": "Q6824623",
+  "Insurgentes (estación)": "Q3301776",
+  "Normal (estación)": "Q3356995",
+  "Isabel la Católica (estación)": "Q3356870",
+  "Garibaldi/Lagunilla (estación)": "Q1147620",
+  "Merced (estación)": "Q3356980",
+  "La Villa-Basílica (estación)": "Q2836136",
+  "Fray Servando (estación)": "Q6824573",
+  "Moctezuma (estación)": "Q3357017",
+  "Guerrero (estación)": "Q6824578",
+  "Hidalgo (estación)": "Q2541914",
+  "Juárez (estación)": "Q6824601",
+  "General Anaya (estación)": "Q3356888",
+  "Misterios (estación)": "Q6824625",
+  "La Raza (estación)": "Q3429492",
+  "Instituto del Petróleo (estación)": "Q6824591",
+  "Hospital General (estación)": "Q6824588",
+  "Niños Héroes-Poder Judicial CDMX (estación)": "Q6824647",
+  "Múzquiz (estación)": "Q6824638",
+  "Impulsora (estación)": "Q6824590",
+  "Nezahualcóyotl (estación)": "Q6824646",
+  "Indios Verdes (estación de metro)": "Q3431052",
+  "Gómez Farías (estación)": "Q3356988",
+  "Lagunilla (estación)": "Q6824610",
+  "Morelos (estación)": "Q9035123",
+  "Lindavista (estación)": "Q6824614",
+  "Mixcoac (estación)": "Q6824627",
+  "Ferrería/Arena Ciudad de México (estación)": "Q619422",
+  "Nativitas (estación)": "Q3356904",
+  "Etiopía-Plaza de la Transparencia (estación)": "Q3429486",
+  "Eugenia (estación)": "Q6824568",
+  "La Paz (estación del Metro de Ciudad de México)": "Q6824608",
+  "Miguel Ángel de Quevedo (estación)": "Q6824630",
+  "Jamaica (estación del Metro de Ciudad de México)": "Q3377006",
+  "Hangares (estación)": "Q6824582",
+  "Norte 45 (estación)": "Q6824650",
+  "La Viga (estación)": "Q9019049",
+  "Iztacalco (estación)": "Q3431125",
+  "Escuadrón 201 (estación)": "Q3431185",
+  "Iztapalapa (estación)": "Q4204314",
+  "Lázaro Cárdenas (estación del Metro de la Ciudad de México)": "Q6824617",
+  "Mixiuhca (estación)": "Q3431067",
+  "Guelatao (estación)": "Q6824577",
+  "Los Reyes (estación)": "Q6824612",
+  "Mexicaltzingo (estación del Metro de Ciudad de México)": "Q6012160",
+  "Insurgentes Sur (estación)": "Q5918521",
+  "Hospital 20 de Noviembre (estación)": "Q5902535",
+  "Lomas Estrella (estación)": "Q5978599",
+  "Nopalera (estación)": "Q6044683",
+  "Observatorio (estación del Metro de la Ciudad de México)": "Q388460",
+  "Tacubaya (estación)": "Q2744158",
+  "Sevilla (estación del Metro de Ciudad de México)": "Q3356943",
+  "Panteones (estación)": "Q3357000",
+  "Tacuba (estación)": "Q3356901",
+  "Popotla (estación)": "Q3356929",
+  "Peñón Viejo (estación)": "Q9058930",
+  "Salto del Agua (estación)": "Q740243",
+  "San Cosme (estación)": "Q3356972",
+  "Pino Suárez (estación del Metro de Ciudad de México)": "Q3357008",
+  "San Lázaro (estación)": "Q3356984",
+  "San Juan de Letrán (estación)": "Q5691609",
+  "Patriotismo (estación)": "Q6824665",
+  "Politécnico (estación)": "Q3431375",
+  "Revolución (estación)": "Q3357042",
+  "Olímpica (estación)": "Q6824654",
+  "UAM-Azcapotzalco (estación)": "Q6824498",
+  "Tlatelolco (estación)": "Q3431323",
+  "Pantitlán (estación)": "Q3352997",
+  "San Antonio Abad (estación)": "Q3356897",
+  "Tasqueña (estación del Metro de Ciudad de México)": "Q3357320",
+  "Río de los Remedios (estación)": "Q6824695",
+  "Plaza Aragón (estación)": "Q6824670",
+  "Oceanía (estación)": "Q522857",
+  "Ricardo Flores Magón (estación)": "Q601519",
+  "Potrero (estación)": "Q6824678",
+  "Tepito (estación)": "Q5402969",
+  "Obrera (estación)": "Q6824651",
+  "Portales (estación Metro de Ciudad de México)": "Q3356960",
+  "San Joaquín (estación del Metro de Ciudad de México)": "Q6824700",
+  "San Pedro de los Pinos (estación)": "Q5841189",
+  "Tepalcates (estación)": "Q6824730",
+  "Talismán (estación)": "Q6824726",
+  "Refinería (estación)": "Q9067431",
+  "Santa Anita (estación)": "Q6824703",
+  "Romero Rubio (estación)": "Q6824691",
+  "Terminal Aérea (estación)": "Q6824733",
+  "Tezozómoc (estación)": "Q6824734",
+  "Polanco (estación)": "Q6824672",
+  "San Antonio (estación del Metro de Ciudad de México)": "Q6824698",
+  "UAM-I (estación)": "Q6824756",
+  "Puebla (estación)": "Q6824679",
+  "Santa Marta (estación)": "Q9074085",
+  "Periférico Oriente (estación)": "Q6072488",
+  "Tláhuac (estación)": "Q6824735",
+  "Parque de los venados (estación)": "Q6062821",
+  "San Andrés Tomatlán (estación)": "Q6118305",
+  "Tlaltenco (estación)": "Q2883637",
+  "Olivos (estación)": "Q6050104",
+  "Tezonco (estación)": "Q6143783",
+  "Universidad (estación del Metro de la Ciudad de México)": "Q6824764",
+  "Valle Gómez (estación)": "Q9092402",
+  "Zócalo/Tenochtitlan (estación)": "Q3356920",
+  "Zaragoza (estación del Metro de la Ciudad de México)": "Q3356989",
+  "Villa de Aragón (estación)": "Q6824768",
+  "Xola (estación)": "Q3356924",
+  "Villa de Cortés (estación)": "Q3356965",
+  "Viaducto (estación)": "Q3357024",
+  "Zapata (estación)": "Q6824782",
+  "Viveros-Derechos Humanos (estación)": "Q7335651",
+  "Vallejo (estación)": "Q6824762",
+  "Velódromo (estación)": "Q6824767",
+  "Zapotitlán (estación)": "Q9097529"
+ },
+ "coords": {
+  "Barranca del Muerto (estación)": [
+   19.36065,
+   -99.19015
+  ],
+  "Constitución de 1917 (estación)": [
+   19.34593,
+   -99.06389
+  ],
+  "Chapultepec (estación)": [
+   19.42078,
+   -99.17629
+  ],
+  "Cuatro Caminos (estación del Metro de Ciudad de México)": [
+   19.45959,
+   -99.2159
+  ],
+  "Cuitláhuac (estación)": [
+   19.45745,
+   -99.18204
+  ],
+  "Colegio Militar (estación)": [
+   19.44935,
+   -99.17225
+  ],
+  "Bellas Artes (estación del Metro de Ciudad de México)": [
+   19.43624,
+   -99.14195
+  ],
+  "Cuauhtémoc (estación del Metro de la Ciudad de México)": [
+   19.42586,
+   -99.1547
+  ],
+  "Balderas (estación)": [
+   19.42744,
+   -99.14904
+  ],
+  "Candelaria (estación del Metro de Ciudad de México)": [
+   19.42884,
+   -99.11951
+  ],
+  "Balbuena (estación)": [
+   19.42306,
+   -99.10222
+  ],
+  "Buenavista (estación)": [
+   19.4466,
+   -99.1532
+  ],
+  "Allende (estación)": [
+   19.43551,
+   -99.13741
+  ],
+  "Doctores (estación)": [
+   19.42161,
+   -99.14337
+  ],
+  "Consulado (estación)": [
+   19.45789,
+   -99.11393
+  ],
+  "Chabacano (estación)": [
+   19.40917,
+   -99.13556
+  ],
+  "Ecatepec (estación)": [
+   19.5153,
+   -99.036
+  ],
+  "Ciudad Azteca (estación)": [
+   19.53459,
+   -99.0275
+  ],
+  "Bosque de Aragón (estación)": [
+   19.45811,
+   -99.06919
+  ],
+  "Deportivo Oceanía (estación)": [
+   19.45103,
+   -99.07917
+  ],
+  "Deportivo 18 de Marzo (estación)": [
+   19.48507,
+   -99.12549
+  ],
+  "Bulevar Puerto Aéreo (estación)": [
+   19.41967,
+   -99.09595
+  ],
+  "El Rosario (estación)": [
+   19.50454,
+   -99.20002
+  ],
+  "Ermita (estación)": [
+   19.36188,
+   -99.14294
+  ],
+  "Copilco (estación)": [
+   19.33589,
+   -99.17665
+  ],
+  "Centro Médico (estación)": [
+   19.40664,
+   -99.15575
+  ],
+  "Aquiles Serdán (estación)": [
+   19.49042,
+   -99.19487
+  ],
+  "Camarones (estación)": [
+   19.47913,
+   -99.19006
+  ],
+  "Apatlaco (estación)": [
+   19.37929,
+   -99.1096
+  ],
+  "División del Norte (estación del Metro de la Ciudad de México)": [
+   19.38002,
+   -99.15888
+  ],
+  "Coyoacán (estación)": [
+   19.36142,
+   -99.17071
+  ],
+  "Bondojito (estación)": [
+   19.46461,
+   -99.11196
+  ],
+  "Canal del Norte (estación)": [
+   19.44911,
+   -99.11651
+  ],
+  "Autobuses del Norte (estación)": [
+   19.47897,
+   -99.14067
+  ],
+  "Eduardo Molina (estación)": [
+   19.45138,
+   -99.10543
+  ],
+  "Aragón (estación)": [
+   19.45124,
+   -99.09589
+  ],
+  "Auditorio (estación del Metro de Ciudad de México)": [
+   19.4255,
+   -99.192
+  ],
+  "Constituyentes (estación)": [
+   19.41186,
+   -99.19127
+  ],
+  "Coyuya (estación)": [
+   19.39852,
+   -99.11355
+  ],
+  "Aculco (estación)": [
+   19.37407,
+   -99.1081
+  ],
+  "Atlalilco (estación)": [
+   19.35613,
+   -99.10131
+  ],
+  "Cerro de la Estrella (estación)": [
+   19.35601,
+   -99.08552
+  ],
+  "Chilpancingo (estación)": [
+   19.4059,
+   -99.1686
+  ],
+  "Ciudad Deportiva (estación)": [
+   19.40836,
+   -99.09123
+  ],
+  "Agrícola Oriental (estación)": [
+   19.40483,
+   -99.0699
+  ],
+  "Canal de San Juan (estación)": [
+   19.39868,
+   -99.05936
+  ],
+  "Acatitla (estación)": [
+   19.36474,
+   -99.00589
+  ],
+  "Eje Central (estación)": [
+   19.3614,
+   -99.1514
+  ],
+  "Culhuacán (estación)": [
+   19.337,
+   -99.109
+  ],
+  "Calle 11 (estación)": [
+   19.3205,
+   -99.0857
+  ],
+  "Juanacatlán (estación)": [
+   19.41289,
+   -99.18217
+  ],
+  "Martín Carrera (estación)": [
+   19.48492,
+   -99.1044
+  ],
+  "Insurgentes (estación)": [
+   19.42329,
+   -99.16318
+  ],
+  "Normal (estación)": [
+   19.4444,
+   -99.1674
+  ],
+  "Isabel la Católica (estación)": [
+   19.42673,
+   -99.13769
+  ],
+  "Garibaldi/Lagunilla (estación)": [
+   19.44446,
+   -99.13972
+  ],
+  "Merced (estación)": [
+   19.42556,
+   -99.12464
+  ],
+  "La Villa-Basílica (estación)": [
+   19.4816,
+   -99.11845
+  ],
+  "Fray Servando (estación)": [
+   19.42163,
+   -99.12054
+  ],
+  "Moctezuma (estación)": [
+   19.42722,
+   -99.1103
+  ],
+  "Guerrero (estación)": [
+   19.44515,
+   -99.14539
+  ],
+  "Hidalgo (estación)": [
+   19.43729,
+   -99.1471
+  ],
+  "Juárez (estación)": [
+   19.43317,
+   -99.14779
+  ],
+  "General Anaya (estación)": [
+   19.35326,
+   -99.145
+  ],
+  "Misterios (estación)": [
+   19.46332,
+   -99.1308
+  ],
+  "La Raza (estación)": [
+   19.47015,
+   -99.13689
+  ],
+  "Instituto del Petróleo (estación)": [
+   19.48957,
+   -99.14526
+  ],
+  "Hospital General (estación)": [
+   19.41358,
+   -99.15389
+  ],
+  "Niños Héroes-Poder Judicial CDMX (estación)": [
+   19.41951,
+   -99.15058
+  ],
+  "Múzquiz (estación)": [
+   19.50163,
+   -99.04205
+  ],
+  "Impulsora (estación)": [
+   19.48585,
+   -99.04891
+  ],
+  "Nezahualcóyotl (estación)": [
+   19.47307,
+   -99.05454
+  ],
+  "Indios Verdes (estación de metro)": [
+   19.49536,
+   -99.11947
+  ],
+  "Gómez Farías (estación)": [
+   19.41647,
+   -99.09035
+  ],
+  "Lagunilla (estación)": [
+   19.44339,
+   -99.13133
+  ],
+  "Morelos (estación)": [
+   19.43897,
+   -99.11827
+  ],
+  "Lindavista (estación)": [
+   19.48861,
+   -99.13504
+  ],
+  "Mixcoac (estación)": [
+   19.37589,
+   -99.18753
+  ],
+  "Ferrería/Arena Ciudad de México (estación)": [
+   19.49075,
+   -99.17384
+  ],
+  "Nativitas (estación)": [
+   19.37947,
+   -99.14022
+  ],
+  "Etiopía-Plaza de la Transparencia (estación)": [
+   19.39559,
+   -99.15627
+  ],
+  "Eugenia (estación)": [
+   19.38611,
+   -99.15722
+  ],
+  "La Paz (estación del Metro de Ciudad de México)": [
+   19.35053,
+   -98.96075
+  ],
+  "Miguel Ángel de Quevedo (estación)": [
+   19.3464,
+   -99.18103
+  ],
+  "Jamaica (estación del Metro de Ciudad de México)": [
+   19.409,
+   -99.12217
+  ],
+  "Hangares (estación)": [
+   19.42414,
+   -99.0875
+  ],
+  "Norte 45 (estación)": [
+   19.48868,
+   -99.16277
+  ],
+  "La Viga (estación)": [
+   19.40649,
+   -99.12625
+  ],
+  "Iztacalco (estación)": [
+   19.38856,
+   -99.11222
+  ],
+  "Escuadrón 201 (estación)": [
+   19.36492,
+   -99.10955
+  ],
+  "Iztapalapa (estación)": [
+   19.35783,
+   -99.09346
+  ],
+  "Lázaro Cárdenas (estación del Metro de la Ciudad de México)": [
+   19.40696,
+   -99.14487
+  ],
+  "Mixiuhca (estación)": [
+   19.40848,
+   -99.1129
+  ],
+  "Guelatao (estación)": [
+   19.38516,
+   -99.03574
+  ],
+  "Los Reyes (estación)": [
+   19.35897,
+   -98.9769
+  ],
+  "Mexicaltzingo (estación del Metro de Ciudad de México)": [
+   19.3577,
+   -99.1218
+  ],
+  "Insurgentes Sur (estación)": [
+   19.3736,
+   -99.1788
+  ],
+  "Hospital 20 de Noviembre (estación)": [
+   19.372,
+   -99.171
+  ],
+  "Lomas Estrella (estación)": [
+   19.3223,
+   -99.0961
+  ],
+  "Nopalera (estación)": [
+   19.3,
+   -99.04667
+  ],
+  "Observatorio (estación del Metro de la Ciudad de México)": [
+   19.39824,
+   -99.20036
+  ],
+  "Tacubaya (estación)": [
+   19.40344,
+   -99.1871
+  ],
+  "Sevilla (estación del Metro de Ciudad de México)": [
+   19.42192,
+   -99.17058
+  ],
+  "Panteones (estación)": [
+   19.45876,
+   -99.20315
+  ],
+  "Tacuba (estación)": [
+   19.45935,
+   -99.18921
+  ],
+  "Popotla (estación)": [
+   19.45215,
+   -99.1747
+  ],
+  "Peñón Viejo (estación)": [
+   19.37332,
+   -99.01709
+  ],
+  "Salto del Agua (estación)": [
+   19.42681,
+   -99.14221
+  ],
+  "San Cosme (estación)": [
+   19.44171,
+   -99.1611
+  ],
+  "Pino Suárez (estación del Metro de Ciudad de México)": [
+   19.42534,
+   -99.13294
+  ],
+  "San Lázaro (estación)": [
+   19.43021,
+   -99.11483
+  ],
+  "San Juan de Letrán (estación)": [
+   19.4313,
+   -99.14157
+  ],
+  "Patriotismo (estación)": [
+   19.4062,
+   -99.1789
+  ],
+  "Politécnico (estación)": [
+   19.50082,
+   -99.14929
+  ],
+  "Revolución (estación)": [
+   19.4392,
+   -99.15435
+  ],
+  "Olímpica (estación)": [
+   19.52133,
+   -99.03342
+  ],
+  "UAM-Azcapotzalco (estación)": [
+   19.49089,
+   -99.18629
+  ],
+  "Tlatelolco (estación)": [
+   19.45498,
+   -99.14281
+  ],
+  "Pantitlán (estación)": [
+   19.41491,
+   -99.07346
+  ],
+  "San Antonio Abad (estación)": [
+   19.4186,
+   -99.13415
+  ],
+  "Tasqueña (estación del Metro de Ciudad de México)": [
+   19.34417,
+   -99.14269
+  ],
+  "Río de los Remedios (estación)": [
+   19.49091,
+   -99.0466
+  ],
+  "Plaza Aragón (estación)": [
+   19.52845,
+   -99.03012
+  ],
+  "Oceanía (estación)": [
+   19.44567,
+   -99.08724
+  ],
+  "Ricardo Flores Magón (estación)": [
+   19.43657,
+   -99.10367
+  ],
+  "Potrero (estación)": [
+   19.47691,
+   -99.13217
+  ],
+  "Tepito (estación)": [
+   19.4425,
+   -99.12333
+  ],
+  "Obrera (estación)": [
+   19.41356,
+   -99.14419
+  ],
+  "Portales (estación Metro de Ciudad de México)": [
+   19.3698,
+   -99.1416
+  ],
+  "San Joaquín (estación del Metro de Ciudad de México)": [
+   19.44579,
+   -99.19182
+  ],
+  "San Pedro de los Pinos (estación)": [
+   19.39128,
+   -99.18605
+  ],
+  "Tepalcates (estación)": [
+   19.39134,
+   -99.04638
+  ],
+  "Talismán (estación)": [
+   19.47428,
+   -99.10801
+  ],
+  "Refinería (estación)": [
+   19.46995,
+   -99.19058
+  ],
+  "Santa Anita (estación)": [
+   19.40273,
+   -99.1217
+  ],
+  "Romero Rubio (estación)": [
+   19.44074,
+   -99.09436
+  ],
+  "Terminal Aérea (estación)": [
+   19.43373,
+   -99.08767
+  ],
+  "Tezozómoc (estación)": [
+   19.49512,
+   -99.19629
+  ],
+  "Polanco (estación)": [
+   19.43351,
+   -99.19103
+  ],
+  "San Antonio (estación del Metro de Ciudad de México)": [
+   19.38476,
+   -99.18631
+  ],
+  "UAM-I (estación)": [
+   19.35123,
+   -99.07471
+  ],
+  "Puebla (estación)": [
+   19.40714,
+   -99.08243
+  ],
+  "Santa Marta (estación)": [
+   19.36,
+   -98.99486
+  ],
+  "Periférico Oriente (estación)": [
+   19.3177,
+   -99.0746
+  ],
+  "Tláhuac (estación)": [
+   19.28597,
+   -99.01419
+  ],
+  "Parque de los venados (estación)": [
+   19.3707,
+   -99.1587
+  ],
+  "San Andrés Tomatlán (estación)": [
+   19.3283,
+   -99.1049
+  ],
+  "Tlaltenco (estación)": [
+   19.29417,
+   -99.02389
+  ],
+  "Olivos (estación)": [
+   19.30417,
+   -99.05972
+  ],
+  "Tezonco (estación)": [
+   19.30611,
+   -99.065
+  ],
+  "Universidad (estación del Metro de la Ciudad de México)": [
+   19.32443,
+   -99.17397
+  ],
+  "Valle Gómez (estación)": [
+   19.45874,
+   -99.1193
+  ],
+  "Zócalo/Tenochtitlan (estación)": [
+   19.43325,
+   -99.1329
+  ],
+  "Zaragoza (estación del Metro de la Ciudad de México)": [
+   19.41234,
+   -99.08241
+  ],
+  "Villa de Aragón (estación)": [
+   19.46166,
+   -99.0617
+  ],
+  "Xola (estación)": [
+   19.3952,
+   -99.1377
+  ],
+  "Villa de Cortés (estación)": [
+   19.38753,
+   -99.13899
+  ],
+  "Viaducto (estación)": [
+   19.40081,
+   -99.13689
+  ],
+  "Zapata (estación)": [
+   19.37095,
+   -99.16494
+  ],
+  "Viveros-Derechos Humanos (estación)": [
+   19.35372,
+   -99.17605
+  ],
+  "Vallejo (estación)": [
+   19.48977,
+   -99.15612
+  ],
+  "Velódromo (estación)": [
+   19.40848,
+   -99.10307
+  ],
+  "Zapotitlán (estación)": [
+   19.29667,
+   -99.03444
+  ]
+ }
+}

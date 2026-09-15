@@ -1,0 +1,2661 @@
+{
+  "meta": {
+    "system": "Sistema de Transporte Colectivo Metro, Ciudad de México",
+    "generated": "2026-09-15",
+    "sources": [
+      "https://www.metro.cdmx.gob.mx/la-red (nombres, orden y colores oficiales)",
+      "https://es.wikipedia.org (artículos por línea, cotejo de nombres y orden)",
+      "https://www.wikidata.org (coordenadas GPS, propiedad P625)"
+    ],
+    "notes": "Los 195 del STC cuentan cada estación una vez por línea; físicas únicas son 163. La ampliación de L12 a Observatorio no se incluye por estar en construcción.",
+    "stationsPerLineTotal": 195,
+    "uniqueStations": 163,
+    "transferStations": 28
+  },
+  "lines": {
+    "1": {
+      "name": "Línea 1",
+      "color": "#F56394",
+      "textDark": false,
+      "nick": "Rosa",
+      "terminals": [
+        "Observatorio",
+        "Pantitlán"
+      ],
+      "stationCount": 20
+    },
+    "2": {
+      "name": "Línea 2",
+      "color": "#0064A8",
+      "textDark": false,
+      "nick": "Azul",
+      "terminals": [
+        "Cuatro Caminos",
+        "Tasqueña"
+      ],
+      "stationCount": 24
+    },
+    "3": {
+      "name": "Línea 3",
+      "color": "#AE9D27",
+      "textDark": true,
+      "nick": "Verde olivo",
+      "terminals": [
+        "Indios Verdes",
+        "Universidad"
+      ],
+      "stationCount": 21
+    },
+    "4": {
+      "name": "Línea 4",
+      "color": "#6FB7AE",
+      "textDark": true,
+      "nick": "Turquesa",
+      "terminals": [
+        "Martín Carrera",
+        "Santa Anita"
+      ],
+      "stationCount": 10
+    },
+    "5": {
+      "name": "Línea 5",
+      "color": "#FDDF00",
+      "textDark": true,
+      "nick": "Amarillo",
+      "terminals": [
+        "Pantitlán",
+        "Politécnico"
+      ],
+      "stationCount": 13
+    },
+    "6": {
+      "name": "Línea 6",
+      "color": "#FF1100",
+      "textDark": false,
+      "nick": "Rojo",
+      "terminals": [
+        "El Rosario",
+        "Martín Carrera"
+      ],
+      "stationCount": 11
+    },
+    "7": {
+      "name": "Línea 7",
+      "color": "#FF6309",
+      "textDark": false,
+      "nick": "Naranja",
+      "terminals": [
+        "El Rosario",
+        "Barranca del Muerto"
+      ],
+      "stationCount": 14
+    },
+    "8": {
+      "name": "Línea 8",
+      "color": "#018749",
+      "textDark": false,
+      "nick": "Verde",
+      "terminals": [
+        "Garibaldi/Lagunilla",
+        "Constitución de 1917"
+      ],
+      "stationCount": 19
+    },
+    "9": {
+      "name": "Línea 9",
+      "color": "#5B2C2A",
+      "textDark": false,
+      "nick": "Café",
+      "terminals": [
+        "Tacubaya",
+        "Pantitlán"
+      ],
+      "stationCount": 12
+    },
+    "A": {
+      "name": "Línea A",
+      "color": "#A3277C",
+      "textDark": false,
+      "nick": "Morado",
+      "terminals": [
+        "Pantitlán",
+        "La Paz"
+      ],
+      "stationCount": 10
+    },
+    "B": {
+      "name": "Línea B",
+      "color": "#A8A8A8",
+      "textDark": true,
+      "nick": "Gris/Verde",
+      "terminals": [
+        "Ciudad Azteca",
+        "Buenavista"
+      ],
+      "stationCount": 21,
+      "color2": "#007F3A"
+    },
+    "12": {
+      "name": "Línea 12",
+      "color": "#B99E51",
+      "textDark": true,
+      "nick": "Dorado",
+      "terminals": [
+        "Mixcoac",
+        "Tláhuac"
+      ],
+      "stationCount": 20
+    }
+  },
+  "stations": [
+    {
+      "id": "acatitla",
+      "name": "Acatitla",
+      "system": "metro",
+      "lines": [
+        "A"
+      ],
+      "transfer": false,
+      "lat": 19.36474,
+      "lng": -99.00589,
+      "order": {
+        "A": 7
+      },
+      "wikidata": "Q6824469"
+    },
+    {
+      "id": "aculco",
+      "name": "Aculco",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.37407,
+      "lng": -99.1081,
+      "order": {
+        "8": 13
+      },
+      "wikidata": "Q6824471"
+    },
+    {
+      "id": "agricola-oriental",
+      "name": "Agrícola Oriental",
+      "system": "metro",
+      "lines": [
+        "A"
+      ],
+      "transfer": false,
+      "lat": 19.40483,
+      "lng": -99.0699,
+      "order": {
+        "A": 2
+      },
+      "wikidata": "Q8191806"
+    },
+    {
+      "id": "allende",
+      "name": "Allende",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.43551,
+      "lng": -99.13741,
+      "order": {
+        "2": 12
+      },
+      "wikidata": "Q3287760"
+    },
+    {
+      "id": "apatlaco",
+      "name": "Apatlaco",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.37929,
+      "lng": -99.1096,
+      "order": {
+        "8": 12
+      },
+      "wikidata": "Q6824476"
+    },
+    {
+      "id": "aquiles-serdan",
+      "name": "Aquiles Serdán",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.49042,
+      "lng": -99.19487,
+      "order": {
+        "7": 2
+      },
+      "wikidata": "Q6824477"
+    },
+    {
+      "id": "aragon",
+      "name": "Aragón",
+      "system": "metro",
+      "lines": [
+        "5"
+      ],
+      "transfer": false,
+      "lat": 19.45124,
+      "lng": -99.09589,
+      "order": {
+        "5": 5
+      },
+      "wikidata": "Q6824481"
+    },
+    {
+      "id": "atlalilco",
+      "name": "Atlalilco",
+      "system": "metro",
+      "lines": [
+        "8",
+        "12"
+      ],
+      "transfer": true,
+      "lat": 19.35613,
+      "lng": -99.10131,
+      "order": {
+        "8": 15,
+        "12": 9
+      },
+      "wikidata": "Q6824487"
+    },
+    {
+      "id": "auditorio",
+      "name": "Auditorio",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.4255,
+      "lng": -99.192,
+      "order": {
+        "7": 8
+      },
+      "wikidata": "Q6824492"
+    },
+    {
+      "id": "autobuses-del-norte",
+      "name": "Autobuses del Norte",
+      "system": "metro",
+      "lines": [
+        "5"
+      ],
+      "transfer": false,
+      "lat": 19.47897,
+      "lng": -99.14067,
+      "order": {
+        "5": 11
+      },
+      "wikidata": "Q6824496"
+    },
+    {
+      "id": "balbuena",
+      "name": "Balbuena",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.42306,
+      "lng": -99.10222,
+      "order": {
+        "1": 16
+      },
+      "wikidata": "Q3356881"
+    },
+    {
+      "id": "balderas",
+      "name": "Balderas",
+      "system": "metro",
+      "lines": [
+        "1",
+        "3"
+      ],
+      "transfer": true,
+      "lat": 19.42744,
+      "lng": -99.14904,
+      "order": {
+        "1": 8,
+        "3": 9
+      },
+      "wikidata": "Q3356947"
+    },
+    {
+      "id": "barranca-del-muerto",
+      "name": "Barranca del Muerto",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.36065,
+      "lng": -99.19015,
+      "order": {
+        "7": 14
+      },
+      "wikidata": "Q2885482"
+    },
+    {
+      "id": "bellas-artes",
+      "name": "Bellas Artes",
+      "system": "metro",
+      "lines": [
+        "2",
+        "8"
+      ],
+      "transfer": true,
+      "lat": 19.43624,
+      "lng": -99.14195,
+      "order": {
+        "2": 11,
+        "8": 2
+      },
+      "wikidata": "Q2541953"
+    },
+    {
+      "id": "bondojito",
+      "name": "Bondojito",
+      "system": "metro",
+      "lines": [
+        "4"
+      ],
+      "transfer": false,
+      "lat": 19.46461,
+      "lng": -99.11196,
+      "order": {
+        "4": 3
+      },
+      "wikidata": "Q6824506"
+    },
+    {
+      "id": "bosque-de-aragon",
+      "name": "Bosque de Aragón",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.45811,
+      "lng": -99.06919,
+      "order": {
+        "B": 10
+      },
+      "wikidata": "Q6824508"
+    },
+    {
+      "id": "boulevard-puerto-aereo",
+      "name": "Boulevard Puerto Aéreo",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.41967,
+      "lng": -99.09595,
+      "order": {
+        "1": 17
+      },
+      "wikidata": "Q2630441"
+    },
+    {
+      "id": "buenavista",
+      "name": "Buenavista",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.4466,
+      "lng": -99.1532,
+      "order": {
+        "B": 21
+      },
+      "wikidata": "Q3431142"
+    },
+    {
+      "id": "calle-11",
+      "name": "Calle 11",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.3205,
+      "lng": -99.0857,
+      "order": {
+        "12": 13
+      },
+      "wikidata": "Q5740298"
+    },
+    {
+      "id": "camarones",
+      "name": "Camarones",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.47913,
+      "lng": -99.19006,
+      "order": {
+        "7": 3
+      },
+      "wikidata": "Q6824514"
+    },
+    {
+      "id": "canal-de-san-juan",
+      "name": "Canal de San Juan",
+      "system": "metro",
+      "lines": [
+        "A"
+      ],
+      "transfer": false,
+      "lat": 19.39868,
+      "lng": -99.05936,
+      "order": {
+        "A": 3
+      },
+      "wikidata": "Q6824517"
+    },
+    {
+      "id": "canal-del-norte",
+      "name": "Canal del Norte",
+      "system": "metro",
+      "lines": [
+        "4"
+      ],
+      "transfer": false,
+      "lat": 19.44911,
+      "lng": -99.11651,
+      "order": {
+        "4": 5
+      },
+      "wikidata": "Q6824521"
+    },
+    {
+      "id": "candelaria",
+      "name": "Candelaria",
+      "system": "metro",
+      "lines": [
+        "1",
+        "4"
+      ],
+      "transfer": true,
+      "lat": 19.42884,
+      "lng": -99.11951,
+      "order": {
+        "1": 13,
+        "4": 7
+      },
+      "wikidata": "Q2936246"
+    },
+    {
+      "id": "centro-medico",
+      "name": "Centro Médico",
+      "system": "metro",
+      "lines": [
+        "3",
+        "9"
+      ],
+      "transfer": true,
+      "lat": 19.40664,
+      "lng": -99.15575,
+      "order": {
+        "3": 12,
+        "9": 4
+      },
+      "wikidata": "Q5810513"
+    },
+    {
+      "id": "cerro-de-la-estrella",
+      "name": "Cerro de la Estrella",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.35601,
+      "lng": -99.08552,
+      "order": {
+        "8": 17
+      },
+      "wikidata": "Q8344273"
+    },
+    {
+      "id": "chabacano",
+      "name": "Chabacano",
+      "system": "metro",
+      "lines": [
+        "2",
+        "8",
+        "9"
+      ],
+      "transfer": true,
+      "lat": 19.40917,
+      "lng": -99.13556,
+      "order": {
+        "2": 16,
+        "8": 7,
+        "9": 6
+      },
+      "wikidata": "Q3317707"
+    },
+    {
+      "id": "chapultepec",
+      "name": "Chapultepec",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.42078,
+      "lng": -99.17629,
+      "order": {
+        "1": 4
+      },
+      "wikidata": "Q3357035"
+    },
+    {
+      "id": "chilpancingo",
+      "name": "Chilpancingo",
+      "system": "metro",
+      "lines": [
+        "9"
+      ],
+      "transfer": false,
+      "lat": 19.4059,
+      "lng": -99.1686,
+      "order": {
+        "9": 3
+      },
+      "wikidata": "Q3431073"
+    },
+    {
+      "id": "ciudad-azteca",
+      "name": "Ciudad Azteca",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.53459,
+      "lng": -99.0275,
+      "order": {
+        "B": 1
+      },
+      "wikidata": "Q3431176"
+    },
+    {
+      "id": "ciudad-deportiva",
+      "name": "Ciudad Deportiva",
+      "system": "metro",
+      "lines": [
+        "9"
+      ],
+      "transfer": false,
+      "lat": 19.40836,
+      "lng": -99.09123,
+      "order": {
+        "9": 10
+      },
+      "wikidata": "Q6824544"
+    },
+    {
+      "id": "colegio-militar",
+      "name": "Colegio Militar",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.44935,
+      "lng": -99.17225,
+      "order": {
+        "2": 6
+      },
+      "wikidata": "Q3356873"
+    },
+    {
+      "id": "constitucion-de-1917",
+      "name": "Constitución de 1917",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.34593,
+      "lng": -99.06389,
+      "order": {
+        "8": 19
+      },
+      "wikidata": "Q6824546"
+    },
+    {
+      "id": "constituyentes",
+      "name": "Constituyentes",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.41186,
+      "lng": -99.19127,
+      "order": {
+        "7": 9
+      },
+      "wikidata": "Q5944586"
+    },
+    {
+      "id": "consulado",
+      "name": "Consulado",
+      "system": "metro",
+      "lines": [
+        "4",
+        "5"
+      ],
+      "transfer": true,
+      "lat": 19.45789,
+      "lng": -99.11393,
+      "order": {
+        "4": 4,
+        "5": 7
+      },
+      "wikidata": "Q6824549"
+    },
+    {
+      "id": "copilco",
+      "name": "Copilco",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.33589,
+      "lng": -99.17665,
+      "order": {
+        "3": 20
+      },
+      "wikidata": "Q6824550"
+    },
+    {
+      "id": "coyoacan",
+      "name": "Coyoacán",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.36142,
+      "lng": -99.17071,
+      "order": {
+        "3": 17
+      },
+      "wikidata": "Q3366731"
+    },
+    {
+      "id": "coyuya",
+      "name": "Coyuya",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.39852,
+      "lng": -99.11355,
+      "order": {
+        "8": 10
+      },
+      "wikidata": "Q6824553"
+    },
+    {
+      "id": "cuatro-caminos",
+      "name": "Cuatro Caminos",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.45959,
+      "lng": -99.2159,
+      "order": {
+        "2": 1
+      },
+      "wikidata": "Q3356908"
+    },
+    {
+      "id": "cuauhtemoc",
+      "name": "Cuauhtémoc",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.42586,
+      "lng": -99.1547,
+      "order": {
+        "1": 7
+      },
+      "wikidata": "Q3356912"
+    },
+    {
+      "id": "cuitlahuac",
+      "name": "Cuitláhuac",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.45745,
+      "lng": -99.18204,
+      "order": {
+        "2": 4
+      },
+      "wikidata": "Q3357029"
+    },
+    {
+      "id": "culhuacan",
+      "name": "Culhuacán",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.337,
+      "lng": -99.109,
+      "order": {
+        "12": 10
+      },
+      "wikidata": "Q5794406"
+    },
+    {
+      "id": "deportivo-18-de-marzo",
+      "name": "Deportivo 18 de Marzo",
+      "system": "metro",
+      "lines": [
+        "3",
+        "6"
+      ],
+      "transfer": true,
+      "lat": 19.48507,
+      "lng": -99.12549,
+      "order": {
+        "3": 2,
+        "6": 9
+      },
+      "wikidata": "Q3431319"
+    },
+    {
+      "id": "deportivo-oceania",
+      "name": "Deportivo Oceanía",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.45103,
+      "lng": -99.07917,
+      "order": {
+        "B": 11
+      },
+      "wikidata": "Q6824555"
+    },
+    {
+      "id": "division-del-norte",
+      "name": "División del Norte",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.38002,
+      "lng": -99.15888,
+      "order": {
+        "3": 15
+      },
+      "wikidata": "Q6824558"
+    },
+    {
+      "id": "doctores",
+      "name": "Doctores",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.42161,
+      "lng": -99.14337,
+      "order": {
+        "8": 5
+      },
+      "wikidata": "Q2837042"
+    },
+    {
+      "id": "ecatepec",
+      "name": "Ecatepec",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.5153,
+      "lng": -99.036,
+      "order": {
+        "B": 4
+      },
+      "wikidata": "Q11681253"
+    },
+    {
+      "id": "eduardo-molina",
+      "name": "Eduardo Molina",
+      "system": "metro",
+      "lines": [
+        "5"
+      ],
+      "transfer": false,
+      "lat": 19.45138,
+      "lng": -99.10543,
+      "order": {
+        "5": 6
+      },
+      "wikidata": "Q6824560"
+    },
+    {
+      "id": "eje-central",
+      "name": "Eje Central",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.3614,
+      "lng": -99.1514,
+      "order": {
+        "12": 6
+      },
+      "wikidata": "Q5644140"
+    },
+    {
+      "id": "el-rosario",
+      "name": "El Rosario",
+      "system": "metro",
+      "lines": [
+        "6",
+        "7"
+      ],
+      "transfer": true,
+      "lat": 19.50454,
+      "lng": -99.20002,
+      "order": {
+        "6": 1,
+        "7": 1
+      },
+      "wikidata": "Q3429496"
+    },
+    {
+      "id": "ermita",
+      "name": "Ermita",
+      "system": "metro",
+      "lines": [
+        "2",
+        "12"
+      ],
+      "transfer": true,
+      "lat": 19.36188,
+      "lng": -99.14294,
+      "order": {
+        "2": 22,
+        "12": 7
+      },
+      "wikidata": "Q5256668"
+    },
+    {
+      "id": "escuadron-201",
+      "name": "Escuadrón 201",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.36492,
+      "lng": -99.10955,
+      "order": {
+        "8": 14
+      },
+      "wikidata": "Q3431185"
+    },
+    {
+      "id": "etiopia-plaza-de-la-transparencia",
+      "name": "Etiopía/Plaza de la Transparencia",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.39559,
+      "lng": -99.15627,
+      "order": {
+        "3": 13
+      },
+      "wikidata": "Q3429486"
+    },
+    {
+      "id": "eugenia",
+      "name": "Eugenia",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.38611,
+      "lng": -99.15722,
+      "order": {
+        "3": 14
+      },
+      "wikidata": "Q6824568"
+    },
+    {
+      "id": "ferreria-arena-ciudad-de-mexico",
+      "name": "Ferrería/Arena Ciudad de México",
+      "system": "metro",
+      "lines": [
+        "6"
+      ],
+      "transfer": false,
+      "lat": 19.49075,
+      "lng": -99.17384,
+      "order": {
+        "6": 4
+      },
+      "wikidata": "Q619422"
+    },
+    {
+      "id": "fray-servando",
+      "name": "Fray Servando",
+      "system": "metro",
+      "lines": [
+        "4"
+      ],
+      "transfer": false,
+      "lat": 19.42163,
+      "lng": -99.12054,
+      "order": {
+        "4": 8
+      },
+      "wikidata": "Q6824573"
+    },
+    {
+      "id": "garibaldi-lagunilla",
+      "name": "Garibaldi/Lagunilla",
+      "system": "metro",
+      "lines": [
+        "8",
+        "B"
+      ],
+      "transfer": true,
+      "lat": 19.44446,
+      "lng": -99.13972,
+      "order": {
+        "8": 1,
+        "B": 19
+      },
+      "wikidata": "Q1147620"
+    },
+    {
+      "id": "general-anaya",
+      "name": "General Anaya",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.35326,
+      "lng": -99.145,
+      "order": {
+        "2": 23
+      },
+      "wikidata": "Q3356888"
+    },
+    {
+      "id": "guelatao",
+      "name": "Guelatao",
+      "system": "metro",
+      "lines": [
+        "A"
+      ],
+      "transfer": false,
+      "lat": 19.38516,
+      "lng": -99.03574,
+      "order": {
+        "A": 5
+      },
+      "wikidata": "Q6824577"
+    },
+    {
+      "id": "guerrero",
+      "name": "Guerrero",
+      "system": "metro",
+      "lines": [
+        "3",
+        "B"
+      ],
+      "transfer": true,
+      "lat": 19.44515,
+      "lng": -99.14539,
+      "order": {
+        "3": 6,
+        "B": 20
+      },
+      "wikidata": "Q6824578"
+    },
+    {
+      "id": "gomez-farias",
+      "name": "Gómez Farías",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.41647,
+      "lng": -99.09035,
+      "order": {
+        "1": 18
+      },
+      "wikidata": "Q3356988"
+    },
+    {
+      "id": "hangares",
+      "name": "Hangares",
+      "system": "metro",
+      "lines": [
+        "5"
+      ],
+      "transfer": false,
+      "lat": 19.42414,
+      "lng": -99.0875,
+      "order": {
+        "5": 2
+      },
+      "wikidata": "Q6824582"
+    },
+    {
+      "id": "hidalgo",
+      "name": "Hidalgo",
+      "system": "metro",
+      "lines": [
+        "2",
+        "3"
+      ],
+      "transfer": true,
+      "lat": 19.43729,
+      "lng": -99.1471,
+      "order": {
+        "2": 10,
+        "3": 7
+      },
+      "wikidata": "Q2541914"
+    },
+    {
+      "id": "hospital-20-de-noviembre",
+      "name": "Hospital 20 de Noviembre",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.372,
+      "lng": -99.171,
+      "order": {
+        "12": 3
+      },
+      "wikidata": "Q5902535"
+    },
+    {
+      "id": "hospital-general",
+      "name": "Hospital General",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.41358,
+      "lng": -99.15389,
+      "order": {
+        "3": 11
+      },
+      "wikidata": "Q6824588"
+    },
+    {
+      "id": "impulsora",
+      "name": "Impulsora",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.48585,
+      "lng": -99.04891,
+      "order": {
+        "B": 7
+      },
+      "wikidata": "Q6824590"
+    },
+    {
+      "id": "indios-verdes",
+      "name": "Indios Verdes",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.49536,
+      "lng": -99.11947,
+      "order": {
+        "3": 1
+      },
+      "wikidata": "Q3431052"
+    },
+    {
+      "id": "instituto-del-petroleo",
+      "name": "Instituto del Petróleo",
+      "system": "metro",
+      "lines": [
+        "5",
+        "6"
+      ],
+      "transfer": true,
+      "lat": 19.48957,
+      "lng": -99.14526,
+      "order": {
+        "5": 12,
+        "6": 7
+      },
+      "wikidata": "Q6824591"
+    },
+    {
+      "id": "insurgentes",
+      "name": "Insurgentes",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.42329,
+      "lng": -99.16318,
+      "order": {
+        "1": 6
+      },
+      "wikidata": "Q3301776"
+    },
+    {
+      "id": "insurgentes-sur",
+      "name": "Insurgentes Sur",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.3736,
+      "lng": -99.1788,
+      "order": {
+        "12": 2
+      },
+      "wikidata": "Q5918521"
+    },
+    {
+      "id": "isabel-la-catolica",
+      "name": "Isabel la Católica",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.42673,
+      "lng": -99.13769,
+      "order": {
+        "1": 10
+      },
+      "wikidata": "Q3356870"
+    },
+    {
+      "id": "iztacalco",
+      "name": "Iztacalco",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.38856,
+      "lng": -99.11222,
+      "order": {
+        "8": 11
+      },
+      "wikidata": "Q3431125"
+    },
+    {
+      "id": "iztapalapa",
+      "name": "Iztapalapa",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.35783,
+      "lng": -99.09346,
+      "order": {
+        "8": 16
+      },
+      "wikidata": "Q4204314"
+    },
+    {
+      "id": "jamaica",
+      "name": "Jamaica",
+      "system": "metro",
+      "lines": [
+        "4",
+        "9"
+      ],
+      "transfer": true,
+      "lat": 19.409,
+      "lng": -99.12217,
+      "order": {
+        "4": 9,
+        "9": 7
+      },
+      "wikidata": "Q3377006"
+    },
+    {
+      "id": "juanacatlan",
+      "name": "Juanacatlán",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.41289,
+      "lng": -99.18217,
+      "order": {
+        "1": 3
+      },
+      "wikidata": "Q3356938"
+    },
+    {
+      "id": "juarez",
+      "name": "Juárez",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.43317,
+      "lng": -99.14779,
+      "order": {
+        "3": 8
+      },
+      "wikidata": "Q6824601"
+    },
+    {
+      "id": "la-paz",
+      "name": "La Paz",
+      "system": "metro",
+      "lines": [
+        "A"
+      ],
+      "transfer": false,
+      "lat": 19.35053,
+      "lng": -98.96075,
+      "order": {
+        "A": 10
+      },
+      "wikidata": "Q6824608"
+    },
+    {
+      "id": "la-raza",
+      "name": "La Raza",
+      "system": "metro",
+      "lines": [
+        "3",
+        "5"
+      ],
+      "transfer": true,
+      "lat": 19.47015,
+      "lng": -99.13689,
+      "order": {
+        "3": 4,
+        "5": 10
+      },
+      "wikidata": "Q3429492"
+    },
+    {
+      "id": "la-viga",
+      "name": "La Viga",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.40649,
+      "lng": -99.12625,
+      "order": {
+        "8": 8
+      },
+      "wikidata": "Q9019049"
+    },
+    {
+      "id": "la-villa-basilica",
+      "name": "La Villa/Basílica",
+      "system": "metro",
+      "lines": [
+        "6"
+      ],
+      "transfer": false,
+      "lat": 19.4816,
+      "lng": -99.11845,
+      "order": {
+        "6": 10
+      },
+      "wikidata": "Q2836136"
+    },
+    {
+      "id": "lagunilla",
+      "name": "Lagunilla",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.44339,
+      "lng": -99.13133,
+      "order": {
+        "B": 18
+      },
+      "wikidata": "Q6824610"
+    },
+    {
+      "id": "lindavista",
+      "name": "Lindavista",
+      "system": "metro",
+      "lines": [
+        "6"
+      ],
+      "transfer": false,
+      "lat": 19.48861,
+      "lng": -99.13504,
+      "order": {
+        "6": 8
+      },
+      "wikidata": "Q6824614"
+    },
+    {
+      "id": "lomas-estrella",
+      "name": "Lomas Estrella",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.3223,
+      "lng": -99.0961,
+      "order": {
+        "12": 12
+      },
+      "wikidata": "Q5978599"
+    },
+    {
+      "id": "los-reyes",
+      "name": "Los Reyes",
+      "system": "metro",
+      "lines": [
+        "A"
+      ],
+      "transfer": false,
+      "lat": 19.35897,
+      "lng": -98.9769,
+      "order": {
+        "A": 9
+      },
+      "wikidata": "Q6824612"
+    },
+    {
+      "id": "lazaro-cardenas",
+      "name": "Lázaro Cárdenas",
+      "system": "metro",
+      "lines": [
+        "9"
+      ],
+      "transfer": false,
+      "lat": 19.40696,
+      "lng": -99.14487,
+      "order": {
+        "9": 5
+      },
+      "wikidata": "Q6824617"
+    },
+    {
+      "id": "martin-carrera",
+      "name": "Martín Carrera",
+      "system": "metro",
+      "lines": [
+        "4",
+        "6"
+      ],
+      "transfer": true,
+      "lat": 19.48492,
+      "lng": -99.1044,
+      "order": {
+        "4": 1,
+        "6": 11
+      },
+      "wikidata": "Q6824623"
+    },
+    {
+      "id": "merced",
+      "name": "Merced",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.42556,
+      "lng": -99.12464,
+      "order": {
+        "1": 12
+      },
+      "wikidata": "Q3356980"
+    },
+    {
+      "id": "mexicaltzingo",
+      "name": "Mexicaltzingo",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.3577,
+      "lng": -99.1218,
+      "order": {
+        "12": 8
+      },
+      "wikidata": "Q6012160"
+    },
+    {
+      "id": "miguel-angel-de-quevedo",
+      "name": "Miguel Ángel de Quevedo",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.3464,
+      "lng": -99.18103,
+      "order": {
+        "3": 19
+      },
+      "wikidata": "Q6824630"
+    },
+    {
+      "id": "misterios",
+      "name": "Misterios",
+      "system": "metro",
+      "lines": [
+        "5"
+      ],
+      "transfer": false,
+      "lat": 19.46332,
+      "lng": -99.1308,
+      "order": {
+        "5": 9
+      },
+      "wikidata": "Q6824625"
+    },
+    {
+      "id": "mixcoac",
+      "name": "Mixcoac",
+      "system": "metro",
+      "lines": [
+        "7",
+        "12"
+      ],
+      "transfer": true,
+      "lat": 19.37589,
+      "lng": -99.18753,
+      "order": {
+        "7": 13,
+        "12": 1
+      },
+      "wikidata": "Q6824627"
+    },
+    {
+      "id": "mixiuhca",
+      "name": "Mixiuhca",
+      "system": "metro",
+      "lines": [
+        "9"
+      ],
+      "transfer": false,
+      "lat": 19.40848,
+      "lng": -99.1129,
+      "order": {
+        "9": 8
+      },
+      "wikidata": "Q3431067"
+    },
+    {
+      "id": "moctezuma",
+      "name": "Moctezuma",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.42722,
+      "lng": -99.1103,
+      "order": {
+        "1": 15
+      },
+      "wikidata": "Q3357017"
+    },
+    {
+      "id": "morelos",
+      "name": "Morelos",
+      "system": "metro",
+      "lines": [
+        "4",
+        "B"
+      ],
+      "transfer": true,
+      "lat": 19.43897,
+      "lng": -99.11827,
+      "order": {
+        "4": 6,
+        "B": 16
+      },
+      "wikidata": "Q9035123"
+    },
+    {
+      "id": "muzquiz",
+      "name": "Múzquiz",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.50163,
+      "lng": -99.04205,
+      "order": {
+        "B": 5
+      },
+      "wikidata": "Q6824638"
+    },
+    {
+      "id": "nativitas",
+      "name": "Nativitas",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.37947,
+      "lng": -99.14022,
+      "order": {
+        "2": 20
+      },
+      "wikidata": "Q3356904"
+    },
+    {
+      "id": "nezahualcoyotl",
+      "name": "Nezahualcóyotl",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.47307,
+      "lng": -99.05454,
+      "order": {
+        "B": 8
+      },
+      "wikidata": "Q6824646"
+    },
+    {
+      "id": "ninos-heroes-poder-judicial-cdmx",
+      "name": "Niños Héroes/Poder Judicial CDMX",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.41951,
+      "lng": -99.15058,
+      "order": {
+        "3": 10
+      },
+      "wikidata": "Q6824647"
+    },
+    {
+      "id": "nopalera",
+      "name": "Nopalera",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.3,
+      "lng": -99.04667,
+      "order": {
+        "12": 17
+      },
+      "wikidata": "Q6044683"
+    },
+    {
+      "id": "normal",
+      "name": "Normal",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.4444,
+      "lng": -99.1674,
+      "order": {
+        "2": 7
+      },
+      "wikidata": "Q3356995"
+    },
+    {
+      "id": "norte-45",
+      "name": "Norte 45",
+      "system": "metro",
+      "lines": [
+        "6"
+      ],
+      "transfer": false,
+      "lat": 19.48868,
+      "lng": -99.16277,
+      "order": {
+        "6": 5
+      },
+      "wikidata": "Q6824650"
+    },
+    {
+      "id": "obrera",
+      "name": "Obrera",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.41356,
+      "lng": -99.14419,
+      "order": {
+        "8": 6
+      },
+      "wikidata": "Q6824651"
+    },
+    {
+      "id": "observatorio",
+      "name": "Observatorio",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.39824,
+      "lng": -99.20036,
+      "order": {
+        "1": 1
+      },
+      "wikidata": "Q388460"
+    },
+    {
+      "id": "oceania",
+      "name": "Oceanía",
+      "system": "metro",
+      "lines": [
+        "5",
+        "B"
+      ],
+      "transfer": true,
+      "lat": 19.44567,
+      "lng": -99.08724,
+      "order": {
+        "5": 4,
+        "B": 12
+      },
+      "wikidata": "Q522857"
+    },
+    {
+      "id": "olivos",
+      "name": "Olivos",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.30417,
+      "lng": -99.05972,
+      "order": {
+        "12": 16
+      },
+      "wikidata": "Q6050104"
+    },
+    {
+      "id": "olimpica",
+      "name": "Olímpica",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.52133,
+      "lng": -99.03342,
+      "order": {
+        "B": 3
+      },
+      "wikidata": "Q6824654"
+    },
+    {
+      "id": "panteones",
+      "name": "Panteones",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.45876,
+      "lng": -99.20315,
+      "order": {
+        "2": 2
+      },
+      "wikidata": "Q3357000"
+    },
+    {
+      "id": "pantitlan",
+      "name": "Pantitlán",
+      "system": "metro",
+      "lines": [
+        "1",
+        "5",
+        "9",
+        "A"
+      ],
+      "transfer": true,
+      "lat": 19.41491,
+      "lng": -99.07346,
+      "order": {
+        "1": 20,
+        "5": 1,
+        "9": 12,
+        "A": 1
+      },
+      "wikidata": "Q3352997"
+    },
+    {
+      "id": "parque-de-los-venados",
+      "name": "Parque de los Venados",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.3707,
+      "lng": -99.1587,
+      "order": {
+        "12": 5
+      },
+      "wikidata": "Q6062821"
+    },
+    {
+      "id": "patriotismo",
+      "name": "Patriotismo",
+      "system": "metro",
+      "lines": [
+        "9"
+      ],
+      "transfer": false,
+      "lat": 19.4062,
+      "lng": -99.1789,
+      "order": {
+        "9": 2
+      },
+      "wikidata": "Q6824665"
+    },
+    {
+      "id": "periferico-oriente",
+      "name": "Periférico Oriente",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.3177,
+      "lng": -99.0746,
+      "order": {
+        "12": 14
+      },
+      "wikidata": "Q6072488"
+    },
+    {
+      "id": "penon-viejo",
+      "name": "Peñón Viejo",
+      "system": "metro",
+      "lines": [
+        "A"
+      ],
+      "transfer": false,
+      "lat": 19.37332,
+      "lng": -99.01709,
+      "order": {
+        "A": 6
+      },
+      "wikidata": "Q9058930"
+    },
+    {
+      "id": "pino-suarez",
+      "name": "Pino Suárez",
+      "system": "metro",
+      "lines": [
+        "1",
+        "2"
+      ],
+      "transfer": true,
+      "lat": 19.42534,
+      "lng": -99.13294,
+      "order": {
+        "1": 11,
+        "2": 14
+      },
+      "wikidata": "Q3357008"
+    },
+    {
+      "id": "plaza-aragon",
+      "name": "Plaza Aragón",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.52845,
+      "lng": -99.03012,
+      "order": {
+        "B": 2
+      },
+      "wikidata": "Q6824670"
+    },
+    {
+      "id": "polanco",
+      "name": "Polanco",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.43351,
+      "lng": -99.19103,
+      "order": {
+        "7": 7
+      },
+      "wikidata": "Q6824672"
+    },
+    {
+      "id": "politecnico",
+      "name": "Politécnico",
+      "system": "metro",
+      "lines": [
+        "5"
+      ],
+      "transfer": false,
+      "lat": 19.50082,
+      "lng": -99.14929,
+      "order": {
+        "5": 13
+      },
+      "wikidata": "Q3431375"
+    },
+    {
+      "id": "popotla",
+      "name": "Popotla",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.45215,
+      "lng": -99.1747,
+      "order": {
+        "2": 5
+      },
+      "wikidata": "Q3356929"
+    },
+    {
+      "id": "portales",
+      "name": "Portales",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.3698,
+      "lng": -99.1416,
+      "order": {
+        "2": 21
+      },
+      "wikidata": "Q3356960"
+    },
+    {
+      "id": "potrero",
+      "name": "Potrero",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.47691,
+      "lng": -99.13217,
+      "order": {
+        "3": 3
+      },
+      "wikidata": "Q6824678"
+    },
+    {
+      "id": "puebla",
+      "name": "Puebla",
+      "system": "metro",
+      "lines": [
+        "9"
+      ],
+      "transfer": false,
+      "lat": 19.40714,
+      "lng": -99.08243,
+      "order": {
+        "9": 11
+      },
+      "wikidata": "Q6824679"
+    },
+    {
+      "id": "refineria",
+      "name": "Refinería",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.46995,
+      "lng": -99.19058,
+      "order": {
+        "7": 4
+      },
+      "wikidata": "Q9067431"
+    },
+    {
+      "id": "revolucion",
+      "name": "Revolución",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.4392,
+      "lng": -99.15435,
+      "order": {
+        "2": 9
+      },
+      "wikidata": "Q3357042"
+    },
+    {
+      "id": "ricardo-flores-magon",
+      "name": "Ricardo Flores Magón",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.43657,
+      "lng": -99.10367,
+      "order": {
+        "B": 14
+      },
+      "wikidata": "Q601519"
+    },
+    {
+      "id": "romero-rubio",
+      "name": "Romero Rubio",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.44074,
+      "lng": -99.09436,
+      "order": {
+        "B": 13
+      },
+      "wikidata": "Q6824691"
+    },
+    {
+      "id": "rio-de-los-remedios",
+      "name": "Río de los Remedios",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.49091,
+      "lng": -99.0466,
+      "order": {
+        "B": 6
+      },
+      "wikidata": "Q6824695"
+    },
+    {
+      "id": "salto-del-agua",
+      "name": "Salto del Agua",
+      "system": "metro",
+      "lines": [
+        "1",
+        "8"
+      ],
+      "transfer": true,
+      "lat": 19.42681,
+      "lng": -99.14221,
+      "order": {
+        "1": 9,
+        "8": 4
+      },
+      "wikidata": "Q740243"
+    },
+    {
+      "id": "san-andres-tomatlan",
+      "name": "San Andrés Tomatlán",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.3283,
+      "lng": -99.1049,
+      "order": {
+        "12": 11
+      },
+      "wikidata": "Q6118305"
+    },
+    {
+      "id": "san-antonio",
+      "name": "San Antonio",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.38476,
+      "lng": -99.18631,
+      "order": {
+        "7": 12
+      },
+      "wikidata": "Q6824698"
+    },
+    {
+      "id": "san-antonio-abad",
+      "name": "San Antonio Abad",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.4186,
+      "lng": -99.13415,
+      "order": {
+        "2": 15
+      },
+      "wikidata": "Q3356897"
+    },
+    {
+      "id": "san-cosme",
+      "name": "San Cosme",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.44171,
+      "lng": -99.1611,
+      "order": {
+        "2": 8
+      },
+      "wikidata": "Q3356972"
+    },
+    {
+      "id": "san-joaquin",
+      "name": "San Joaquín",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.44579,
+      "lng": -99.19182,
+      "order": {
+        "7": 6
+      },
+      "wikidata": "Q6824700"
+    },
+    {
+      "id": "san-juan-de-letran",
+      "name": "San Juan de Letrán",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.4313,
+      "lng": -99.14157,
+      "order": {
+        "8": 3
+      },
+      "wikidata": "Q5691609"
+    },
+    {
+      "id": "san-lazaro",
+      "name": "San Lázaro",
+      "system": "metro",
+      "lines": [
+        "1",
+        "B"
+      ],
+      "transfer": true,
+      "lat": 19.43021,
+      "lng": -99.11483,
+      "order": {
+        "1": 14,
+        "B": 15
+      },
+      "wikidata": "Q3356984"
+    },
+    {
+      "id": "san-pedro-de-los-pinos",
+      "name": "San Pedro de los Pinos",
+      "system": "metro",
+      "lines": [
+        "7"
+      ],
+      "transfer": false,
+      "lat": 19.39128,
+      "lng": -99.18605,
+      "order": {
+        "7": 11
+      },
+      "wikidata": "Q5841189"
+    },
+    {
+      "id": "santa-anita",
+      "name": "Santa Anita",
+      "system": "metro",
+      "lines": [
+        "4",
+        "8"
+      ],
+      "transfer": true,
+      "lat": 19.40273,
+      "lng": -99.1217,
+      "order": {
+        "4": 10,
+        "8": 9
+      },
+      "wikidata": "Q6824703"
+    },
+    {
+      "id": "santa-marta",
+      "name": "Santa Marta",
+      "system": "metro",
+      "lines": [
+        "A"
+      ],
+      "transfer": false,
+      "lat": 19.36,
+      "lng": -98.99486,
+      "order": {
+        "A": 8
+      },
+      "wikidata": "Q9074085"
+    },
+    {
+      "id": "sevilla",
+      "name": "Sevilla",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.42192,
+      "lng": -99.17058,
+      "order": {
+        "1": 5
+      },
+      "wikidata": "Q3356943"
+    },
+    {
+      "id": "tacuba",
+      "name": "Tacuba",
+      "system": "metro",
+      "lines": [
+        "2",
+        "7"
+      ],
+      "transfer": true,
+      "lat": 19.45935,
+      "lng": -99.18921,
+      "order": {
+        "2": 3,
+        "7": 5
+      },
+      "wikidata": "Q3356901"
+    },
+    {
+      "id": "tacubaya",
+      "name": "Tacubaya",
+      "system": "metro",
+      "lines": [
+        "1",
+        "7",
+        "9"
+      ],
+      "transfer": true,
+      "lat": 19.40344,
+      "lng": -99.1871,
+      "order": {
+        "1": 2,
+        "7": 10,
+        "9": 1
+      },
+      "wikidata": "Q2744158"
+    },
+    {
+      "id": "talisman",
+      "name": "Talismán",
+      "system": "metro",
+      "lines": [
+        "4"
+      ],
+      "transfer": false,
+      "lat": 19.47428,
+      "lng": -99.10801,
+      "order": {
+        "4": 2
+      },
+      "wikidata": "Q6824726"
+    },
+    {
+      "id": "tasquena",
+      "name": "Tasqueña",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.34417,
+      "lng": -99.14269,
+      "order": {
+        "2": 24
+      },
+      "wikidata": "Q3357320"
+    },
+    {
+      "id": "tepalcates",
+      "name": "Tepalcates",
+      "system": "metro",
+      "lines": [
+        "A"
+      ],
+      "transfer": false,
+      "lat": 19.39134,
+      "lng": -99.04638,
+      "order": {
+        "A": 4
+      },
+      "wikidata": "Q6824730"
+    },
+    {
+      "id": "tepito",
+      "name": "Tepito",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.4425,
+      "lng": -99.12333,
+      "order": {
+        "B": 17
+      },
+      "wikidata": "Q5402969"
+    },
+    {
+      "id": "terminal-aerea",
+      "name": "Terminal Aérea",
+      "system": "metro",
+      "lines": [
+        "5"
+      ],
+      "transfer": false,
+      "lat": 19.43373,
+      "lng": -99.08767,
+      "order": {
+        "5": 3
+      },
+      "wikidata": "Q6824733"
+    },
+    {
+      "id": "tezonco",
+      "name": "Tezonco",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.30611,
+      "lng": -99.065,
+      "order": {
+        "12": 15
+      },
+      "wikidata": "Q6143783"
+    },
+    {
+      "id": "tezozomoc",
+      "name": "Tezozómoc",
+      "system": "metro",
+      "lines": [
+        "6"
+      ],
+      "transfer": false,
+      "lat": 19.49512,
+      "lng": -99.19629,
+      "order": {
+        "6": 2
+      },
+      "wikidata": "Q6824734"
+    },
+    {
+      "id": "tlaltenco",
+      "name": "Tlaltenco",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.29417,
+      "lng": -99.02389,
+      "order": {
+        "12": 19
+      },
+      "wikidata": "Q2883637"
+    },
+    {
+      "id": "tlatelolco",
+      "name": "Tlatelolco",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.45498,
+      "lng": -99.14281,
+      "order": {
+        "3": 5
+      },
+      "wikidata": "Q3431323"
+    },
+    {
+      "id": "tlahuac",
+      "name": "Tláhuac",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.28597,
+      "lng": -99.01419,
+      "order": {
+        "12": 20
+      },
+      "wikidata": "Q6824735"
+    },
+    {
+      "id": "uam-azcapotzalco",
+      "name": "UAM Azcapotzalco",
+      "system": "metro",
+      "lines": [
+        "6"
+      ],
+      "transfer": false,
+      "lat": 19.49089,
+      "lng": -99.18629,
+      "order": {
+        "6": 3
+      },
+      "wikidata": "Q6824498"
+    },
+    {
+      "id": "uam-i",
+      "name": "UAM-I",
+      "system": "metro",
+      "lines": [
+        "8"
+      ],
+      "transfer": false,
+      "lat": 19.35123,
+      "lng": -99.07471,
+      "order": {
+        "8": 18
+      },
+      "wikidata": "Q6824756"
+    },
+    {
+      "id": "universidad",
+      "name": "Universidad",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.32443,
+      "lng": -99.17397,
+      "order": {
+        "3": 21
+      },
+      "wikidata": "Q6824764"
+    },
+    {
+      "id": "valle-gomez",
+      "name": "Valle Gómez",
+      "system": "metro",
+      "lines": [
+        "5"
+      ],
+      "transfer": false,
+      "lat": 19.45874,
+      "lng": -99.1193,
+      "order": {
+        "5": 8
+      },
+      "wikidata": "Q9092402"
+    },
+    {
+      "id": "vallejo",
+      "name": "Vallejo",
+      "system": "metro",
+      "lines": [
+        "6"
+      ],
+      "transfer": false,
+      "lat": 19.48977,
+      "lng": -99.15612,
+      "order": {
+        "6": 6
+      },
+      "wikidata": "Q6824762"
+    },
+    {
+      "id": "velodromo",
+      "name": "Velódromo",
+      "system": "metro",
+      "lines": [
+        "9"
+      ],
+      "transfer": false,
+      "lat": 19.40848,
+      "lng": -99.10307,
+      "order": {
+        "9": 9
+      },
+      "wikidata": "Q6824767"
+    },
+    {
+      "id": "viaducto",
+      "name": "Viaducto",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.40081,
+      "lng": -99.13689,
+      "order": {
+        "2": 17
+      },
+      "wikidata": "Q3357024"
+    },
+    {
+      "id": "villa-de-aragon",
+      "name": "Villa de Aragón",
+      "system": "metro",
+      "lines": [
+        "B"
+      ],
+      "transfer": false,
+      "lat": 19.46166,
+      "lng": -99.0617,
+      "order": {
+        "B": 9
+      },
+      "wikidata": "Q6824768"
+    },
+    {
+      "id": "villa-de-cortes",
+      "name": "Villa de Cortés",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.38753,
+      "lng": -99.13899,
+      "order": {
+        "2": 19
+      },
+      "wikidata": "Q3356965"
+    },
+    {
+      "id": "viveros-derechos-humanos",
+      "name": "Viveros/Derechos Humanos",
+      "system": "metro",
+      "lines": [
+        "3"
+      ],
+      "transfer": false,
+      "lat": 19.35372,
+      "lng": -99.17605,
+      "order": {
+        "3": 18
+      },
+      "wikidata": "Q7335651"
+    },
+    {
+      "id": "xola",
+      "name": "Xola",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.3952,
+      "lng": -99.1377,
+      "order": {
+        "2": 18
+      },
+      "wikidata": "Q3356924"
+    },
+    {
+      "id": "zapata",
+      "name": "Zapata",
+      "system": "metro",
+      "lines": [
+        "3",
+        "12"
+      ],
+      "transfer": true,
+      "lat": 19.37095,
+      "lng": -99.16494,
+      "order": {
+        "3": 16,
+        "12": 4
+      },
+      "wikidata": "Q6824782"
+    },
+    {
+      "id": "zapotitlan",
+      "name": "Zapotitlán",
+      "system": "metro",
+      "lines": [
+        "12"
+      ],
+      "transfer": false,
+      "lat": 19.29667,
+      "lng": -99.03444,
+      "order": {
+        "12": 18
+      },
+      "wikidata": "Q9097529"
+    },
+    {
+      "id": "zaragoza",
+      "name": "Zaragoza",
+      "system": "metro",
+      "lines": [
+        "1"
+      ],
+      "transfer": false,
+      "lat": 19.41234,
+      "lng": -99.08241,
+      "order": {
+        "1": 19
+      },
+      "wikidata": "Q3356989"
+    },
+    {
+      "id": "zocalo-tenochtitlan",
+      "name": "Zócalo/Tenochtitlan",
+      "system": "metro",
+      "lines": [
+        "2"
+      ],
+      "transfer": false,
+      "lat": 19.43325,
+      "lng": -99.1329,
+      "order": {
+        "2": 13
+      },
+      "wikidata": "Q3356920"
+    }
+  ]
+}

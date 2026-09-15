@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Metro CDMX · Planificador de rutas</title>
+<meta name="theme-color" content="#0d0f14">
+<meta name="description" content="Planificador de rutas del Metro de la Ciudad de México. Funciona sin conexión.">
+<!-- PWA: manifest e íconos. apple-touch-icon y las metas "apple-*" son para
+     que "Agregar a pantalla de inicio" en iPhone se vea como app. -->
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Metro">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== Sistema visual (mismo del prototipo mis-rutas-metro.html) ===== */
+  :root{--bg:#0d0f14;--panel:#161a23;--panel2:#1d2230;--ink:#f4f5f7;--muted:#8b94a7;--line:#2a3040;--accent:#E97B11;--warn:#FFD800;--ok:#22c55e}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  body{font-family:'Hanken Grotesk',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:40px;
+    background-image:radial-gradient(circle at 15% -10%,rgba(233,123,17,.12),transparent 40%),radial-gradient(circle at 90% 5%,rgba(0,115,189,.14),transparent 45%)}
+  header{padding:calc(24px + env(safe-area-inset-top,0px)) 20px 14px;position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg) 70%,transparent);backdrop-filter:blur(6px)}
+  .kicker{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:2rem;line-height:1;margin-top:6px;letter-spacing:-.02em}
+  h1 span{color:var(--accent)}
+  .sub{font-size:.85rem;color:var(--muted);margin-top:8px;line-height:1.4}
+  main{padding:4px 16px 0;display:flex;flex-direction:column;gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .card-inner{padding:16px 16px 18px}
+  .sec-label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 8px}
+  .chev{flex:none;transition:transform .25s;opacity:.6}
+
+  /* ===== Formulario ===== */
+  .geo-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:11px 13px;color:var(--ink);font-family:inherit;font-weight:600;font-size:.9rem;cursor:pointer}
+  .geo-btn:active{transform:scale(.99)}
+  .geo-btn[disabled]{opacity:.6;cursor:wait}
+  .geo-msg{margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.82rem;line-height:1.4;background:rgba(0,154,83,.12);color:var(--ok)}
+  .geo-msg b{color:var(--ink)}
+  .geo-msg.bad{background:rgba(229,48,138,.12);color:#f5a3c7}
+  .field{margin-top:14px;position:relative}
+  .field label{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:6px}
+  .field label .hint{text-transform:none;letter-spacing:0;font-weight:500;opacity:.8}
+  .field input,.field select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:12px 13px;color:var(--ink);font-family:inherit;font-size:1rem;font-weight:500;outline:none;appearance:none;-webkit-appearance:none;color-scheme:dark}
+  .field input.ac-input{padding-right:40px}
+  .field input::placeholder{color:var(--muted);font-weight:400}
+  .field input:focus,.field select:focus{border-color:var(--accent)}
+  .field input.picked{border-color:rgba(34,197,94,.55)}
+  .field select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b94a7' stroke-width='2.5'><path d='m6 9 6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+  .clear{position:absolute;right:8px;bottom:6px;width:30px;height:30px;border:none;background:none;color:var(--muted);font-size:1.1rem;cursor:pointer;border-radius:8px}
+  .clear:hover{background:var(--bg)}
+  /* Lista desplegable del autocompletar */
+  .ac-list{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:20;list-style:none;background:var(--panel2);border:1px solid var(--line);border-radius:12px;max-height:270px;overflow-y:auto;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+  .ac-item{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer;border-bottom:1px solid var(--line);font-size:.95rem;font-weight:500}
+  .ac-item:last-child{border-bottom:none}
+  .ac-item.active,.ac-item:hover{background:rgba(233,123,17,.14)}
+  .ac-item .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ac-item .nm mark{background:none;color:var(--accent);font-weight:700}
+  .ac-item .pills{display:flex;gap:3px;flex:none}
+  .ac-empty{padding:12px 13px;color:var(--muted);font-size:.85rem}
+  .swap-row{display:flex;justify-content:flex-end;margin-top:10px;margin-bottom:-6px}
+  .swap{background:none;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-family:inherit;font-weight:600;font-size:.78rem;padding:6px 12px;cursor:pointer}
+  .swap:active{transform:rotate(180deg)}
+  .calc-btn{width:100%;margin-top:18px;padding:15px;border:none;border-radius:12px;background:linear-gradient(135deg,#E97B11,#d96a05);color:#fff;font-family:inherit;font-weight:800;font-size:1.05rem;cursor:pointer;letter-spacing:.02em;box-shadow:0 8px 24px rgba(233,123,17,.25)}
+  .calc-btn:active{transform:scale(.98)}
+  .err{padding:11px 13px;background:rgba(229,48,138,.12);border:1px solid #E5308A;border-radius:10px;font-size:.86rem;color:#fff;margin-top:14px;line-height:1.4}
+  .loading{padding:12px 13px;border-radius:10px;font-size:.85rem;color:var(--muted);background:var(--panel2);margin-top:14px}
+
+  /* ===== Píldoras de línea ===== */
+  .lpill{display:inline-block;font-size:.68rem;font-weight:800;color:#111;border-radius:6px;padding:2px 7px;min-width:24px;text-align:center;line-height:1.5;vertical-align:middle}
+  .lpill.light-text{color:#fff}
+  .lpill.big{font-size:.8rem;padding:4px 9px;min-width:30px;border-radius:8px}
+
+  /* ===== Resultado ===== */
+  #results{display:flex;flex-direction:column;gap:14px;scroll-margin-top:150px}
+  #alts{display:flex;flex-direction:column;gap:14px}
+  #alts:empty{display:none}
+  .card-head{padding:16px 18px 14px}
+  .tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .tag{display:inline-block;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;padding:3px 8px;border-radius:6px}
+  .tag.opt{background:rgba(34,197,94,.15);color:var(--ok)}
+  .tag.alt{background:rgba(255,216,0,.12);color:var(--warn)}
+  .variant{font-size:.76rem;color:var(--muted);font-weight:500}
+  .route-od .od{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:600;font-size:1.15rem;line-height:1.2;letter-spacing:-.01em}
+  .route-od .arrow{color:var(--accent);margin:0 6px}
+  .summary{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:8px;margin-top:14px}
+  .stat{background:var(--panel2);border-radius:12px;padding:10px 12px}
+  .stat .lbl{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .stat .val{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:1.35rem;margin-top:2px;letter-spacing:-.01em;line-height:1.1}
+  .stat .val.big{font-size:1.6rem;color:var(--accent)}
+  .stat .val small{font-size:.7em;font-weight:600;color:var(--muted);margin-left:2px}
+  .stat .sub{font-size:.72rem;color:var(--muted);margin-top:4px}
+  .stat .sub b{color:var(--ink);font-weight:700}
+  .lines-mini{display:flex;gap:5px;margin-top:12px;flex-wrap:wrap;align-items:center}
+  .lines-mini .lbl{font-size:.72rem;color:var(--muted);font-weight:600;margin-right:2px}
+  .dep-line{font-size:.78rem;color:var(--muted);margin-top:10px;line-height:1.4}
+  .dep-line b{color:var(--ink);font-weight:600}
+  .steps-inner{padding:16px 18px 18px;border-top:1px solid var(--line)}
+  .block{background:var(--panel2);border-radius:14px;padding:8px 6px;margin-bottom:16px}
+  .block svg{width:100%;height:auto;display:block}
+  .dirs{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+  .diritem{display:flex;gap:11px;align-items:flex-start;background:var(--panel2);border-radius:12px;padding:11px 13px;border-left:5px solid var(--line)}
+  .diritem .num{flex:none;width:22px;height:22px;border-radius:50%;background:var(--bg);color:var(--muted);font-weight:800;font-size:.78rem;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .dirbody{flex:1;min-width:0}
+  .dirtop{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .dirtop .lname{font-weight:700;font-size:.9rem}
+  .dirhacia{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:1.1rem;line-height:1.15;margin-top:5px;letter-spacing:-.01em}
+  .dirhacia .arr{font-size:.85em;margin-right:3px}
+  .dirsub{font-size:.8rem;color:var(--muted);margin-top:4px;line-height:1.4}
+  .dirsub b{color:var(--ink);font-weight:600}
+  .dirstats{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:.74rem;color:var(--muted);font-weight:600}
+  .chip b{color:var(--ink);font-weight:700}
+  .tip{padding:11px 13px;background:var(--panel2);border-radius:10px;font-size:.82rem;color:var(--muted);line-height:1.45}
+  .tip b{color:var(--warn)}
+  /* Pregunta "¿te acomoda?" */
+  .ask-q{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.01em}
+  .ask-btns{display:flex;gap:8px;margin-top:12px}
+  .ask-btn{flex:1;padding:12px 8px;border-radius:11px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer}
+  .ask-btn.yes{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.4)}
+  .ask-btn:active{transform:scale(.98)}
+  .ask-done{font-weight:600;color:var(--ok)}
+
+  /* ===== Tarjeta colapsable (favoritas, buscador, autobús) ===== */
+  .col-head{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+  .col-head .emoji{font-size:1.4rem;line-height:1}
+  .col-head h2{flex:1;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:-.01em}
+  .col-head h2 small{display:block;font-family:'Hanken Grotesk',system-ui,sans-serif;font-size:.72rem;color:var(--muted);font-weight:500;letter-spacing:0;text-transform:none;margin-top:2px}
+  .col-head h2 .count{color:var(--warn);font-size:.85em;margin-left:4px}
+  .col-body{max-height:0;overflow:hidden;transition:max-height .45s ease}
+  .card.open .col-body{max-height:3000px;overflow:visible}
+  .card.open .chev{transform:rotate(90deg)}
+  .col-inner{padding:0 16px 18px;border-top:1px solid var(--line)}
+  .satana{background:linear-gradient(135deg,#1a2030,#161a23)}
+  /* Favoritas */
+  .fav-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+  .fav-item{display:flex;align-items:center;gap:8px;background:var(--panel2);border-radius:12px;padding:10px 6px 10px 12px;cursor:pointer;border:1px solid transparent}
+  .fav-item:active{border-color:var(--accent)}
+  .fav-item .od-wrap{flex:1;min-width:0}
+  .fav-item .od{font-weight:600;font-size:.95rem;line-height:1.25}
+  .fav-item .od .arrow{color:var(--accent);margin:0 5px}
+  .fav-item .meta{font-size:.74rem;color:var(--muted);margin-top:4px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+  .fav-item .del{flex:none;background:none;border:none;color:var(--muted);font-size:1.15rem;cursor:pointer;padding:6px 10px;border-radius:8px}
+  .fav-item .del:hover{color:#f5a3c7}
+  .fav-empty{margin-top:14px;font-size:.85rem;color:var(--muted);line-height:1.45}
+  .star-btn{margin-top:12px;width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer}
+  .star-btn.on{border-color:rgba(255,216,0,.5);color:var(--warn);background:rgba(255,216,0,.08)}
+  /* Estado del Metro */
+  .status-card{display:flex;gap:12px;align-items:center;padding:12px 14px}
+  .status-btn{flex:none;background:rgba(229,48,138,.14);border:1px solid rgba(229,48,138,.5);color:#fff;border-radius:10px;padding:10px 12px;font-family:inherit;font-weight:700;font-size:.84rem;text-decoration:none;white-space:nowrap}
+  .status-note{font-size:.76rem;color:var(--muted);line-height:1.4}
+  /* Buscador de estación */
+  .st-name{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .st-sub{font-size:.8rem;color:var(--muted);margin-top:4px}
+  .st-line{margin-top:10px;background:var(--panel2);border-radius:12px;padding:10px 12px;border-left:5px solid var(--line)}
+  .st-line .top{display:flex;align-items:center;gap:7px;font-weight:700;font-size:.9rem}
+  .st-line .top .pos{margin-left:auto;font-size:.72rem;color:var(--muted);font-weight:600;white-space:nowrap}
+  .nb{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .nb div{background:var(--bg);border-radius:9px;padding:8px 10px;font-size:.78rem;color:var(--muted);line-height:1.35;min-width:0}
+  .nb b{display:block;color:var(--ink);font-size:.88rem;font-weight:700;margin-top:2px}
+  .nb .term{font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .st-actions{display:flex;gap:8px;margin-top:12px}
+  .st-actions button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-family:inherit;font-weight:700;font-size:.84rem;cursor:pointer}
+  .result{margin-top:16px;background:var(--panel2);border-radius:14px;padding:14px;display:none}
+  .result.show{display:block}
+  .result.warn{border:1px solid var(--warn)}
+  .result-row{display:flex;align-items:flex-start;gap:11px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .result-row:last-of-type{border-bottom:none}
+  .rr-ico{flex:none;width:30px;height:30px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .rr-body{flex:1;min-width:0}
+  .rr-lbl{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .rr-val{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:1.25rem;margin-top:1px;letter-spacing:-.01em}
+  .rr-val.big{font-size:1.5rem;color:var(--accent)}
+  .rr-sub{font-size:.78rem;color:var(--muted);margin-top:2px;line-height:1.45}
+  .rr-sub b{color:var(--ink);font-weight:600}
+  .alert{padding:10px 12px;background:rgba(255,216,0,.1);border-radius:9px;font-size:.82rem;color:var(--warn);margin-top:11px;line-height:1.4}
+  .alert b{color:#fff}
+  .link-btn{margin-top:12px;width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-family:inherit;font-weight:700;font-size:.86rem;cursor:pointer}
+  footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:26px;padding:0 20px;line-height:1.5}
+  .badge{display:inline-block;margin-top:10px;padding:5px 11px;border-radius:999px;background:var(--panel2);font-size:.7rem;font-weight:600;color:var(--muted)}
+  .badge.ok{background:rgba(0,154,83,.15);color:var(--ok)}
+  .badge.warn{background:rgba(255,216,0,.12);color:var(--warn)}
+  .toast{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--panel2);border:1px solid var(--accent);border-radius:12px;padding:12px 14px;font-size:.86rem;display:flex;gap:10px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+  .toast button{margin-left:auto;flex:none;background:var(--accent);border:none;color:#fff;font-family:inherit;font-weight:700;padding:8px 12px;border-radius:8px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Ciudad de México · Planificador</div>
+  <h1>Metro <span>CDMX</span></h1>
+  <p class="sub">La ruta más rápida entre dos estaciones. Funciona sin conexión.</p>
+</header>
+
+<main>
+  <!-- ===== Mis favoritas (localStorage) ===== -->
+  <section class="card" id="favs">
+    <div class="col-head" data-toggle="favs">
+      <span class="emoji">⭐</span>
+      <h2>Mis favoritas<span class="count" id="fav-count"></span><small>Toca una para calcularla de nuevo</small></h2>
+      <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 6 6 6-6 6"/></svg>
+    </div>
+    <div class="col-body"><div class="col-inner"><div id="fav-list"></div></div></div>
+  </section>
+
+  <!-- ===== Formulario origen / destino ===== -->
+  <section class="card"><div class="card-inner">
+    <button class="geo-btn" id="btn-geo" type="button">📍 Usar mi ubicación</button>
+    <div class="geo-msg" id="geo-msg" hidden></div>
+
+    <div class="field">
+      <label for="from">📍 Desde</label>
+      <input id="from" class="ac-input" type="text" placeholder="Escribe una estación…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="next">
+      <button class="clear" type="button" data-clear="from" aria-label="Borrar" hidden>×</button>
+      <ul class="ac-list" id="from-list" hidden></ul>
+    </div>
+
+    <div class="swap-row"><button class="swap" id="btn-swap" type="button">🔄 Invertir</button></div>
+
+    <div class="field">
+      <label for="to">🏁 Hasta</label>
+      <input id="to" class="ac-input" type="text" placeholder="Escribe una estación…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+      <button class="clear" type="button" data-clear="to" aria-label="Borrar" hidden>×</button>
+      <ul class="ac-list" id="to-list" hidden></ul>
+    </div>
+
+    <div class="field">
+      <label for="depart">🕒 Salgo a las <span class="hint">(vacío = ahora)</span></label>
+      <input id="depart" type="time">
+    </div>
+
+    <button class="calc-btn" id="btn-calc" type="button">Calcular ruta</button>
+    <div class="loading" id="loading">Cargando estaciones…</div>
+    <div class="err" id="form-err" hidden></div>
+  </div></section>
+
+  <!-- ===== Estado del servicio (enlace externo) ===== -->
+  <section class="card status-card">
+    <a class="status-btn" href="https://twitter.com/MetroCDMX" target="_blank" rel="noopener">🚨 Ver estado del Metro</a>
+    <div class="status-note">El estado en tiempo real no está integrado en la app; consulta el Twitter oficial antes de salir si sospechas un cierre.</div>
+  </section>
+
+  <!-- ===== Resultado: ruta óptima + pregunta + alternativas (se llena por JS) ===== -->
+  <section id="results" hidden>
+    <div id="optimal"></div>
+    <div class="card" id="ask"></div>
+    <div id="alts"></div>
+  </section>
+
+  <!-- ===== Buscador de estación: líneas y vecinas ===== -->
+  <section class="card" id="lookup-card">
+    <div class="col-head" data-toggle="lookup-card">
+      <span class="emoji">🔎</span>
+      <h2>Buscar estación<small>Qué líneas pasan y cuáles son sus estaciones vecinas</small></h2>
+      <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 6 6 6-6 6"/></svg>
+    </div>
+    <div class="col-body"><div class="col-inner">
+      <div class="field">
+        <label for="lookup">🚇 Estación</label>
+        <input id="lookup" class="ac-input" type="text" placeholder="Escribe una estación…" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button class="clear" type="button" data-clear="lookup" aria-label="Borrar" hidden>×</button>
+        <ul class="ac-list" id="lookup-list" hidden></ul>
+      </div>
+      <div id="lookup-info"></div>
+    </div></div>
+  </section>
+
+  <!-- ===== Módulo: viaje en autobús desde una terminal (Santa Ana) ===== -->
+  <section class="card satana" id="satana">
+    <div class="col-head" data-toggle="satana">
+      <span class="emoji" id="sa-emoji">🚌</span>
+      <h2 id="sa-title">Viaje en autobús<small>Calcula a qué hora salir del Metro para llegar a tu hora</small></h2>
+      <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 6 6 6-6 6"/></svg>
+    </div>
+    <div class="col-body"><div class="col-inner">
+      <div class="field"><label for="sa-dest">🎯 Destino</label><select id="sa-dest"></select></div>
+      <div class="field">
+        <label for="sa-origen">📍 Sales desde la estación…</label>
+        <input id="sa-origen" class="ac-input" type="text" placeholder="Escribe una estación…" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button class="clear" type="button" data-clear="sa-origen" aria-label="Borrar" hidden>×</button>
+        <ul class="ac-list" id="sa-origen-list" hidden></ul>
+      </div>
+      <div class="field"><label for="sa-dia">📅 Día del viaje</label><select id="sa-dia"></select></div>
+      <div class="field"><label for="sa-hora">⏰ Quiero llegar a las…</label><input type="time" id="sa-hora" value="17:00"></div>
+      <button class="calc-btn" id="sa-calc" type="button">Calcular mi viaje</button>
+      <div class="err" id="sa-err" hidden></div>
+      <div class="result" id="sa-result"></div>
+    </div></div>
+  </section>
+</main>
+
+<footer>
+  Tiempos aproximados: ~2 min entre estaciones y ~5 min por transbordo.<br>
+  En hora pico (7–9 h / 18–21 h) suma 10–25 %.<br>
+  <span id="pwa-badge" class="badge">💾 Preparando modo sin conexión…</span>
+</footer>
+
+<!-- ROUTER:BEGIN -->
+<!-- Generado desde router.js por tools/sync-router.js. Edita router.js, no este bloque. -->
+<script>
+/* ============================================================================
+   router.js — Motor de ruteo del MetroCDMX PWA
+   ----------------------------------------------------------------------------
+   Idea central: en vez de un grafo de estaciones, usamos un grafo de
+   "andenes": cada nodo es la pareja (estación, línea). Así:
+
+     - Ir de una estación a la vecina POR LA MISMA LÍNEA es una arista barata.
+     - Cambiar de línea DENTRO de la misma estación es una arista cara
+       (representa caminar por los pasillos y esperar el siguiente tren).
+
+   Dijkstra encuentra el camino de menor costo total, y como el transbordo
+   cuesta más que avanzar dos o tres estaciones, el algoritmo evita cambiar de
+   línea salvo que realmente le convenga.
+
+   El motor NO lee stations.json por su cuenta: recibe los datos como
+   parámetro (buildGraph) y devuelve un grafo que luego se pasa a findRoute.
+   Eso permite en el futuro construir un grafo combinado Metro + Metrobús
+   + Cablebús sin tocar el algoritmo.
+   ========================================================================== */
+
+/* ---------- 1. Configuración ---------------------------------------------- */
+
+// Pesos del grafo, en minutos. Cambia aquí si quieres calibrar tiempos.
+const ROUTER_DEFAULTS = {
+  hopMinutes: 2,        // entre dos estaciones adyacentes de la misma línea
+  transferMinutes: 5,   // caminar + esperar al cambiar de línea en una estación
+};
+
+// Cierres. Por ahora vacío; en el futuro se llena desde una API o reportes
+// colaborativos. Una estación cerrada desaparece del grafo (no se puede
+// subir, bajar, ni pasar por ella). Una línea cerrada desaparece completa.
+const CLOSURES = {
+  stations: [],   // ids de estación, p. ej. ["zocalo-tenochtitlan"]
+  lines: [],      // ids de línea, p. ej. ["12"]
+  transfers: [],  // ids de estación donde NO se permite cambiar de línea
+                  // (se puede pasar, pero no transbordar). Lo usan las alternativas.
+};
+
+/* ---------- 2. Construcción del grafo ------------------------------------- */
+
+// Cada nodo se identifica con una cadena "idEstacion@idLinea".
+function nodeKey(stationId, lineId) {
+  return stationId + '@' + lineId;
+}
+
+/**
+ * Construye el grafo a partir de los datos.
+ * @param {object} data      Contenido de stations.json ({ lines, stations }).
+ * @param {object} closures  { stations: [...ids], lines: [...ids], transfers: [...ids] }
+ * @param {object} cfg       { hopMinutes, transferMinutes }
+ * @returns {object} grafo   { nodes, edges, stationsById, lines, cfg }
+ *
+ * Nota para el futuro: si se agrega Metrobús, sus líneas deben llevar un id
+ * distinto al del Metro (p. ej. "mb-1" en lugar de "1") para no chocar.
+ */
+function buildGraph(data, closures = CLOSURES, cfg = ROUTER_DEFAULTS) {
+  const closedStations  = new Set(closures.stations || []);
+  const closedLines     = new Set(closures.lines || []);
+  const closedTransfers = new Set(closures.transfers || []);
+
+  const stationsById = {};
+  for (const s of data.stations) stationsById[s.id] = s;
+
+  const nodes = new Map();  // key -> { stationId, lineId }
+  const edges = new Map();  // key -> [ { to, weight, kind } ]
+
+  function addNode(stationId, lineId) {
+    const k = nodeKey(stationId, lineId);
+    if (!nodes.has(k)) { nodes.set(k, { stationId, lineId }); edges.set(k, []); }
+    return k;
+  }
+  // Las aristas son bidireccionales: el tren va y viene.
+  function addEdge(a, b, weight, kind) {
+    edges.get(a).push({ to: b, weight, kind });
+    edges.get(b).push({ to: a, weight, kind });
+  }
+
+  // 2a. Aristas de "viaje": estaciones consecutivas de cada línea.
+  for (const lineId of Object.keys(data.lines)) {
+    if (closedLines.has(lineId)) continue;
+
+    // Estaciones de esta línea, ordenadas por su posición (campo order).
+    const seq = data.stations
+      .filter(s => s.lines.includes(lineId) && !closedStations.has(s.id))
+      .sort((a, b) => a.order[lineId] - b.order[lineId]);
+
+    for (let i = 0; i < seq.length; i++) {
+      const k = addNode(seq[i].id, lineId);
+      if (i > 0) {
+        // Si una estación intermedia está cerrada, seq ya la omitió y la
+        // línea queda "cortada" ahí: no se puede pasar por una estación cerrada.
+        const prevOrder = seq[i - 1].order[lineId];
+        const thisOrder = seq[i].order[lineId];
+        if (thisOrder - prevOrder === 1) {
+          addEdge(nodeKey(seq[i - 1].id, lineId), k, cfg.hopMinutes, 'ride');
+        }
+      }
+    }
+  }
+
+  // 2b. Aristas de "transbordo": dentro de una estación, entre cada par de
+  //     líneas que la sirven. En Pantitlán (4 líneas) son 6 pares.
+  for (const s of data.stations) {
+    if (closedStations.has(s.id) || closedTransfers.has(s.id)) continue;
+    const lines = s.lines.filter(l => !closedLines.has(l));
+    for (let i = 0; i < lines.length; i++) {
+      for (let j = i + 1; j < lines.length; j++) {
+        addEdge(nodeKey(s.id, lines[i]), nodeKey(s.id, lines[j]), cfg.transferMinutes, 'transfer');
+      }
+    }
+  }
+
+  // Guardamos data y closures para poder reconstruir variantes del grafo
+  // (lo usa findAlternatives).
+  return { nodes, edges, stationsById, lines: data.lines, cfg, data, closures };
+}
+
+/* ---------- 3. Dijkstra ---------------------------------------------------- */
+
+/**
+ * Calcula la ruta óptima entre dos estaciones.
+ * @returns {object} ruta, o { error: "mensaje" } si no es posible.
+ */
+function findRoute(graph, originId, destId) {
+  const { nodes, edges, stationsById, cfg } = graph;
+
+  if (!stationsById[originId] || !stationsById[destId]) return { error: 'Estación desconocida.' };
+  if (originId === destId) return { error: 'Origen y destino son la misma estación.' };
+
+  // dist: mejor costo conocido para llegar a cada nodo. prev: de dónde venimos.
+  const dist = new Map();
+  const prev = new Map();
+  const visited = new Set();
+
+  // "Fuente virtual": el usuario puede subirse a CUALQUIER línea que pase por
+  // la estación de origen sin costo. Por eso todos esos nodos arrancan en 0.
+  let hasStart = false;
+  for (const [k, n] of nodes) {
+    if (n.stationId === originId) { dist.set(k, 0); hasStart = true; }
+  }
+  if (!hasStart) return { error: 'La estación de origen está cerrada.' };
+
+  let endKey = null;
+
+  // Con ~195 nodos no hace falta un montículo (heap): buscar el nodo
+  // pendiente más barato con un recorrido lineal es instantáneo.
+  while (true) {
+    let current = null, best = Infinity;
+    for (const [k, d] of dist) {
+      if (!visited.has(k) && d < best) { best = d; current = k; }
+    }
+    if (current === null) break;                 // ya no hay nodos alcanzables
+
+    visited.add(current);
+    // Primer nodo del destino que "cerramos" = camino óptimo garantizado.
+    if (nodes.get(current).stationId === destId) { endKey = current; break; }
+
+    for (const e of edges.get(current)) {
+      if (visited.has(e.to)) continue;
+      const cand = best + e.weight;
+      if (cand < (dist.has(e.to) ? dist.get(e.to) : Infinity)) {
+        dist.set(e.to, cand);
+        prev.set(e.to, current);
+      }
+    }
+  }
+
+  if (endKey === null) return { error: 'No hay ruta disponible entre esas estaciones.' };
+
+  // Reconstruir el camino de nodos, del destino hacia atrás.
+  const path = [];
+  for (let k = endKey; k !== undefined; k = prev.get(k)) path.unshift(nodes.get(k));
+
+  return describeRoute(graph, path, dist.get(endKey));
+}
+
+/* ---------- 4. Convertir el camino en instrucciones ------------------------ */
+
+/**
+ * Recibe la secuencia de nodos (estación, línea) y la parte en tramos (legs):
+ * cada vez que cambia la línea empieza un tramo nuevo.
+ */
+function describeRoute(graph, path, totalCost) {
+  const { stationsById, lines, cfg } = graph;
+  const brief = id => ({ id, name: stationsById[id].name });
+
+  // Agrupar nodos consecutivos con la misma línea.
+  const groups = [];
+  for (const n of path) {
+    const g = groups[groups.length - 1];
+    if (g && g.lineId === n.lineId) g.stationIds.push(n.stationId);
+    else groups.push({ lineId: n.lineId, stationIds: [n.stationId] });
+  }
+  // Un nodo de transbordo aparece dos veces seguidas (misma estación, dos
+  // líneas), así que cada grupo ya incluye su estación de subida y bajada.
+
+  const legs = groups.map((g, i) => {
+    const line = lines[g.lineId];
+    const boardId  = g.stationIds[0];
+    const alightId = g.stationIds[g.stationIds.length - 1];
+    const stops = g.stationIds.length - 1;
+
+    // Dirección: comparamos el orden ordinal de subida vs bajada dentro de la
+    // línea. Si crece, vamos hacia la terminal final; si decrece, hacia la inicial.
+    const ordBoard  = stationsById[boardId].order[g.lineId];
+    const ordAlight = stationsById[alightId].order[g.lineId];
+    const towardsEnd = ordAlight > ordBoard;
+    const direction = towardsEnd ? line.terminals[1] : line.terminals[0];
+
+    return {
+      index: i + 1,
+      lineId: g.lineId,
+      lineName: line.name,
+      color: line.color,
+      color2: line.color2 || null,
+      textDark: !!line.textDark,
+      direction,
+      board: brief(boardId),
+      alight: brief(alightId),
+      stations: g.stationIds.map(brief),                 // incluye subida y bajada
+      intermediate: g.stationIds.slice(1, -1).map(brief),
+      stops,                                             // "son N estaciones"
+      minutes: stops * cfg.hopMinutes,
+    };
+  });
+
+  const transfers = legs.length - 1;
+  const rideMinutes = legs.reduce((a, l) => a + l.minutes, 0);
+  const transferMinutes = transfers * cfg.transferMinutes;
+
+  // Secuencia completa de estaciones para la "tira" vertical, marcando
+  // origen, destino y transbordos (con la línea a la que hay que cambiar).
+  const sequence = [];
+  legs.forEach((leg, i) => {
+    leg.stations.forEach((st, j) => {
+      if (i > 0 && j === 0) {
+        // Esta estación ya la agregó el tramo anterior: solo la marcamos.
+        const last = sequence[sequence.length - 1];
+        last.kind = 'transfer';
+        last.changeTo = leg.lineId;
+        return;
+      }
+      sequence.push({ ...st, lineId: leg.lineId, kind: 'ride' });
+    });
+  });
+  sequence[0].kind = 'origin';
+  sequence[sequence.length - 1].kind = 'destination';
+
+  return {
+    origin: legs[0].board,
+    destination: legs[legs.length - 1].alight,
+    legs,
+    transfers,
+    transferStations: legs.slice(1).map(l => l.board),
+    linesUsed: [...new Set(legs.map(l => l.lineId))],
+    rideMinutes,
+    transferMinutes,
+    totalMinutes: rideMinutes + transferMinutes,   // igual a totalCost de Dijkstra
+    totalCost,
+    sequence,
+  };
+}
+
+/* ---------- 5. Rutas alternativas ----------------------------------------- */
+
+// "Firma" de una ruta: misma secuencia de tramos = misma ruta.
+function routeSignature(route) {
+  return route.legs.map(l => l.lineId + ':' + l.board.id + '>' + l.alight.id).join('|');
+}
+
+/**
+ * Busca rutas realmente distintas a la óptima. Estrategia: se vuelve a
+ * calcular la ruta prohibiendo, una a la vez, (a) cada transbordo de la
+ * óptima y (b) cada línea que usa. Se descartan duplicados, la propia
+ * óptima y las que tarden más de `maxFactor` veces la óptima.
+ * @returns {Array} rutas ordenadas por tiempo, cada una con deltaMinutes y variant.
+ */
+function findAlternatives(graph, optimal, { max = 2, maxFactor = 2 } = {}) {
+  const { data, closures, cfg } = graph;
+  const seen = new Set([routeSignature(optimal)]);
+  const found = [];
+
+  function tryWith(extra, variant) {
+    const merged = {
+      stations:  [...(closures.stations  || []), ...(extra.stations  || [])],
+      lines:     [...(closures.lines     || []), ...(extra.lines     || [])],
+      transfers: [...(closures.transfers || []), ...(extra.transfers || [])],
+    };
+    const r = findRoute(buildGraph(data, merged, cfg), optimal.origin.id, optimal.destination.id);
+    if (r.error) return;
+    const sig = routeSignature(r);
+    if (seen.has(sig) || r.totalMinutes > optimal.totalMinutes * maxFactor) return;
+    seen.add(sig);
+    r.deltaMinutes = r.totalMinutes - optimal.totalMinutes;
+    r.variant = variant;
+    found.push(r);
+  }
+
+  for (const t of optimal.transferStations) tryWith({ transfers: [t.id] }, 'sin cambiar en ' + t.name);
+  for (const l of optimal.linesUsed)        tryWith({ lines: [l] },        'sin usar ' + graph.lines[l].name);
+
+  found.sort((a, b) => a.totalMinutes - b.totalMinutes);
+  return found.slice(0, max);
+}
+
+/* ---------- 6. Utilidades de búsqueda ------------------------------------- */
+
+// Quita acentos y mayúsculas para comparar: "Tláhuac" -> "tlahuac".
+function normalize(str) {
+  return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
+// Busca estaciones cuyo nombre contenga el texto (sin acentos ni mayúsculas).
+function searchStations(data, query, limit = 8) {
+  const q = normalize(query.trim());
+  if (!q) return [];
+  const starts = [], contains = [];
+  for (const s of data.stations) {
+    const n = normalize(s.name);
+    if (n.startsWith(q)) starts.push(s);
+    else if (n.includes(q)) contains.push(s);
+  }
+  return [...starts, ...contains].slice(0, limit);
+}
+
+// Distancia en metros entre dos coordenadas (fórmula de Haversine).
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 6371000, toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+// Estación más cercana a una coordenada.
+function nearestStation(data, lat, lng) {
+  let best = null, bestDist = Infinity;
+  for (const s of data.stations) {
+    const d = haversine(lat, lng, s.lat, s.lng);
+    if (d < bestDist) { bestDist = d; best = s; }
+  }
+  return { station: best, meters: Math.round(bestDist) };
+}
+
+/* ---------- 7. Exportar (solo para pruebas en Node) ------------------------ */
+// En el navegador estas funciones quedan como globales dentro del <script>.
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { ROUTER_DEFAULTS, CLOSURES, buildGraph, findRoute, describeRoute, findAlternatives, routeSignature,
+                     searchStations, nearestStation, haversine, normalize, nodeKey };
+}
+</script>
+<!-- ROUTER:END -->
+
+<script>
+/* ============================================================================
+   Interfaz. Todo lo que ves en pantalla se arma aquí; el cálculo de rutas
+   vive en el bloque anterior (router.js).
+   ========================================================================== */
+
+let DATA = null;          // contenido de stations.json
+let GRAPH = null;         // grafo construido una sola vez al cargar
+let currentRoute = null;  // última ruta óptima calculada (para las alternativas)
+const sel = { from: null, to: null, 'sa-origen': null, lookup: null };   // ids de estación elegidos por campo
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+// "Garibaldi/Lagunilla" -> "Garibaldi": nombre corto para etiquetas del mapa.
+const shortName = name => name.split('/')[0].trim();
+
+/* ---------- Configuración del módulo de autobús ---------------------------
+   Cada destino es un objeto; para agregar otro (p. ej. Puebla desde TAPO o
+   Toluca desde Observatorio) basta con añadir una entrada aquí. Ninguna
+   función depende del nombre "Santa Ana".
+   -------------------------------------------------------------------------- */
+const METRO_OPENS = ['07:00', '05:00', '05:00', '05:00', '05:00', '05:00', '06:00'];  // índice = getDay(): 0 = domingo … 6 = sábado
+
+const BUS_DESTINATIONS = {
+  'santa-ana-chiautempan': {
+    name: 'Santa Ana Chiautempan',
+    emoji: '🚌',
+    terminal: 'TAPO',
+    metroStation: 'san-lazaro',   // id en stations.json de la estación pegada a la terminal
+    metroMarginMinutes: 12,       // margen sobre el tiempo del motor: perder la corrida cuesta 1–2 h
+    walkMinutes: 5,               // del andén del Metro a la taquilla
+    bufferMinutes: 15,            // colchón antes de la salida del autobús (COLCHON)
+    tripMinutes: 180,             // duración del viaje en autobús (VIAJE_BUS)
+    phone: '246-137-9308',        // taquilla
+    days: {                       // horarios de salida desde la terminal
+      ls: { label: 'Lunes a Sábado',              departures: ['07:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:30'] },
+      vi: { label: 'Viernes (con salidas extra)', departures: ['07:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '19:30', '20:00'] },
+      do: { label: 'Domingo',                     departures: ['07:00', '09:30', '11:00', '14:30', '15:30', '16:30', '17:30', '18:30', '19:30', '20:30'] },
+    },
+    dayByWeekday: ['do', 'ls', 'ls', 'ls', 'ls', 'vi', 'ls'],   // qué horario aplica según getDay()
+  },
+};
+
+/* ---------- Carga de datos ------------------------------------------------ */
+async function init() {
+  try {
+    const res = await fetch('stations.json');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    DATA = await res.json();
+  } catch (e) {
+    $('loading').innerHTML = `No pude cargar <b>stations.json</b> (${esc(e.message)}).<br>
+      Si abriste el archivo con doble clic (file://), el navegador bloquea la carga.
+      Sirve la carpeta con <code>python -m http.server</code> y abre <code>http://localhost:8000</code>.`;
+    return;
+  }
+  GRAPH = buildGraph(DATA, CLOSURES, ROUTER_DEFAULTS);
+  $('loading').hidden = true;
+  bindUI();
+  setupFavorites();
+  setupLookup();
+  setupBusModule();
+  restoreFromHash();
+  // Atrás/adelante del navegador o un enlace compartido con #origen/destino.
+  window.addEventListener('hashchange', restoreFromHash);
+}
+
+/* ---------- Colores de línea ---------------------------------------------- */
+// Color de línea para usar como TEXTO sobre fondo oscuro. Las líneas oscuras
+// (L9 café, L2 azul, LA morado) no se leen, así que las aclaramos mezclando
+// con blanco. Las píldoras y los trazos del mapa conservan el color oficial.
+function lineTextColor(hex) {
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  const lin = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+  const lum = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);   // luminancia WCAG
+  if (lum >= 0.18) return hex;
+  const mix = c => Math.round(c + (255 - c) * 0.45);
+  return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
+}
+
+function linePill(id, big = false) {
+  const l = DATA.lines[id];
+  let style = `background:${l.color}`;
+  if (l.color2) style += `;box-shadow:inset 0 -3px 0 ${l.color2}`;   // Línea B bicolor
+  return `<span class="lpill${l.textDark ? '' : ' light-text'}${big ? ' big' : ''}" style="${style}" title="${esc(l.name)}">${esc(id)}</span>`;
+}
+
+/* ---------- Autocompletar -------------------------------------------------- */
+// Cada campo tiene su input (id = key), su lista (id = key + '-list') y su
+// botón × (data-clear = key). onEnter: qué hacer al presionar Enter;
+// onPick: qué hacer cuando queda elegida una estación.
+function setupAutocomplete(key, onEnter, onPick) {
+  const input = $(key), list = $(key + '-list');
+  const clearBtn = document.querySelector(`.clear[data-clear="${key}"]`);
+  let items = [], active = -1;
+
+  function render() {
+    const q = input.value;
+    items = searchStations(DATA, q, 8);
+    active = -1;
+    if (!q.trim()) { list.hidden = true; return; }
+    if (!items.length) { list.innerHTML = `<li class="ac-empty">Sin resultados para “${esc(q)}”</li>`; list.hidden = false; return; }
+    const nq = normalize(q.trim());
+    // Si escribió el nombre completo y solo hay esa coincidencia, la tomamos
+    // y cerramos la lista para no tapar el botón "Calcular ruta".
+    if (items.length === 1 && normalize(items[0].name) === nq) { pick(items[0]); return; }
+    list.innerHTML = items.map((s, i) => {
+      // Resaltar el texto que coincide (comparando sin acentos).
+      const n = normalize(s.name), at = n.indexOf(nq);
+      const label = at < 0 ? esc(s.name)
+        : esc(s.name.slice(0, at)) + '<mark>' + esc(s.name.slice(at, at + nq.length)) + '</mark>' + esc(s.name.slice(at + nq.length));
+      return `<li class="ac-item" data-i="${i}"><span class="nm">${label}</span><span class="pills">${s.lines.map(l => linePill(l)).join('')}</span></li>`;
+    }).join('');
+    list.hidden = false;
+  }
+  function pick(station) {
+    sel[key] = station.id;
+    input.value = station.name;
+    input.classList.add('picked');
+    clearBtn.hidden = false;
+    list.hidden = true;
+    hideError();
+    onPick && onPick(station);
+  }
+  function clear() {
+    sel[key] = null; input.value = ''; input.classList.remove('picked'); clearBtn.hidden = true; list.hidden = true;
+  }
+  // Si el usuario escribió algo pero no eligió de la lista, aceptamos
+  // el resultado si es exacto o si solo hay una coincidencia.
+  function settle() {
+    if (sel[key]) return;
+    const q = normalize(input.value.trim());
+    if (!q) return;
+    const exact = DATA.stations.find(s => normalize(s.name) === q);
+    const found = exact || (items.length === 1 ? items[0] : null);
+    if (found) pick(found);
+  }
+
+  input.addEventListener('input', () => { sel[key] = null; input.classList.remove('picked'); clearBtn.hidden = !input.value; render(); });
+  input.addEventListener('focus', () => { if (!sel[key]) render(); });
+  input.addEventListener('keydown', e => {
+    if (list.hidden || !items.length) { if (e.key === 'Enter') { settle(); onEnter && onEnter(); } return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); active = (active + 1) % items.length; }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); active = (active - 1 + items.length) % items.length; }
+    else if (e.key === 'Enter') { e.preventDefault(); pick(items[active >= 0 ? active : 0]); onEnter && onEnter(); return; }
+    else if (e.key === 'Escape') { list.hidden = true; return; }
+    else return;
+    [...list.children].forEach((li, i) => li.classList.toggle('active', i === active));
+  });
+  // mousedown en vez de click: se dispara antes del blur del input.
+  list.addEventListener('mousedown', e => {
+    const li = e.target.closest('.ac-item'); if (!li) return;
+    e.preventDefault(); pick(items[+li.dataset.i]);
+  });
+  input.addEventListener('blur', () => setTimeout(() => { list.hidden = true; settle(); }, 120));
+  clearBtn.addEventListener('mousedown', e => { e.preventDefault(); clear(); input.focus(); });
+
+  return { pick, clear, setById: id => pick(DATA.stations.find(s => s.id === id)) };
+}
+
+/* ---------- Eventos de la pantalla principal ------------------------------ */
+const ac = {};
+function bindUI() {
+  ac.from = setupAutocomplete('from', () => $('to').focus());
+  ac.to = setupAutocomplete('to', calculate);
+
+  $('btn-swap').addEventListener('click', () => {
+    const f = sel.from, t = sel.to;
+    const fText = $('from').value, tText = $('to').value;
+    if (t) ac.from.setById(t); else { ac.from.clear(); $('from').value = tText; }
+    if (f) ac.to.setById(f); else { ac.to.clear(); $('to').value = fText; }
+    if (sel.from && sel.to && !$('results').hidden) calculate();
+  });
+
+  $('btn-calc').addEventListener('click', calculate);
+  $('btn-geo').addEventListener('click', useMyLocation);
+
+  // Tarjetas colapsables: cualquier .col-head con data-toggle abre/cierra su tarjeta.
+  document.querySelectorAll('.col-head[data-toggle]').forEach(h => h.addEventListener('click', () => $(h.dataset.toggle).classList.toggle('open')));
+
+  // Hora de salida: al cambiarla se recalculan las horas de llegada en pantalla.
+  $('depart').addEventListener('input', updateEtas);
+  $('depart').addEventListener('change', updateEtas);
+  // Y si está en "ahora", refrescamos cada medio minuto para que no se quede vieja.
+  setInterval(() => { if (!$('depart').value) updateEtas(); }, 30000);
+}
+
+function showError(msg) { const e = $('form-err'); e.innerHTML = msg; e.hidden = false; }
+function hideError() { $('form-err').hidden = true; }
+
+/* ---------- Geolocalización ----------------------------------------------- */
+function useMyLocation() {
+  const btn = $('btn-geo'), msg = $('geo-msg');
+  if (!navigator.geolocation) { msg.className = 'geo-msg bad'; msg.textContent = 'Tu navegador no soporta geolocalización.'; msg.hidden = false; return; }
+  btn.disabled = true; btn.textContent = '📍 Buscando tu estación…';
+  navigator.geolocation.getCurrentPosition(pos => {
+    const { station, meters } = nearestStation(DATA, pos.coords.latitude, pos.coords.longitude);
+    const dist = meters >= 1000 ? (meters / 1000).toFixed(1) + ' km' : meters + ' m';
+    msg.className = 'geo-msg';
+    msg.innerHTML = `Estación más cercana: <b>${esc(station.name)}</b> ${station.lines.map(l => linePill(l)).join(' ')} · a ${dist}. La puse como origen.`;
+    msg.hidden = false;
+    ac.from.setById(station.id);
+    btn.disabled = false; btn.textContent = '📍 Usar mi ubicación';
+    if (!sel.to) $('to').focus();
+  }, err => {
+    const reasons = { 1: 'No diste permiso de ubicación.', 2: 'No se pudo determinar tu posición.', 3: 'Se agotó el tiempo de espera.' };
+    msg.className = 'geo-msg bad';
+    msg.textContent = (reasons[err.code] || 'Error de ubicación.') + ' Puedes escribir la estación a mano.';
+    msg.hidden = false;
+    btn.disabled = false; btn.textContent = '📍 Usar mi ubicación';
+  }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+}
+
+/* ---------- Hora de salida y llegada estimada ----------------------------- */
+const pad2 = n => String(n).padStart(2, '0');
+const fmtTime = d => pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+
+// Hora de salida: la del campo "Salgo a las" o, si está vacío, la actual.
+function departureTime() {
+  const v = $('depart').value, now = new Date();
+  if (!v) return { date: now, isNow: true };
+  const [h, m] = v.split(':').map(Number);
+  const d = new Date(now); d.setHours(h, m, 0, 0);
+  return { date: d, isNow: false };
+}
+
+// Rellena todos los "Llegas ~HH:MM" y "Sales HH:MM" que haya en pantalla.
+// Cada .eta trae data-min con los minutos de su ruta, así que sirve tanto
+// para la óptima como para las alternativas.
+function updateEtas() {
+  const { date, isNow } = departureTime();
+  document.querySelectorAll('.eta').forEach(el => {
+    el.textContent = '~' + fmtTime(new Date(date.getTime() + Number(el.dataset.min) * 60000));
+  });
+  document.querySelectorAll('.dep').forEach(el => { el.textContent = fmtTime(date) + (isNow ? ' (ahora)' : ''); });
+}
+
+/* ---------- Calcular y mostrar ------------------------------------------- */
+function calculate() {
+  hideError();
+  if (!sel.from || !sel.to) { showError(!sel.from ? 'Elige la estación de <b>origen</b> de la lista.' : 'Elige la estación de <b>destino</b> de la lista.'); return; }
+  const route = findRoute(GRAPH, sel.from, sel.to);
+  if (route.error) { showError(esc(route.error)); $('results').hidden = true; return; }
+  const hash = '#' + sel.from + '/' + sel.to;
+  if (location.hash !== hash) history.replaceState(null, '', hash);
+  renderRoute(route);
+}
+
+// Si la URL trae #origen/destino, precargar y calcular (sirve para compartir).
+function restoreFromHash() {
+  const m = location.hash.match(/^#([a-z0-9-]+)\/([a-z0-9-]+)$/);
+  if (!m) return;
+  const a = DATA.stations.find(s => s.id === m[1]), b = DATA.stations.find(s => s.id === m[2]);
+  if (!a || !b) return;
+  if (currentRoute && currentRoute.origin.id === a.id && currentRoute.destination.id === b.id) return;  // ya está en pantalla
+  ac.from.setById(a.id); ac.to.setById(b.id); calculate();
+}
+
+function renderRoute(r) {
+  currentRoute = r;
+  $('optimal').innerHTML = routeCard(r, { kind: 'opt' });
+  $('ask').innerHTML = `<div class="card-inner">
+      <div class="ask-q">¿Te acomoda esta ruta?</div>
+      <div class="ask-btns">
+        <button class="ask-btn yes" id="btn-yes" type="button">✅ Sí, con esta voy</button>
+        <button class="ask-btn" id="btn-alts" type="button">🔀 Ver otras alternativas</button>
+      </div></div>`;
+  $('btn-yes').addEventListener('click', () => { $('ask').innerHTML = '<div class="card-inner ask-done">✅ Perfecto. ¡Buen viaje!</div>'; });
+  $('btn-alts').addEventListener('click', showAlternatives);
+  $('btn-fav').addEventListener('click', () => {
+    const res = toggleFav(r.origin.id, r.destination.id);
+    if (!res.ok) showError('No se pudo guardar la favorita. ¿Estás en modo privado o sin espacio?');
+    refreshFavButton();
+  });
+  refreshFavButton();
+  $('alts').innerHTML = '';
+  $('results').hidden = false;
+  updateEtas();
+  $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function showAlternatives() {
+  const alts = findAlternatives(GRAPH, currentRoute, { max: 2, maxFactor: 2 });
+  const box = $('alts');
+  if (!alts.length) {
+    box.innerHTML = `<div class="card"><div class="card-inner tip">No encontré alternativas razonables: cualquier otra ruta tarda más del doble que la óptima.</div></div>`;
+  } else {
+    box.innerHTML = alts.map((a, i) => routeCard(a, { kind: 'alt', index: i + 1 })).join('');
+  }
+  $('ask').innerHTML = `<div class="card-inner tip">Arriba la <b>óptima</b>; abajo ${alts.length ? plural(alts.length, 'alternativa', 'alternativas') : 'nada más'}. Cada una excluye un transbordo o una línea de la óptima.</div>`;
+  updateEtas();
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ---------- Tarjeta completa de una ruta ---------------------------------- */
+function routeCard(r, { kind, index }) {
+  const totalStops = r.legs.reduce((a, l) => a + l.stops, 0);
+  const tbText = r.transfers === 0 ? 'Directo' : plural(r.transfers, 'transbordo', 'transbordos');
+  const tags = kind === 'opt'
+    ? `<span class="tag opt">Ruta óptima</span>`
+    : `<span class="tag alt">Alternativa ${index} · +${r.deltaMinutes} min vs óptima</span><span class="variant">${esc(r.variant)}</span>`;
+  return `<div class="card">
+    <div class="card-head">
+      <div class="tags">${tags}</div>
+      <div class="route-od"><div class="od">${esc(r.origin.name)}<span class="arrow">→</span>${esc(r.destination.name)}</div></div>
+      <div class="summary">
+        <div class="stat"><div class="lbl">Tiempo</div><div class="val big">~${r.totalMinutes}<small>min</small></div>
+          <div class="sub">Llegas <b class="eta" data-min="${r.totalMinutes}"></b></div></div>
+        <div class="stat"><div class="lbl">Transbordos</div><div class="val">${r.transfers}</div><div class="sub">${tbText}</div></div>
+        <div class="stat"><div class="lbl">Estaciones</div><div class="val">${totalStops}</div><div class="sub">recorridas</div></div>
+      </div>
+      <div class="lines-mini"><span class="lbl">Líneas:</span>${r.linesUsed.map(l => linePill(l, true)).join('')}</div>
+      <div class="dep-line">🕒 Sales <b class="dep"></b> · ${r.rideMinutes} min de viaje${r.transfers ? ' + ' + r.transferMinutes + ' de transbordo' : ''}</div>
+      ${kind === 'opt' ? '<button class="star-btn" id="btn-fav" type="button"></button>' : ''}
+    </div>
+    <div class="steps-inner">
+      <div class="sec-label">🧭 Qué dirección tomar</div>
+      ${directionsList(r)}
+      <div class="sec-label">🗺️ Mapa de la ruta</div>
+      <div class="block">${routeMap(r)}</div>
+      <div class="sec-label">🚇 Estaciones del recorrido</div>
+      <div class="block">${stationStrip(r)}</div>
+      <div class="tip">💡 Tiempo estimado con <b>${ROUTER_DEFAULTS.hopMinutes} min</b> por estación y <b>${ROUTER_DEFAULTS.transferMinutes} min</b> por transbordo. Antes de salir revisa el estado del servicio.</div>
+    </div></div>`;
+}
+
+/* ---------- Tarjetas "qué dirección tomar", una por tramo ----------------- */
+function directionsList(r) {
+  return '<div class="dirs">' + r.legs.map((leg, i) => {
+    const last = i === r.legs.length - 1;
+    const sub = last
+      ? `Súbete en <b>${esc(leg.board.name)}</b> y baja en <b>${esc(leg.alight.name)}</b> (tu destino).`
+      : `Súbete en <b>${esc(leg.board.name)}</b> y baja en <b>${esc(leg.alight.name)}</b> para cambiar a ${esc(r.legs[i + 1].lineName)}.`;
+    return `<div class="diritem" style="border-left-color:${leg.color}">
+      <div class="num">${leg.index}</div>
+      <div class="dirbody">
+        <div class="dirtop">${linePill(leg.lineId)}<span class="lname">${esc(leg.lineName)}</span></div>
+        <div class="dirhacia" style="color:${lineTextColor(leg.color)}"><span class="arr">▶</span>dirección ${esc(leg.direction)}</div>
+        <div class="dirsub">${sub}</div>
+        <div class="dirstats">
+          <span class="chip">🚇 <b>${leg.stops}</b> ${leg.stops === 1 ? 'estación' : 'estaciones'}</span>
+          <span class="chip">⏱ ~<b>${leg.minutes}</b> min</span>
+        </div>
+      </div></div>`;
+  }).join('') + '</div>';
+}
+
+/* ---------- Mapa esquemático (horizontal, se dobla en cada transbordo) ----- */
+// Trazo de línea con "halo" claro debajo para que las líneas oscuras (L9 café)
+// se vean sobre el fondo, y rayas verdes encima para la Línea B bicolor.
+function lineStroke(x1, y1, x2, y2, leg, w) {
+  let s = `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(255,255,255,.14)" stroke-width="${w + 4}" stroke-linecap="round"/>`;
+  s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${leg.color}" stroke-width="${w}" stroke-linecap="round"/>`;
+  if (leg.color2) s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${leg.color2}" stroke-width="${w * 0.4}" stroke-dasharray="7 6"/>`;
+  return s;
+}
+
+function routeMap(r) {
+  const legs = r.legs, S = legs.length, pad = 52, W = 360, dy = 86;
+  const Hn = Math.ceil(S / 2), Vn = Math.floor(S / 2);
+  const H = Vn > 0 ? (pad * 2 + Vn * dy) : 150, dx = (W - 2 * pad) / Hn;
+  // Puntos: se alterna horizontal / vertical para que cada transbordo sea un doblez.
+  let x = pad, y = Vn > 0 ? (H - pad) : H / 2; const pts = [{ x, y }];
+  for (let i = 0; i < S; i++) { if (i % 2 === 0) x += dx; else y -= dy; pts.push({ x, y }); }
+
+  let s = `<svg viewBox="0 0 ${W} ${H + 8}" xmlns="http://www.w3.org/2000/svg" font-family="Hanken Grotesk,system-ui,sans-serif">`;
+  for (let i = 0; i < S; i++) {
+    const a = pts[i], b = pts[i + 1];
+    s += lineStroke(a.x, a.y, b.x, b.y, legs[i], 9);
+    // Puntitos que sugieren las estaciones intermedias (máximo 3).
+    const ticks = Math.min(legs[i].intermediate.length, 3);
+    for (let t = 1; t <= ticks; t++) { const f = t / (ticks + 1); s += `<circle cx="${a.x + (b.x - a.x) * f}" cy="${a.y + (b.y - a.y) * f}" r="2.6" fill="#fff" opacity=".7"/>`; }
+  }
+  for (let k = 0; k < pts.length; k++) {
+    const p = pts[k], isO = k === 0, isD = k === pts.length - 1;
+    const cIn = isO ? legs[0].color : legs[k - 1].color, cOut = isD ? legs[S - 1].color : legs[k].color;
+    let name, tag, tc;
+    if (isO) { name = legs[0].board.name; tag = 'Origen'; tc = '#8b94a7'; }
+    else if (isD) { name = legs[S - 1].alight.name; tag = 'Destino'; tc = '#E97B11'; }
+    else { name = legs[k - 1].alight.name; tag = 'Cambia a L' + legs[k].lineId; tc = '#FFD800'; }
+    if (isO) s += `<circle cx="${p.x}" cy="${p.y}" r="9" fill="${cOut}" stroke="#fff" stroke-width="3"/>`;
+    else if (isD) s += `<rect x="${p.x - 9}" y="${p.y - 9}" width="18" height="18" rx="4" fill="${cIn}" stroke="#fff" stroke-width="3"/>`;
+    else s += `<circle cx="${p.x}" cy="${p.y}" r="10" fill="#161a23" stroke="#fff" stroke-width="3"/><circle cx="${p.x}" cy="${p.y}" r="3.5" fill="#FFD800"/>`;
+    // Etiquetas: los puntos donde ARRANCA un tramo horizontal (índice par) van
+    // abajo-derecha; los puntos donde TERMINA (índice impar) van arriba-izquierda.
+    // Así dos etiquetas de la misma fila nunca se enciman.
+    const above = k % 2 === 1;
+    const right = above || p.x > W * 0.62;          // anclar a la izquierda del punto
+    const lx = right ? p.x - 14 : p.x + 14, anc = right ? 'end' : 'start';
+    const ly = above ? p.y - 15 : p.y + 24;          // línea base del nombre
+    const tagY = above ? p.y - 28 : ly + 13;         // etiqueta pequeña: arriba del nombre si va "above"
+    s += `<text x="${lx}" y="${ly}" text-anchor="${anc}" fill="#f4f5f7" font-size="13" font-weight="700">${esc(shortName(name))}</text>`;
+    s += `<text x="${lx}" y="${tagY}" text-anchor="${anc}" fill="${tc}" font-size="9.5" font-weight="700" letter-spacing=".5">${esc(tag.toUpperCase())}</text>`;
+  }
+  return s + '</svg>';
+}
+
+/* ---------- Tira vertical con TODAS las estaciones ------------------------ */
+function stationStrip(r) {
+  const legs = r.legs, nodes = [];
+  legs.forEach((leg, li) => {
+    const start = li === 0 ? 0 : 1;   // la estación de transbordo ya la puso el tramo anterior
+    for (let si = start; si < leg.stations.length; si++) {
+      const isLastOfLeg = si === leg.stations.length - 1;
+      const isFirst = li === 0 && si === 0;
+      const isLast = li === legs.length - 1 && isLastOfLeg;
+      let type, seg, cap, cc;
+      if (isFirst) { type = 'origin'; seg = leg; cap = 'Toma ' + leg.lineName + ' · dir. ' + leg.direction; cc = lineTextColor(leg.color); }
+      else if (isLast) { type = 'dest'; seg = null; cap = 'Destino'; cc = '#E97B11'; }
+      else if (isLastOfLeg) { const nx = legs[li + 1]; type = 'transfer'; seg = nx; cap = 'Cambia a ' + nx.lineName + ' · dir. ' + nx.direction; cc = lineTextColor(nx.color); }
+      else { type = 'inter'; seg = leg; cap = null; }
+      nodes.push({ name: leg.stations[si].name, type, seg, cap, cc });
+    }
+  });
+  const N = nodes.length, top = 22, rowH = 34, X = 22, TX = 42, Hsvg = top + (N - 1) * rowH + 28;
+  let s = `<svg viewBox="0 0 360 ${Hsvg}" xmlns="http://www.w3.org/2000/svg" font-family="Hanken Grotesk,system-ui,sans-serif">`;
+  for (let k = 0; k < N - 1; k++) s += lineStroke(X, top + k * rowH, X, top + (k + 1) * rowH, nodes[k].seg, 6);
+  nodes.forEach((nd, k) => {
+    const y = top + k * rowH;
+    if (nd.type === 'origin') s += `<circle cx="${X}" cy="${y}" r="7" fill="${nd.seg.color}" stroke="#fff" stroke-width="3"/>`;
+    else if (nd.type === 'dest') s += `<rect x="${X - 7}" y="${y - 7}" width="14" height="14" rx="3" fill="${nodes[k - 1].seg.color}" stroke="#fff" stroke-width="3"/>`;
+    else if (nd.type === 'transfer') s += `<circle cx="${X}" cy="${y}" r="8" fill="#1d2230" stroke="#fff" stroke-width="3"/><circle cx="${X}" cy="${y}" r="3" fill="#FFD800"/>`;
+    else s += `<circle cx="${X}" cy="${y}" r="3.6" fill="#cdd4e2"/>`;
+    const bold = nd.type !== 'inter';
+    s += `<text x="${TX}" y="${y + 4}" font-size="${bold ? 12.5 : 11.5}" font-weight="${bold ? 700 : 500}" fill="${bold ? '#f4f5f7' : '#9aa3b5'}">${esc(nd.name)}</text>`;
+    if (nd.cap) { const pre = nd.type === 'transfer' ? '⇄ ' : (nd.type === 'dest' ? '◆ ' : '▸ '); s += `<text x="${TX}" y="${y + 17}" font-size="10" font-weight="700" fill="${nd.cc}">${pre}${esc(nd.cap)}</text>`; }
+  });
+  return s + '</svg>';
+}
+
+/* ============================================================================
+   Módulo: viaje en autobús desde una terminal (Santa Ana Chiautempan)
+   El tiempo en Metro hasta la terminal sale de findRoute(origen, estación de
+   la terminal), así que funciona desde cualquiera de las 163 estaciones.
+   ========================================================================== */
+const toMin = hhmm => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
+const toHHMM = min => { while (min < 0) min += 1440; while (min >= 1440) min -= 1440; return pad2(Math.floor(min / 60)) + ':' + pad2(min % 60); };
+
+function setupBusModule() {
+  ac['sa-origen'] = setupAutocomplete('sa-origen', () => $('sa-hora').focus());
+
+  // Selector de destino (uno por entrada en BUS_DESTINATIONS).
+  const destSel = $('sa-dest');
+  destSel.innerHTML = Object.entries(BUS_DESTINATIONS).map(([k, d]) => `<option value="${k}">${esc(d.name)} · desde ${esc(d.terminal)}</option>`).join('');
+  destSel.addEventListener('change', fillDayOptions);
+  fillDayOptions();
+
+  $('sa-calc').addEventListener('click', calcBusTrip);
+}
+
+// Llena el selector de día con los horarios del destino elegido y
+// preselecciona el que aplica hoy.
+function fillDayOptions() {
+  const d = BUS_DESTINATIONS[$('sa-dest').value];
+  $('sa-title').innerHTML = `Viaje a ${esc(d.name)}<small>Calcula a qué hora salir del Metro para llegar a tu hora</small>`;
+  $('sa-emoji').textContent = d.emoji || '🚌';
+  const daySel = $('sa-dia');
+  daySel.innerHTML = Object.entries(d.days).map(([k, v]) => `<option value="${k}">${esc(v.label)}</option>`).join('');
+  daySel.value = d.dayByWeekday[new Date().getDay()];
+  $('sa-result').className = 'result';
+}
+
+function calcBusTrip() {
+  const dest = BUS_DESTINATIONS[$('sa-dest').value];
+  const originId = sel['sa-origen'];
+  const dayKey = $('sa-dia').value, hora = $('sa-hora').value;
+  const errEl = $('sa-err'), resEl = $('sa-result');
+  errEl.hidden = true; resEl.className = 'result';
+
+  const fail = msg => { errEl.innerHTML = msg; errEl.hidden = false; };
+  if (!originId) return fail('Elige la estación desde la que sales.');
+  if (!hora) return fail('Pon la hora a la que quieres llegar.');
+
+  // 1) Tiempo en Metro hasta la estación de la terminal (motor de rutas).
+  const terminalSt = GRAPH.stationsById[dest.metroStation];
+  let route = null, metroMin = 0;
+  if (originId !== dest.metroStation) {
+    route = findRoute(GRAPH, originId, dest.metroStation);
+    if (route.error) return fail(esc(route.error));
+    metroMin = route.totalMinutes;
+  }
+  const originName = GRAPH.stationsById[originId].name;
+  // El motor da tiempos promedio; para no perder el autobús se suma un margen
+  // configurable (solo si hay tramo en Metro) más la caminata a la terminal.
+  const margin = route ? (dest.metroMarginMinutes ?? 12) : 0;
+  const metroTotal = metroMin + margin + dest.walkMinutes;
+
+  // 2) Elegir corrida: la última cuya llegada sea ≤ la hora deseada.
+  const target = toMin(hora);
+  const corridas = dest.days[dayKey].departures.map(c => ({ hhmm: c, salida: toMin(c), llegada: toMin(c) + dest.tripMinutes }));
+  let elegida = null, tarde = false;
+  for (const c of corridas) if (c.llegada <= target && (!elegida || c.llegada > elegida.llegada)) elegida = c;
+  if (!elegida) {   // ninguna llega a tiempo: la más cercana después (llegas un poco tarde)
+    for (const c of corridas) if (c.llegada >= target && (!elegida || c.llegada < elegida.llegada)) elegida = c;
+    tarde = true;
+  }
+  if (!elegida) {
+    const ult = corridas[corridas.length - 1];
+    return fail(`No hay corridas para llegar a las ${esc(hora)}. La última del día sale ${ult.hhmm} y llega a las ${toHHMM(ult.llegada)}.`);
+  }
+
+  // 3) Cuentas hacia atrás.
+  const llegadaTerminal = elegida.salida - dest.bufferMinutes;
+  const salidaMetro = llegadaTerminal - metroTotal;
+  const diff = elegida.llegada - target;
+
+  let alerts = '';
+  if (tarde) alerts += `<div class="alert">⚠️ No hay una corrida que te haga llegar a las ${esc(hora)}. Te pongo la más cercana: <b>llegas ${Math.abs(diff)} min ${diff >= 0 ? 'después' : 'antes'}</b> de tu hora objetivo.</div>`;
+  else if (Math.abs(diff) >= 30) alerts += `<div class="alert">ℹ️ La corrida más conveniente te deja en ${esc(dest.name)} <b>${Math.abs(diff)} min antes</b> de tu hora (${esc(hora)}). La siguiente te haría llegar tarde.</div>`;
+  const opens = dayKey === 'do' ? METRO_OPENS[0] : METRO_OPENS[1];
+  if (salidaMetro < toMin(opens)) alerts += `<div class="alert">🌙 La salida del Metro cae <b>antes de la apertura</b> (abre 5:00 L–V, 6:00 sábado, 7:00 domingo). Considera otra corrida.</div>`;
+
+  const rutaTxt = route
+    ? route.legs.map(l => `${linePill(l.lineId)} dir. ${esc(l.direction)}`).join(' → ')
+      + `<br><b>${metroMin} min</b> de Metro + <b>${margin}</b> de margen + <b>${dest.walkMinutes}</b> caminando a ${esc(dest.terminal)} = <b>${metroTotal} min</b>.`
+    : `Ya estás en <b>${esc(terminalSt.name)}</b>: solo <b>${dest.walkMinutes} min</b> caminando a ${esc(dest.terminal)}.`;
+
+  resEl.className = 'result show' + (tarde ? ' warn' : '');
+  resEl.innerHTML = `
+    <div class="result-row"><div class="rr-ico">🚇</div><div class="rr-body">
+      <div class="rr-lbl">Sal del Metro ${esc(originName)}</div>
+      <div class="rr-val big">${toHHMM(salidaMetro)}</div>
+      <div class="rr-sub">${rutaTxt}</div>
+    </div></div>
+    <div class="result-row"><div class="rr-ico">🎫</div><div class="rr-body">
+      <div class="rr-lbl">Llega a ${esc(dest.terminal)} antes de</div>
+      <div class="rr-val">${toHHMM(llegadaTerminal)}</div>
+      <div class="rr-sub">${dest.bufferMinutes} min de colchón para tu boleto.</div>
+    </div></div>
+    <div class="result-row"><div class="rr-ico">🚌</div><div class="rr-body">
+      <div class="rr-lbl">Toma el autobús de</div>
+      <div class="rr-val">${elegida.hhmm}</div>
+      <div class="rr-sub">${esc(dest.terminal)} → ${esc(dest.name)}${dest.phone ? `, taquilla <b>${esc(dest.phone)}</b>` : ''}.</div>
+    </div></div>
+    <div class="result-row"><div class="rr-ico">📍</div><div class="rr-body">
+      <div class="rr-lbl">Llegas a ${esc(dest.name)}</div>
+      <div class="rr-val">${toHHMM(elegida.llegada)}</div>
+      <div class="rr-sub">~${Math.round(dest.tripMinutes / 60 * 10) / 10} h de viaje, terminal a terminal.</div>
+    </div></div>
+    ${alerts}
+    ${route ? `<button class="link-btn" type="button" id="sa-ver-ruta">🗺️ Ver esta ruta en el planificador</button>` : ''}`;
+  if (route) $('sa-ver-ruta').addEventListener('click', () => {
+    ac.from.setById(originId); ac.to.setById(dest.metroStation);
+    $('depart').value = toHHMM(salidaMetro);
+    calculate();
+  });
+}
+
+/* ============================================================================
+   Favoritas: pares origen-destino guardados en localStorage bajo la clave
+   'metrocdmx-favs' como [{ from, to, added }, ...].
+   ========================================================================== */
+const FAVS_KEY = 'metrocdmx-favs';
+
+function loadFavs() {
+  try {
+    const v = JSON.parse(localStorage.getItem(FAVS_KEY) || '[]');
+    return Array.isArray(v) ? v.filter(f => f && f.from && f.to) : [];
+  } catch (e) { return []; }
+}
+function saveFavs(list) {
+  try { localStorage.setItem(FAVS_KEY, JSON.stringify(list)); return true; }
+  catch (e) { return false; }   // modo privado, sin espacio, etc.
+}
+const isFav = (from, to) => loadFavs().some(f => f.from === from && f.to === to);
+
+function toggleFav(from, to) {
+  let list = loadFavs();
+  if (isFav(from, to)) list = list.filter(f => !(f.from === from && f.to === to));
+  else list.unshift({ from, to, added: new Date().toISOString() });
+  const ok = saveFavs(list);
+  renderFavs();
+  const on = isFav(from, to);
+  if (on) $('favs').classList.add('open');   // que se vea dónde quedó guardada
+  return { ok, on };
+}
+
+function refreshFavButton() {
+  const b = $('btn-fav');
+  if (!b || !currentRoute) return;
+  const on = isFav(currentRoute.origin.id, currentRoute.destination.id);
+  b.textContent = on ? '★ Guardada en favoritas' : '☆ Guardar como favorita';
+  b.classList.toggle('on', on);
+}
+
+function setupFavorites() {
+  renderFavs();
+  if (loadFavs().length) $('favs').classList.add('open');
+  // Un solo listener para toda la lista: tocar = cargar la ruta; × = quitar.
+  $('fav-list').addEventListener('click', e => {
+    const del = e.target.closest('.del');
+    const item = e.target.closest('.fav-item');
+    if (!item) return;
+    const f = loadFavs()[+item.dataset.i];
+    if (!f) return;
+    if (del) { toggleFav(f.from, f.to); refreshFavButton(); return; }
+    ac.from.setById(f.from); ac.to.setById(f.to); calculate();
+  });
+}
+
+function renderFavs() {
+  const list = loadFavs();
+  $('fav-count').textContent = list.length ? `(${list.length})` : '';
+  const box = $('fav-list');
+  if (!list.length) { box.innerHTML = '<div class="fav-empty">Aún no tienes favoritas. Calcula una ruta y toca <b>☆ Guardar como favorita</b>.</div>'; return; }
+  box.innerHTML = '<div class="fav-list">' + list.map((f, i) => {
+    const a = GRAPH.stationsById[f.from], b = GRAPH.stationsById[f.to];
+    if (!a || !b) return '';   // por si una estación cambió de id en stations.json
+    const r = findRoute(GRAPH, f.from, f.to);
+    const meta = r.error ? '' : `~${r.totalMinutes} min · ${r.transfers === 0 ? 'directo' : plural(r.transfers, 'transbordo', 'transbordos')} ` + r.linesUsed.map(l => linePill(l)).join('');
+    return `<div class="fav-item" data-i="${i}" role="button">
+      <div class="od-wrap"><div class="od">${esc(a.name)}<span class="arrow">→</span>${esc(b.name)}</div><div class="meta">${meta}</div></div>
+      <button class="del" type="button" aria-label="Quitar de favoritas" title="Quitar">×</button>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+/* ============================================================================
+   Buscador de estación: líneas que pasan y estaciones vecinas en cada línea.
+   ========================================================================== */
+let LINE_SEQ = null;   // { lineId: [estaciones en orden] }, se arma una vez
+
+function setupLookup() {
+  LINE_SEQ = {};
+  for (const l of Object.keys(DATA.lines)) LINE_SEQ[l] = DATA.stations.filter(s => s.lines.includes(l)).sort((a, b) => a.order[l] - b.order[l]);
+  ac.lookup = setupAutocomplete('lookup', null, st => renderStationInfo(st.id));
+  $('lookup-info').addEventListener('click', e => {
+    const b = e.target.closest('button[data-use]'); if (!b) return;
+    if (b.dataset.use === 'from') ac.from.setById(sel.lookup); else ac.to.setById(sel.lookup);
+    $('from').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+}
+
+function renderStationInfo(id) {
+  const s = GRAPH.stationsById[id];
+  let h = `<div class="st-name">${esc(s.name)} ${s.lines.map(l => linePill(l, true)).join(' ')}</div>
+    <div class="st-sub">${s.transfer ? `Estación de transbordo · ${plural(s.lines.length, 'línea', 'líneas')}` : 'Estación de paso · 1 línea'}</div>`;
+  for (const l of s.lines) {
+    const line = DATA.lines[l], seq = LINE_SEQ[l], idx = s.order[l];
+    const prev = seq.find(x => x.order[l] === idx - 1), next = seq.find(x => x.order[l] === idx + 1);
+    h += `<div class="st-line" style="border-left-color:${line.color}">
+      <div class="top">${linePill(l)} ${esc(line.name)}<span class="pos">estación ${idx} de ${seq.length}</span></div>
+      <div class="nb">
+        <div><span class="term">← hacia ${esc(line.terminals[0])}</span><b>${prev ? esc(prev.name) : 'Aquí termina la línea'}</b></div>
+        <div><span class="term">hacia ${esc(line.terminals[1])} →</span><b>${next ? esc(next.name) : 'Aquí termina la línea'}</b></div>
+      </div></div>`;
+  }
+  h += `<div class="st-actions"><button type="button" data-use="from">📍 Usar como origen</button><button type="button" data-use="to">🏁 Usar como destino</button></div>`;
+  $('lookup-info').innerHTML = h;
+}
+
+/* ============================================================================
+   PWA: registrar el service worker (caché para uso sin conexión) y mostrar
+   el estado en el pie de página. Se hace aparte de init() para que funcione
+   aunque stations.json no cargue.
+   ========================================================================== */
+function setupPWA() {
+  const badge = $('pwa-badge');
+  const setBadge = (text, cls = '') => { badge.textContent = text; badge.className = 'badge ' + cls; };
+  const refreshOnline = () => navigator.onLine
+    ? setBadge('✓ Lista para usar sin conexión', 'ok')
+    : setBadge('📴 Sin conexión · usando los datos guardados', 'warn');
+  window.addEventListener('online', refreshOnline);
+  window.addEventListener('offline', refreshOnline);
+
+  if (!('serviceWorker' in navigator)) { setBadge('Este navegador no soporta el modo sin conexión', 'warn'); return; }
+  navigator.serviceWorker.register('./service-worker.js').then(reg => {
+    // Cuando llega una versión nueva del service worker (subiste CACHE_VERSION),
+    // avisamos para recargar. Si es la primera instalación no hay que avisar.
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing;
+      if (!nw) return;
+      nw.addEventListener('statechange', () => {
+        if (nw.state === 'installed' && navigator.serviceWorker.controller) showUpdateToast();
+      });
+    });
+    navigator.serviceWorker.ready.then(refreshOnline);
+  }).catch(err => setBadge('No se pudo activar el modo sin conexión: ' + err.message, 'warn'));
+}
+
+function showUpdateToast() {
+  if (document.querySelector('.toast')) return;
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = '🆕 Hay una versión nueva de la app.<button type="button">Actualizar</button>';
+  t.querySelector('button').addEventListener('click', () => location.reload());
+  document.body.appendChild(t);
+}
+
+init();
+setupPWA();
+</script>
+</body>
+</html>

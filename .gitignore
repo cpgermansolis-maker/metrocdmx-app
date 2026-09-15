@@ -1,0 +1,8 @@
+# Capturas generadas por las pruebas de interfaz
+tools/shots/
+# Prototipo visual original: referencia local, no se publica
+tools/referencia/
+# Temporales
+*.tmp
+.DS_Store
+Thumbs.db
