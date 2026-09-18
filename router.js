@@ -169,8 +169,10 @@ function buildGraph(data, closures = CLOSURES, cfg = ROUTER_DEFAULTS) {
 function findRoute(graph, originId, destId) {
   const { nodes, edges, stationsById, cfg } = graph;
 
-  if (!stationsById[originId] || !stationsById[destId]) return { error: 'Estación desconocida.' };
-  if (originId === destId) return { error: 'Origen y destino son la misma estación.' };
+  // Cada error lleva un `code` para que la interfaz pueda explicar el motivo
+  // (p. ej. decir qué cierre lo causa) sin depender del texto.
+  if (!stationsById[originId] || !stationsById[destId]) return { error: 'Estación desconocida.', code: 'unknown' };
+  if (originId === destId) return { error: 'Origen y destino son la misma estación.', code: 'same' };
 
   // dist: mejor costo conocido para llegar a cada nodo. prev: de dónde venimos.
   const dist = new Map();
@@ -179,11 +181,15 @@ function findRoute(graph, originId, destId) {
 
   // "Fuente virtual": el usuario puede subirse a CUALQUIER línea que pase por
   // la estación de origen sin costo. Por eso todos esos nodos arrancan en 0.
-  let hasStart = false;
+  let hasStart = false, hasEnd = false;
   for (const [k, n] of nodes) {
     if (n.stationId === originId) { dist.set(k, 0); hasStart = true; }
+    if (n.stationId === destId) hasEnd = true;
   }
-  if (!hasStart) return { error: 'La estación de origen está cerrada.' };
+  // Una estación sin nodos está cerrada (directamente o porque cerraron
+  // todas sus líneas).
+  if (!hasStart) return { error: 'La estación de origen está cerrada.', code: 'origin-closed' };
+  if (!hasEnd) return { error: 'La estación de destino está cerrada.', code: 'dest-closed' };
 
   let endKey = null;
 
@@ -210,7 +216,7 @@ function findRoute(graph, originId, destId) {
     }
   }
 
-  if (endKey === null) return { error: 'No hay ruta disponible entre esas estaciones.' };
+  if (endKey === null) return { error: 'No hay ruta disponible entre esas estaciones.', code: 'no-route' };
 
   // Reconstruir el camino de nodos, del destino hacia atrás.
   const path = [];
@@ -348,6 +354,21 @@ function findAlternatives(graph, optimal, { max = 2, maxFactor = 2 } = {}) {
   return found.slice(0, max);
 }
 
+/**
+ * Qué cierres tocan una ruta. Se usa con la ruta calculada SIN cierres para
+ * explicar por qué la ruta con cierres es distinta ("evita Candelaria y
+ * Merced") o por qué no existe.
+ * @returns {{ stations: [{id,name}], lines: [lineId], transfers: [{id,name}] }}
+ */
+function routeClosureConflicts(route, closures) {
+  const cs = new Set(closures.stations || []), cl = new Set(closures.lines || []), ct = new Set(closures.transfers || []);
+  return {
+    stations:  route.sequence.filter(s => cs.has(s.id)).map(({ id, name }) => ({ id, name })),
+    lines:     route.linesUsed.filter(l => cl.has(l)),
+    transfers: route.transferStations.filter(t => ct.has(t.id)),
+  };
+}
+
 /* ---------- 6. Utilidades de búsqueda ------------------------------------- */
 
 // Quita acentos y mayúsculas para comparar: "Tláhuac" -> "tlahuac".
@@ -390,6 +411,6 @@ function nearestStation(data, lat, lng) {
 /* ---------- 7. Exportar (solo para pruebas en Node) ------------------------ */
 // En el navegador estas funciones quedan como globales dentro del <script>.
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { ROUTER_DEFAULTS, CLOSURES, normalizeClosures, buildGraph, findRoute, describeRoute, findAlternatives, routeSignature,
+  module.exports = { ROUTER_DEFAULTS, CLOSURES, normalizeClosures, buildGraph, findRoute, describeRoute, findAlternatives, routeSignature, routeClosureConflicts,
                      searchStations, nearestStation, haversine, normalize, nodeKey };
 }

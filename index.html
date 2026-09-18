@@ -173,6 +173,9 @@
   .status-meta{font-size:.74rem;color:var(--muted);margin-top:8px}
   .status-warn{margin-top:8px;padding:8px 10px;background:rgba(229,48,138,.12);border:1px solid rgba(229,48,138,.5);border-radius:8px;font-size:.78rem;line-height:1.4}
   .status-warn b{display:block;margin-bottom:2px}
+  .closure-note{background:rgba(255,216,0,.1);border-left:4px solid var(--warn);border-radius:8px;padding:8px 10px;font-size:.82rem;line-height:1.4;margin-bottom:10px}
+  .closed{color:#f5a3c7;font-weight:700}
+  .fav-closed{color:#f5a3c7;font-weight:600}
   /* Buscador de estación */
   .st-name{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
   .st-sub{font-size:.8rem;color:var(--muted);margin-top:4px}
@@ -206,6 +209,7 @@
   .badge.warn{background:rgba(255,216,0,.12);color:var(--warn)}
   .toast{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--panel2);border:1px solid var(--accent);border-radius:12px;padding:12px 14px;font-size:.86rem;display:flex;gap:10px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,.5)}
   .toast button{margin-left:auto;flex:none;background:var(--accent);border:none;color:#fff;font-family:inherit;font-weight:700;padding:8px 12px;border-radius:8px;cursor:pointer}
+  .toast.info{border-color:var(--warn)}
 </style>
 </head>
 <body>
@@ -497,8 +501,10 @@ function buildGraph(data, closures = CLOSURES, cfg = ROUTER_DEFAULTS) {
 function findRoute(graph, originId, destId) {
   const { nodes, edges, stationsById, cfg } = graph;
 
-  if (!stationsById[originId] || !stationsById[destId]) return { error: 'Estación desconocida.' };
-  if (originId === destId) return { error: 'Origen y destino son la misma estación.' };
+  // Cada error lleva un `code` para que la interfaz pueda explicar el motivo
+  // (p. ej. decir qué cierre lo causa) sin depender del texto.
+  if (!stationsById[originId] || !stationsById[destId]) return { error: 'Estación desconocida.', code: 'unknown' };
+  if (originId === destId) return { error: 'Origen y destino son la misma estación.', code: 'same' };
 
   // dist: mejor costo conocido para llegar a cada nodo. prev: de dónde venimos.
   const dist = new Map();
@@ -507,11 +513,15 @@ function findRoute(graph, originId, destId) {
 
   // "Fuente virtual": el usuario puede subirse a CUALQUIER línea que pase por
   // la estación de origen sin costo. Por eso todos esos nodos arrancan en 0.
-  let hasStart = false;
+  let hasStart = false, hasEnd = false;
   for (const [k, n] of nodes) {
     if (n.stationId === originId) { dist.set(k, 0); hasStart = true; }
+    if (n.stationId === destId) hasEnd = true;
   }
-  if (!hasStart) return { error: 'La estación de origen está cerrada.' };
+  // Una estación sin nodos está cerrada (directamente o porque cerraron
+  // todas sus líneas).
+  if (!hasStart) return { error: 'La estación de origen está cerrada.', code: 'origin-closed' };
+  if (!hasEnd) return { error: 'La estación de destino está cerrada.', code: 'dest-closed' };
 
   let endKey = null;
 
@@ -538,7 +548,7 @@ function findRoute(graph, originId, destId) {
     }
   }
 
-  if (endKey === null) return { error: 'No hay ruta disponible entre esas estaciones.' };
+  if (endKey === null) return { error: 'No hay ruta disponible entre esas estaciones.', code: 'no-route' };
 
   // Reconstruir el camino de nodos, del destino hacia atrás.
   const path = [];
@@ -676,6 +686,21 @@ function findAlternatives(graph, optimal, { max = 2, maxFactor = 2 } = {}) {
   return found.slice(0, max);
 }
 
+/**
+ * Qué cierres tocan una ruta. Se usa con la ruta calculada SIN cierres para
+ * explicar por qué la ruta con cierres es distinta ("evita Candelaria y
+ * Merced") o por qué no existe.
+ * @returns {{ stations: [{id,name}], lines: [lineId], transfers: [{id,name}] }}
+ */
+function routeClosureConflicts(route, closures) {
+  const cs = new Set(closures.stations || []), cl = new Set(closures.lines || []), ct = new Set(closures.transfers || []);
+  return {
+    stations:  route.sequence.filter(s => cs.has(s.id)).map(({ id, name }) => ({ id, name })),
+    lines:     route.linesUsed.filter(l => cl.has(l)),
+    transfers: route.transferStations.filter(t => ct.has(t.id)),
+  };
+}
+
 /* ---------- 6. Utilidades de búsqueda ------------------------------------- */
 
 // Quita acentos y mayúsculas para comparar: "Tláhuac" -> "tlahuac".
@@ -718,7 +743,7 @@ function nearestStation(data, lat, lng) {
 /* ---------- 7. Exportar (solo para pruebas en Node) ------------------------ */
 // En el navegador estas funciones quedan como globales dentro del <script>.
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { ROUTER_DEFAULTS, CLOSURES, normalizeClosures, buildGraph, findRoute, describeRoute, findAlternatives, routeSignature,
+  module.exports = { ROUTER_DEFAULTS, CLOSURES, normalizeClosures, buildGraph, findRoute, describeRoute, findAlternatives, routeSignature, routeClosureConflicts,
                      searchStations, nearestStation, haversine, normalize, nodeKey };
 }
 </script>
@@ -731,8 +756,10 @@ if (typeof module !== 'undefined' && module.exports) {
    ========================================================================== */
 
 let DATA = null;          // contenido de stations.json
-let GRAPH = null;         // grafo construido al cargar (se reconstruye si cambian los cierres)
+let GRAPH = null;         // grafo con los cierres vigentes (se reconstruye si cambian)
+let GRAPH_OPEN = null;    // grafo sin cierres: para explicar qué cambió por un cierre
 let closuresState = null; // resultado de loadClosures(): cierres vigentes y de dónde salieron
+let uiReady = false;      // true cuando init() terminó de armar la interfaz
 let currentRoute = null;  // última ruta óptima calculada (para las alternativas)
 const sel = { from: null, to: null, 'sa-origen': null, lookup: null };   // ids de estación elegidos por campo
 
@@ -830,10 +857,86 @@ async function loadClosures() {
   }
 }
 
-// Fija los cierres vigentes y refresca lo que dependa de ellos.
+// Único punto que fija los cierres vigentes: reconstruye el grafo y refresca
+// lo que dependa de ellos. Se llama al arrancar y, si la red tardó, otra vez
+// cuando llega la respuesta.
 function applyClosures(state) {
   closuresState = state;
+  GRAPH = buildGraph(DATA, state.closures, ROUTER_DEFAULTS);
   renderClosures();
+  if (!uiReady) return;
+  renderFavs();
+  if (sel.lookup) renderStationInfo(sel.lookup);
+  if (currentRoute) refreshCurrentRoute();
+}
+
+// La ruta en pantalla se recalcula con los cierres nuevos; solo se avisa si
+// de verdad cambió algo.
+function refreshCurrentRoute() {
+  const { origin, destination } = currentRoute;
+  const r = findRoute(GRAPH, origin.id, destination.id);
+  if (r.error) {
+    currentRoute = null; $('results').hidden = true;
+    showError(closureErrorHtml(r, origin.id, destination.id));
+    showToast('🚨 Cierres actualizados: la ruta que tenías ya no es posible.');
+    return;
+  }
+  r.closureNote = closureNoteFor(r);
+  if (routeSignature(r) === routeSignature(currentRoute) && r.closureNote === currentRoute.closureNote) return;
+  renderRoute(r, { scroll: false });
+  showToast('🚨 Cierres actualizados: recalculé la ruta.');
+}
+
+const activeClosures = () => (closuresState ? closuresState.closures : CLOSURES);
+const anyClosures = () => { const c = activeClosures(); return !!(c.stations.length || c.lines.length || c.transfers.length); };
+
+// "la Línea 12 (cerrada) y Candelaria, Merced (cerradas) y el transbordo en …"
+function conflictText(k) {
+  const parts = [];
+  if (k.lines.length)     parts.push((k.lines.length === 1 ? 'la ' : 'las ') + k.lines.map(l => esc(DATA.lines[l].name)).join(' y ') + (k.lines.length === 1 ? ' (cerrada)' : ' (cerradas)'));
+  if (k.stations.length)  parts.push(k.stations.map(s => esc(s.name)).join(', ') + (k.stations.length === 1 ? ' (cerrada)' : ' (cerradas)'));
+  if (k.transfers.length) parts.push('el transbordo en ' + k.transfers.map(t => esc(t.name)).join(' y ') + ' (sin cambio de línea)');
+  return parts.join(' y ');
+}
+
+// Si la ruta con cierres es distinta de la ruta normal, explica por qué.
+function closureNoteFor(route) {
+  if (!anyClosures()) return null;
+  const open = findRoute(GRAPH_OPEN, route.origin.id, route.destination.id);
+  if (open.error || routeSignature(open) === routeSignature(route)) return null;
+  const k = routeClosureConflicts(open, activeClosures());
+  if (!k.stations.length && !k.lines.length && !k.transfers.length) return null;   // empate entre rutas, no es por cierres
+  const delta = route.totalMinutes - open.totalMinutes;
+  return `Ruta ajustada por cierres: evita ${conflictText(k)}. Sin cierres serían ~${open.totalMinutes} min` + (delta > 0 ? ` (esta tarda ${delta} más).` : '.');
+}
+
+// Explica un error de findRoute en términos de los cierres vigentes.
+function closureErrorHtml(route, fromId, toId) {
+  const c = activeClosures();
+  const closedWhy = id => {
+    const st = DATA.stations.find(x => x.id === id);
+    if (c.stations.includes(id)) return `<b>${esc(st.name)}</b> está cerrada`;
+    const cl = st.lines.filter(l => c.lines.includes(l));
+    return `<b>${esc(st.name)}</b> no tiene servicio: ` + (cl.length === 1 ? `la ${esc(DATA.lines[cl[0]].name)} está cerrada` : `sus líneas ${cl.map(l => esc(DATA.lines[l].name)).join(' y ')} están cerradas`);
+  };
+  const ref = ' según el <b>Estado del Metro</b>.';
+  if (route.code === 'origin-closed') return '🚫 ' + closedWhy(fromId) + ref + ' Elige otra estación de origen.';
+  if (route.code === 'dest-closed')   return '🚫 ' + closedWhy(toId) + ref + ' Elige otra estación de destino.';
+  if (route.code === 'no-route' && anyClosures()) {
+    const open = findRoute(GRAPH_OPEN, fromId, toId);
+    if (!open.error) return `🚫 No hay ruta con los cierres vigentes: la ruta normal (~${open.totalMinutes} min) pasa por ${conflictText(routeClosureConflicts(open, c))}.`;
+  }
+  return esc(route.error);
+}
+
+// Aviso breve que desaparece solo (distinto del aviso de versión nueva).
+function showToast(html, ms = 6000) {
+  document.querySelectorAll('.toast.info').forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className = 'toast info';
+  t.innerHTML = html;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), ms);
 }
 
 const fmtStamp = iso => {   // "2026-09-17T15:04:00.000Z" → "17/09/2026 09:04" (hora local)
@@ -881,8 +984,8 @@ async function init() {
       Sirve la carpeta con <code>python -m http.server</code> y abre <code>http://localhost:8000</code>.`;
     return;
   }
-  applyClosures(await loadClosures());
-  GRAPH = buildGraph(DATA, CLOSURES, ROUTER_DEFAULTS);
+  GRAPH_OPEN = buildGraph(DATA, CLOSURES, ROUTER_DEFAULTS);
+  applyClosures(await loadClosures());   // construye GRAPH con los cierres vigentes
   $('loading').hidden = true;
   bindUI();
   setupFavorites();
@@ -891,6 +994,7 @@ async function init() {
   restoreFromHash();
   // Atrás/adelante del navegador o un enlace compartido con #origen/destino.
   window.addEventListener('hashchange', restoreFromHash);
+  uiReady = true;
 }
 
 /* ---------- Colores de línea ---------------------------------------------- */
@@ -1080,7 +1184,8 @@ function calculate() {
   hideError();
   if (!sel.from || !sel.to) { showError(!sel.from ? 'Elige la estación de <b>origen</b> de la lista.' : 'Elige la estación de <b>destino</b> de la lista.'); return; }
   const route = findRoute(GRAPH, sel.from, sel.to);
-  if (route.error) { showError(esc(route.error)); $('results').hidden = true; return; }
+  if (route.error) { showError(closureErrorHtml(route, sel.from, sel.to)); $('results').hidden = true; currentRoute = null; return; }
+  route.closureNote = closureNoteFor(route);
   const hash = '#' + sel.from + '/' + sel.to;
   if (location.hash !== hash) history.replaceState(null, '', hash);
   renderRoute(route);
@@ -1096,7 +1201,7 @@ function restoreFromHash() {
   ac.from.setById(a.id); ac.to.setById(b.id); calculate();
 }
 
-function renderRoute(r) {
+function renderRoute(r, { scroll = true } = {}) {
   currentRoute = r;
   $('optimal').innerHTML = routeCard(r, { kind: 'opt' });
   $('ask').innerHTML = `<div class="card-inner">
@@ -1116,7 +1221,7 @@ function renderRoute(r) {
   $('alts').innerHTML = '';
   $('results').hidden = false;
   updateEtas();
-  $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (scroll) $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function showAlternatives() {
@@ -1142,6 +1247,7 @@ function routeCard(r, { kind, index }) {
   return `<div class="card">
     <div class="card-head">
       <div class="tags">${tags}</div>
+      ${kind === 'opt' && r.closureNote ? `<div class="closure-note">⚠️ ${r.closureNote}</div>` : ''}
       <div class="route-od"><div class="od">${esc(r.origin.name)}<span class="arrow">→</span>${esc(r.destination.name)}</div></div>
       <div class="summary">
         <div class="stat"><div class="lbl">Tiempo</div><div class="val big">~${r.totalMinutes}<small>min</small></div>
@@ -1316,7 +1422,7 @@ function calcBusTrip() {
   let route = null, metroMin = 0;
   if (originId !== dest.metroStation) {
     route = findRoute(GRAPH, originId, dest.metroStation);
-    if (route.error) return fail(esc(route.error));
+    if (route.error) return fail(closureErrorHtml(route, originId, dest.metroStation));
     metroMin = route.totalMinutes;
   }
   const originName = GRAPH.stationsById[originId].name;
@@ -1447,7 +1553,10 @@ function renderFavs() {
     const a = GRAPH.stationsById[f.from], b = GRAPH.stationsById[f.to];
     if (!a || !b) return '';   // por si una estación cambió de id en stations.json
     const r = findRoute(GRAPH, f.from, f.to);
-    const meta = r.error ? '' : `~${r.totalMinutes} min · ${r.transfers === 0 ? 'directo' : plural(r.transfers, 'transbordo', 'transbordos')} ` + r.linesUsed.map(l => linePill(l)).join('');
+    const closedTxt = { 'origin-closed': '🚫 origen cerrado', 'dest-closed': '🚫 destino cerrado', 'no-route': '🚫 sin ruta por los cierres' };
+    const meta = r.error
+      ? `<span class="fav-closed">${closedTxt[r.code] || esc(r.error)}</span>`
+      : `~${r.totalMinutes} min · ${r.transfers === 0 ? 'directo' : plural(r.transfers, 'transbordo', 'transbordos')} ` + r.linesUsed.map(l => linePill(l)).join('') + (closureNoteFor(r) ? ' <span class="fav-closed">⚠️ ajustada por cierres</span>' : '');
     return `<div class="fav-item" data-i="${i}" role="button">
       <div class="od-wrap"><div class="od">${esc(a.name)}<span class="arrow">→</span>${esc(b.name)}</div><div class="meta">${meta}</div></div>
       <button class="del" type="button" aria-label="Quitar de favoritas" title="Quitar">×</button>
@@ -1472,14 +1581,18 @@ function setupLookup() {
 }
 
 function renderStationInfo(id) {
-  const s = GRAPH.stationsById[id];
+  const s = GRAPH.stationsById[id], c = activeClosures();
+  let estado = '';
+  if (c.stations.includes(id)) estado = ' · <span class="closed">🚫 Cerrada</span>';
+  else if (s.lines.every(l => c.lines.includes(l))) estado = ' · <span class="closed">🚫 Sin servicio (línea cerrada)</span>';
+  else if (c.transfers.includes(id)) estado = ' · <span class="closed">🚫 Sin cambio de línea</span>';
   let h = `<div class="st-name">${esc(s.name)} ${s.lines.map(l => linePill(l, true)).join(' ')}</div>
-    <div class="st-sub">${s.transfer ? `Estación de transbordo · ${plural(s.lines.length, 'línea', 'líneas')}` : 'Estación de paso · 1 línea'}</div>`;
+    <div class="st-sub">${s.transfer ? `Estación de transbordo · ${plural(s.lines.length, 'línea', 'líneas')}` : 'Estación de paso · 1 línea'}${estado}</div>`;
   for (const l of s.lines) {
     const line = DATA.lines[l], seq = LINE_SEQ[l], idx = s.order[l];
     const prev = seq.find(x => x.order[l] === idx - 1), next = seq.find(x => x.order[l] === idx + 1);
     h += `<div class="st-line" style="border-left-color:${line.color}">
-      <div class="top">${linePill(l)} ${esc(line.name)}<span class="pos">estación ${idx} de ${seq.length}</span></div>
+      <div class="top">${linePill(l)} ${esc(line.name)}${c.lines.includes(l) ? ' <span class="closed">🚫 cerrada</span>' : ''}<span class="pos">estación ${idx} de ${seq.length}</span></div>
       <div class="nb">
         <div><span class="term">← hacia ${esc(line.terminals[0])}</span><b>${prev ? esc(prev.name) : 'Aquí termina la línea'}</b></div>
         <div><span class="term">hacia ${esc(line.terminals[1])} →</span><b>${next ? esc(next.name) : 'Aquí termina la línea'}</b></div>
@@ -1519,9 +1632,9 @@ function setupPWA() {
 }
 
 function showUpdateToast() {
-  if (document.querySelector('.toast')) return;
+  if (document.querySelector('.toast.update')) return;
   const t = document.createElement('div');
-  t.className = 'toast';
+  t.className = 'toast update';
   t.innerHTML = '🆕 Hay una versión nueva de la app.<button type="button">Actualizar</button>';
   t.querySelector('button').addEventListener('click', () => location.reload());
   document.body.appendChild(t);

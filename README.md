@@ -198,7 +198,7 @@ Edita `icon.svg` y corre `python tools/make-icons.py` (necesita Chrome o Edge in
 
 ```bash
 node tools/test-router.js      # motor: 10 casos + 26,406 parejas exhaustivas (solo Node)
-node tools/test-closures.js    # lectura de closures.json: ids válidos, errores de dedo, listas mal formadas (solo Node)
+node tools/test-closures.js    # closures.json: ids válidos, errores de dedo, listas mal formadas; rutas con cierres (solo Node)
 ```
 
 Las pruebas de interfaz usan Playwright y necesitan el servidor local en el puerto 8765:
@@ -208,7 +208,7 @@ python -m http.server 8765     # en una terminal
 node tools/test-ui.js          # autocompletar, invertir, errores, geolocalización simulada
 node tools/test-ui-abc.js      # alternativas, hora de llegada, módulo de autobús
 node tools/test-ui-extras.js   # favoritas, estado del Metro, buscador de estación, header compacto
-node tools/test-closures-ui.js # tarjeta "Estado del Metro": con red, sin red, archivo roto, red lenta, error del servidor
+node tools/test-closures-ui.js # cierres en pantalla: tarjeta de estado (con red, sin red, archivo roto, red lenta, 404), rutas desviadas, estación cerrada, favoritas, buscador, autobús, respuesta tardía
 node tools/test-pwa.js         # manifest, service worker, uso sin conexión, actualización
 ```
 
@@ -219,7 +219,7 @@ Si Playwright no está instalado en este proyecto: `npm i playwright && npx play
 ## 9. Para el futuro (Metrobús, reportes, etc.)
 
 - **Otro sistema de transporte:** agrega sus estaciones a `stations.json` con `"system": "metrobus"` y líneas con ids que no choquen con las del Metro (p. ej. `"mb-1"`). El motor no distingue sistemas: solo ve líneas, `order` y transbordos. Para conectar Metro con Metrobús, una "estación" que pertenezca a líneas de ambos sistemas funciona como transbordo.
-- **Cierres en tiempo real:** ya se leen de `closures.json` (Fase 2). Falta aplicarlos al cálculo de rutas (`buildGraph(DATA, closuresState.closures)`) y documentar la edición desde el teléfono.
+- **Cierres en tiempo real:** se leen de `closures.json` y se aplican a rutas, alternativas, favoritas, buscador y módulo de autobús (Fase 2). Si un cierre cambia la ruta, la tarjeta lo dice ("Ruta ajustada por cierres: evita …"). Falta documentar la edición desde el teléfono.
 - **Tiempos reales por tramo:** hoy todas las aristas pesan lo mismo; `buildGraph` es el único lugar que asigna pesos, así que se pueden leer de un campo por estación sin tocar Dijkstra.
 - **Destinos que no son estación:** `nearestStation(DATA, lat, lng)` ya devuelve la estación más cercana a una coordenada.
 

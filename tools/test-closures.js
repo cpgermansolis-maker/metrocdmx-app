@@ -64,5 +64,31 @@ console.log('4) Listas mal formadas y archivo vacío');
   check('updated/message con tipo raro → se ignoran', n.updated === '' && n.message === '');
 }
 
+console.log('5) Rutas con cierres (findRoute + routeClosureConflicts)');
+{
+  const open = R.buildGraph(data);
+  const sig = r => R.routeSignature(r);
+  // Cortar L1 entre San Lázaro y Pino Suárez: la ruta a Cuatro Caminos debe rodear.
+  const C = { stations: ['candelaria', 'merced'], lines: [], transfers: [] };
+  const g = R.buildGraph(data, C);
+  const a = R.findRoute(open, 'san-lazaro', 'cuatro-caminos'), b = R.findRoute(g, 'san-lazaro', 'cuatro-caminos');
+  check('Sin cierres: L1 → Pino Suárez → L2 (37 min)', same(a.linesUsed, ['1', '2']) && a.totalMinutes === 37, sig(a));
+  check('Con Candelaria y Merced cerradas: rodea por B → 3 → 2 (40 min)', same(b.linesUsed, ['B', '3', '2']) && b.totalMinutes === 40, sig(b));
+  const k = R.routeClosureConflicts(a, C);
+  check('routeClosureConflicts señala Candelaria y Merced en la ruta normal', same(k.stations.map(x => x.id), ['candelaria', 'merced']) && !k.lines.length && !k.transfers.length, JSON.stringify(k));
+  check('Destino cerrado → code dest-closed', R.findRoute(g, 'san-lazaro', 'merced').code === 'dest-closed');
+  check('Origen cerrado → code origin-closed', R.findRoute(g, 'merced', 'san-lazaro').code === 'origin-closed');
+  check('L12 cerrada: Tláhuac (solo L12) → origin-closed', R.findRoute(R.buildGraph(data, { lines: ['12'] }), 'tlahuac', 'pantitlan').code === 'origin-closed');
+  const t = R.findRoute(R.buildGraph(data, { transfers: ['pino-suarez'] }), 'san-lazaro', 'cuatro-caminos');
+  check('Sin transbordo en Pino Suárez: también rodea (B → 3 → 2)', same(t.linesUsed, ['B', '3', '2']));
+  check('…y el conflicto es el transbordo', same(R.routeClosureConflicts(a, { transfers: ['pino-suarez'] }).transfers.map(x => x.id), ['pino-suarez']));
+  const iso = R.findRoute(R.buildGraph(data, { stations: ['zaragoza', 'hangares', 'puebla', 'agricola-oriental'] }), 'pantitlan', 'zocalo-tenochtitlan');
+  check('Pantitlán aislada (vecinas de sus 4 líneas cerradas) → no-route', iso.code === 'no-route', iso.error);
+  check('Misma estación → code same', R.findRoute(g, 'merced', 'merced').code === 'same');
+  check('Id inexistente → code unknown', R.findRoute(g, 'nada', 'merced').code === 'unknown');
+  check('Las alternativas respetan los cierres (ninguna pasa por Candelaria/Merced)',
+    R.findAlternatives(g, b).every(alt => !alt.sequence.some(x => x.id === 'candelaria' || x.id === 'merced')));
+}
+
 console.log(fails ? `\n${fails} FALLAS` : '\nTodo OK');
 process.exit(fails ? 1 : 0);
