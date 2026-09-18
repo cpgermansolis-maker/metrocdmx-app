@@ -25,6 +25,10 @@
   [hidden]{display:none!important}
   body{font-family:'Hanken Grotesk',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:40px;
     background-image:radial-gradient(circle at 15% -10%,rgba(233,123,17,.12),transparent 40%),radial-gradient(circle at 90% 5%,rgba(0,115,189,.14),transparent 45%)}
+  /* overflow-anchor:none evita que el navegador "compense" el scroll cuando el
+     header cambia de alto: con la compensación, encoger el header bajaba el scroll,
+     eso volvía a expandirlo, y el header parpadeaba sin parar entre 60 y 80 px. */
+  html{overflow-anchor:none}
   header{padding:calc(24px + env(safe-area-inset-top,0px)) 20px 14px;position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg) 70%,transparent);backdrop-filter:blur(6px);transition:padding .2s ease}
   .kicker{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600}
   h1{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:2rem;line-height:1;margin-top:6px;letter-spacing:-.02em;transition:font-size .2s ease,margin .2s ease}
@@ -155,10 +159,20 @@
   .fav-empty{margin-top:14px;font-size:.85rem;color:var(--muted);line-height:1.45}
   .star-btn{margin-top:12px;width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer}
   .star-btn.on{border-color:rgba(255,216,0,.5);color:var(--warn);background:rgba(255,216,0,.08)}
-  /* Estado del Metro */
-  .status-card{display:flex;gap:12px;align-items:center;padding:12px 14px}
-  .status-btn{flex:none;background:rgba(229,48,138,.14);border:1px solid rgba(229,48,138,.5);color:#fff;border-radius:10px;padding:10px 12px;font-family:inherit;font-weight:700;font-size:.84rem;text-decoration:none;white-space:nowrap}
-  .status-note{font-size:.76rem;color:var(--muted);line-height:1.4}
+  /* Estado del Metro (cierres desde closures.json) */
+  .status-head{padding:14px 18px 0;display:flex;align-items:center;gap:10px}
+  .status-head .emoji{font-size:1.4rem;line-height:1}
+  .status-head h2{flex:1;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:-.01em}
+  .status-link{flex:none;font-size:.74rem;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:5px 9px;white-space:nowrap}
+  .status-body{padding:10px 18px 14px;font-size:.85rem;line-height:1.45}
+  .status-ok{color:var(--ok);font-weight:700}
+  .status-msg{background:rgba(255,216,0,.1);border-left:4px solid var(--warn);border-radius:8px;padding:8px 10px;font-weight:600;margin-bottom:8px}
+  .status-row{display:flex;flex-wrap:wrap;gap:5px 6px;align-items:center;margin-top:6px}
+  .status-row .lbl{flex:none;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-right:2px}
+  .status-row .chip{gap:6px;color:var(--ink)}
+  .status-meta{font-size:.74rem;color:var(--muted);margin-top:8px}
+  .status-warn{margin-top:8px;padding:8px 10px;background:rgba(229,48,138,.12);border:1px solid rgba(229,48,138,.5);border-radius:8px;font-size:.78rem;line-height:1.4}
+  .status-warn b{display:block;margin-bottom:2px}
   /* Buscador de estación */
   .st-name{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
   .st-sub{font-size:.8rem;color:var(--muted);margin-top:4px}
@@ -244,10 +258,14 @@
     <div class="err" id="form-err" hidden></div>
   </div></section>
 
-  <!-- ===== Estado del servicio (enlace externo) ===== -->
-  <section class="card status-card">
-    <a class="status-btn" href="https://twitter.com/MetroCDMX" target="_blank" rel="noopener">🚨 Ver estado del Metro</a>
-    <div class="status-note">El estado en tiempo real no está integrado en la app; consulta el Twitter oficial antes de salir si sospechas un cierre.</div>
+  <!-- ===== Estado del Metro: cierres leídos de closures.json (se llena por JS) ===== -->
+  <section class="card" id="status">
+    <div class="status-head">
+      <span class="emoji">🚨</span>
+      <h2>Estado del Metro</h2>
+      <a class="status-link" href="https://twitter.com/MetroCDMX" target="_blank" rel="noopener">Twitter oficial ↗</a>
+    </div>
+    <div class="status-body" id="status-body">Consultando cierres…</div>
   </section>
 
   <!-- ===== Resultado: ruta óptima + pregunta + alternativas (se llena por JS) ===== -->
@@ -336,8 +354,9 @@ const ROUTER_DEFAULTS = {
   transferMinutes: 5,   // caminar + esperar al cambiar de línea en una estación
 };
 
-// Cierres. Por ahora vacío; en el futuro se llena desde una API o reportes
-// colaborativos. Una estación cerrada desaparece del grafo (no se puede
+// Cierres por defecto (ninguno). Los cierres reales viven en closures.json,
+// que la app descarga al abrir y pasa por normalizeClosures() antes de
+// construir el grafo. Una estación cerrada desaparece del grafo (no se puede
 // subir, bajar, ni pasar por ella). Una línea cerrada desaparece completa.
 const CLOSURES = {
   stations: [],   // ids de estación, p. ej. ["zocalo-tenochtitlan"]
@@ -345,6 +364,50 @@ const CLOSURES = {
   transfers: [],  // ids de estación donde NO se permite cambiar de línea
                   // (se puede pasar, pero no transbordar). Lo usan las alternativas.
 };
+
+/**
+ * Convierte el contenido de closures.json (un archivo editado a mano, a veces
+ * desde el teléfono) en un objeto de cierres que buildGraph entiende.
+ * Es tolerante: descarta los ids que no existen en los datos y devuelve cada
+ * problema en `warnings` para mostrarlo en pantalla; así un error de dedo no
+ * tumba la app ni pasa desapercibido.
+ *
+ * @param {object} raw   JSON tal como viene del archivo: { updated, message, stations, lines, transfers }
+ * @param {object} data  Contenido de stations.json
+ * @returns {{ closures: object, updated: string, message: string, warnings: string[] }}
+ */
+function normalizeClosures(raw, data) {
+  const warnings = [];
+  const closures = { stations: [], lines: [], transfers: [] };
+  const text = v => (typeof v === 'string' ? v.trim() : '');
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    warnings.push('closures.json debe ser un objeto con las listas "stations", "lines" y "transfers".');
+    return { closures, updated: '', message: '', warnings };
+  }
+  const stationsById = {};
+  for (const s of data.stations) stationsById[s.id] = s;
+  const lineIds = new Set(Object.keys(data.lines));
+
+  // Lee una lista de ids del archivo y conserva solo los que existen.
+  const pick = (key, isValid, label, example) => {
+    const list = raw[key];
+    if (list === undefined || list === null) return;
+    if (!Array.isArray(list)) { warnings.push(`"${key}" debe ser una lista, p. ej. ["${example}"].`); return; }
+    for (const item of list) {
+      const id = String(item).trim();     // acepta 1 o "1" para líneas
+      if (!isValid(id)) { warnings.push(`${label} desconocida en "${key}": "${id}".`); continue; }
+      if (!closures[key].includes(id)) closures[key].push(id);
+    }
+  };
+  pick('stations',  id => id in stationsById, 'Estación', 'pino-suarez');
+  pick('lines',     id => lineIds.has(id),    'Línea',    '12');
+  pick('transfers', id => id in stationsById, 'Estación', 'pino-suarez');
+  // Un cierre de transbordo solo tiene sentido donde se cruzan líneas.
+  for (const id of closures.transfers) {
+    if (!stationsById[id].transfer) warnings.push(`"${id}" está en "transfers" pero no es estación de transbordo.`);
+  }
+  return { closures, updated: text(raw.updated), message: text(raw.message), warnings };
+}
 
 /* ---------- 2. Construcción del grafo ------------------------------------- */
 
@@ -655,7 +718,7 @@ function nearestStation(data, lat, lng) {
 /* ---------- 7. Exportar (solo para pruebas en Node) ------------------------ */
 // En el navegador estas funciones quedan como globales dentro del <script>.
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { ROUTER_DEFAULTS, CLOSURES, buildGraph, findRoute, describeRoute, findAlternatives, routeSignature,
+  module.exports = { ROUTER_DEFAULTS, CLOSURES, normalizeClosures, buildGraph, findRoute, describeRoute, findAlternatives, routeSignature,
                      searchStations, nearestStation, haversine, normalize, nodeKey };
 }
 </script>
@@ -668,7 +731,8 @@ if (typeof module !== 'undefined' && module.exports) {
    ========================================================================== */
 
 let DATA = null;          // contenido de stations.json
-let GRAPH = null;         // grafo construido una sola vez al cargar
+let GRAPH = null;         // grafo construido al cargar (se reconstruye si cambian los cierres)
+let closuresState = null; // resultado de loadClosures(): cierres vigentes y de dónde salieron
 let currentRoute = null;  // última ruta óptima calculada (para las alternativas)
 const sel = { from: null, to: null, 'sa-origen': null, lookup: null };   // ids de estación elegidos por campo
 
@@ -705,6 +769,106 @@ const BUS_DESTINATIONS = {
   },
 };
 
+/* ---------- Cierres (closures.json) ---------------------------------------
+   closures.json vive en el repositorio y se edita a mano (desde GitHub,
+   incluso en el teléfono). A diferencia del resto de archivos NO pasa por la
+   caché de la app: se pide siempre a la red (cache: 'no-store', y el service
+   worker lo deja pasar) y la última copia buena se guarda en localStorage
+   para cuando no hay conexión. Si la red tarda más de CLOSURES_TIMEOUT_MS,
+   la app arranca con la copia guardada y, si la respuesta llega después, se
+   actualiza sola.
+   -------------------------------------------------------------------------- */
+const CLOSURES_URL = 'closures.json';
+const CLOSURES_KEY = 'metrocdmx-closures';   // localStorage: { fetchedAt, raw }
+const CLOSURES_TIMEOUT_MS = 3000;
+
+function readStoredClosures() {
+  try {
+    const e = JSON.parse(localStorage.getItem(CLOSURES_KEY));
+    return e && typeof e === 'object' && e.fetchedAt && e.raw !== undefined ? e : null;
+  } catch (e) { return null; }
+}
+
+// Pide closures.json a la red y guarda la copia. Lanza si no hay red, si el
+// servidor falla o si el archivo no es JSON válido (error de dedo al editar).
+// El error lleva `reason` (texto para la gente) y, si aplica, `detail`
+// (texto técnico para quien edita el archivo).
+async function fetchClosures() {
+  let res;
+  try { res = await fetch(CLOSURES_URL, { cache: 'no-store' }); }
+  catch (e) { throw Object.assign(new Error('offline'), { reason: 'sin red' }); }
+  if (!res.ok) throw Object.assign(new Error('http'), { reason: 'el servidor respondió HTTP ' + res.status });
+  const text = await res.text();
+  let raw;
+  try { raw = JSON.parse(text); }
+  catch (e) { throw Object.assign(new Error('json'), { reason: 'closures.json tiene un error de sintaxis', detail: 'closures.json no es JSON válido: ' + e.message }); }
+  const entry = { fetchedAt: new Date().toISOString(), raw };
+  try { localStorage.setItem(CLOSURES_KEY, JSON.stringify(entry)); } catch (e) {}
+  return entry;
+}
+
+// Estado unificado: de la red ('network'), de la copia guardada ('stored') o
+// nada ('none'). `error` explica por qué no se usó la red, si aplica.
+function closuresStateFrom(entry, source, error) {
+  const n = entry
+    ? normalizeClosures(entry.raw, DATA)
+    : { closures: { stations: [], lines: [], transfers: [] }, updated: '', message: '', warnings: [] };
+  if (error && error.detail) n.warnings.unshift(error.detail);
+  return { ...n, source, fetchedAt: entry ? entry.fetchedAt : null, error: error ? error.reason : null };
+}
+
+async function loadClosures() {
+  const net = fetchClosures();
+  const timeout = new Promise((_, rej) => setTimeout(() => rej(Object.assign(new Error('timeout'), { reason: 'la red tardó más de ' + (CLOSURES_TIMEOUT_MS / 1000) + ' s' })), CLOSURES_TIMEOUT_MS));
+  try {
+    return closuresStateFrom(await Promise.race([net, timeout]), 'network');
+  } catch (e) {
+    // La red tardó: seguimos con lo guardado y aplicamos la respuesta si llega.
+    if (e.message === 'timeout') net.then(entry => applyClosures(closuresStateFrom(entry, 'network'))).catch(() => {});
+    const stored = readStoredClosures();
+    return closuresStateFrom(stored, stored ? 'stored' : 'none', e);
+  }
+}
+
+// Fija los cierres vigentes y refresca lo que dependa de ellos.
+function applyClosures(state) {
+  closuresState = state;
+  renderClosures();
+}
+
+const fmtStamp = iso => {   // "2026-09-17T15:04:00.000Z" → "17/09/2026 09:04" (hora local)
+  const d = new Date(iso), p = n => String(n).padStart(2, '0');
+  return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+};
+
+function renderClosures() {
+  const st = closuresState, body = $('status-body');
+  if (!st) { body.textContent = 'Consultando cierres…'; return; }
+  const c = st.closures;
+  const stationChip = id => { const s = DATA.stations.find(x => x.id === id); return `<span class="chip">${s.lines.map(l => linePill(l)).join('')}${esc(s.name)}</span>`; };
+  const row = (label, chips) => chips.length ? `<div class="status-row"><span class="lbl">${label}</span>${chips.join('')}</div>` : '';
+  let h = '';
+
+  if (st.source === 'none') {
+    h += `<div class="status-warn"><b>No pude consultar los cierres</b>Motivo: ${esc(st.error || 'desconocido')}. Revisa el Twitter oficial antes de salir.</div>`;
+  } else {
+    const any = c.stations.length || c.lines.length || c.transfers.length;
+    if (st.message) h += `<div class="status-msg">⚠️ ${esc(st.message)}</div>`;
+    if (!any && !st.message) h += `<div class="status-ok">✅ Sin cierres reportados</div>`;
+    h += row('Líneas cerradas', c.lines.map(l => `<span class="chip">${linePill(l)}${esc(DATA.lines[l].name)}</span>`));
+    h += row('Estaciones cerradas', c.stations.map(stationChip));
+    h += row('Sin transbordo en', c.transfers.map(stationChip));
+    const meta = [];
+    if (st.updated) meta.push(`Cierres al ${esc(st.updated)}`);
+    if (st.source === 'stored') meta.push(`📴 No se pudo actualizar (${esc(st.error || '')}): se muestran los cierres guardados el ${fmtStamp(st.fetchedAt)}`);
+    if (meta.length) h += `<div class="status-meta">${meta.join(' · ')}</div>`;
+  }
+  if (st.warnings.length) {
+    h += `<div class="status-warn"><b>⚠️ Revisa closures.json</b>${st.warnings.map(esc).join('<br>')}</div>`;
+  }
+  body.innerHTML = h;
+}
+
 /* ---------- Carga de datos ------------------------------------------------ */
 async function init() {
   try {
@@ -717,6 +881,7 @@ async function init() {
       Sirve la carpeta con <code>python -m http.server</code> y abre <code>http://localhost:8000</code>.`;
     return;
   }
+  applyClosures(await loadClosures());
   GRAPH = buildGraph(DATA, CLOSURES, ROUTER_DEFAULTS);
   $('loading').hidden = true;
   bindUI();

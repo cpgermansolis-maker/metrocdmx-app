@@ -13,6 +13,7 @@ Sin frameworks, sin backend, sin base de datos: HTML + CSS + JavaScript vanilla 
 | `index.html` | La app completa: estilos, motor de rutas (inyectado) e interfaz | Sí, la interfaz. **El bloque entre `ROUTER:BEGIN` y `ROUTER:END` no**: se genera desde `router.js` |
 | `router.js` | Motor de rutas (Dijkstra) y utilidades. Es la fuente del bloque inyectado en `index.html` | Sí, si quieres cambiar el algoritmo o los tiempos |
 | `stations.json` | Las 12 líneas (colores, terminales) y las 163 estaciones (nombre, líneas, coordenadas, orden en cada línea) | Sí, cuando el Metro cambie |
+| `closures.json` | Cierres vigentes (estaciones, líneas, transbordos) y un mensaje para la gente. La app lo descarga al abrir, sin pasar por la caché, y muestra lo que dice en "Estado del Metro" | **Sí, cada vez que el Metro cierre algo.** Se puede editar desde GitHub en el teléfono, sin `build.js` |
 | `manifest.json` | Configuración de la PWA (nombre, colores, íconos) | Rara vez |
 | `service-worker.js` | Caché para uso sin conexión. `CACHE_VERSION` la estampa `tools/build.js` | No a mano |
 | `icon.svg` → `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` | Ícono de la app. Los PNG se generan con `tools/make-icons.py` | El SVG, si quieres otro ícono |
@@ -197,6 +198,7 @@ Edita `icon.svg` y corre `python tools/make-icons.py` (necesita Chrome o Edge in
 
 ```bash
 node tools/test-router.js      # motor: 10 casos + 26,406 parejas exhaustivas (solo Node)
+node tools/test-closures.js    # lectura de closures.json: ids válidos, errores de dedo, listas mal formadas (solo Node)
 ```
 
 Las pruebas de interfaz usan Playwright y necesitan el servidor local en el puerto 8765:
@@ -205,7 +207,8 @@ Las pruebas de interfaz usan Playwright y necesitan el servidor local en el puer
 python -m http.server 8765     # en una terminal
 node tools/test-ui.js          # autocompletar, invertir, errores, geolocalización simulada
 node tools/test-ui-abc.js      # alternativas, hora de llegada, módulo de autobús
-node tools/test-ui-extras.js   # favoritas, estado del Metro, buscador de estación
+node tools/test-ui-extras.js   # favoritas, estado del Metro, buscador de estación, header compacto
+node tools/test-closures-ui.js # tarjeta "Estado del Metro": con red, sin red, archivo roto, red lenta, error del servidor
 node tools/test-pwa.js         # manifest, service worker, uso sin conexión, actualización
 ```
 
@@ -216,7 +219,7 @@ Si Playwright no está instalado en este proyecto: `npm i playwright && npx play
 ## 9. Para el futuro (Metrobús, reportes, etc.)
 
 - **Otro sistema de transporte:** agrega sus estaciones a `stations.json` con `"system": "metrobus"` y líneas con ids que no choquen con las del Metro (p. ej. `"mb-1"`). El motor no distingue sistemas: solo ve líneas, `order` y transbordos. Para conectar Metro con Metrobús, una "estación" que pertenezca a líneas de ambos sistemas funciona como transbordo.
-- **Cierres en tiempo real:** llena `CLOSURES` desde una API o desde reportes y vuelve a llamar `buildGraph(DATA, CLOSURES)`.
+- **Cierres en tiempo real:** ya se leen de `closures.json` (Fase 2). Falta aplicarlos al cálculo de rutas (`buildGraph(DATA, closuresState.closures)`) y documentar la edición desde el teléfono.
 - **Tiempos reales por tramo:** hoy todas las aristas pesan lo mismo; `buildGraph` es el único lugar que asigna pesos, así que se pueden leer de un campo por estación sin tocar Dijkstra.
 - **Destinos que no son estación:** `nearestStation(DATA, lat, lng)` ya devuelve la estación más cercana a una coordenada.
 
@@ -225,7 +228,7 @@ Si Playwright no está instalado en este proyecto: `npm i playwright && npx play
 ## 10. Limitaciones conocidas
 
 - Los tiempos son promedios (2 min por estación, 5 por transbordo). En hora pico suma 10–25 %. El módulo de autobús añade un margen configurable precisamente por eso.
-- No hay estado del servicio en tiempo real; el botón "🚨 Ver estado del Metro" abre el Twitter oficial.
+- El estado del servicio se toma de `closures.json`, que se edita a mano: la app solo sabe lo que alguien escribió ahí. GitHub Pages puede tardar hasta 10 minutos en servir un cambio. La tarjeta "Estado del Metro" conserva el enlace al Twitter oficial.
 - Geolocalización, instalación y modo offline requieren HTTPS o `localhost`.
 - Las fuentes de Google se guardan en caché a partir de la **segunda** carga con internet; antes de eso, offline se usa la tipografía del sistema.
 - La extensión de la Línea 12 a Observatorio no está incluida (en construcción al generar los datos, septiembre de 2026).

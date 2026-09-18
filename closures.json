@@ -1,0 +1,8 @@
+{
+  "_ayuda": "Cierres del Metro. Edita este archivo cuando el STC cierre algo y la app lo tomará al abrir (hasta 10 min de retraso). 'stations': estaciones cerradas (id de stations.json, minúsculas con guiones, p. ej. 'pino-suarez'). 'lines': líneas cerradas completas ('1' a '12', 'A', 'B'). 'transfers': estaciones donde no se puede cambiar de línea pero sí pasar. 'message': lo que verá la gente. Cambia 'updated' cada vez que edites.",
+  "updated": "17 de septiembre de 2026",
+  "message": "",
+  "stations": [],
+  "lines": [],
+  "transfers": []
+}

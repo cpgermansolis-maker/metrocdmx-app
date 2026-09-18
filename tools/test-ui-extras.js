@@ -49,9 +49,27 @@ const check = (label, ok, extra = '') => { console.log(`  ${ok ? '✓' : '✗'} 
   check('Sin favoritas otra vez: estado vacío', (await page.$eval('#fav-list', e => e.innerText)).includes('Aún no tienes') && (await page.evaluate(() => localStorage.getItem('metrocdmx-favs'))) === '[]');
 
   console.log('Estado del Metro');
-  const a = await page.$eval('.status-btn', e => ({ href: e.href, target: e.target, rel: e.rel, text: e.textContent }));
-  check('Enlace a twitter.com/MetroCDMX en pestaña nueva', a.href === 'https://twitter.com/MetroCDMX' && a.target === '_blank' && a.rel.includes('noopener') && a.text.includes('Ver estado del Metro'), JSON.stringify(a));
-  check('Nota de "no integrado"', (await page.$eval('.status-note', e => e.textContent)).includes('no está integrado'));
+  const a = await page.$eval('#status .status-link', e => ({ href: e.href, target: e.target, rel: e.rel, text: e.textContent }));
+  check('Enlace a twitter.com/MetroCDMX en pestaña nueva', a.href === 'https://twitter.com/MetroCDMX' && a.target === '_blank' && a.rel.includes('noopener') && a.text.includes('Twitter oficial'), JSON.stringify(a));
+  check('Tarjeta con cierres de closures.json (detalle en test-closures-ui.js)', (await page.$eval('#status-body', e => e.innerText)).includes('Sin cierres reportados'));
+
+  console.log('Header compacto: sin parpadeo');
+  // Regresión: con el scroll anchoring del navegador activo, un scroll que se
+  // detenía entre 60 y 80 px hacía que el header se encogiera y creciera sin
+  // parar (cada cambio de alto movía el scroll y volvía a cruzar el umbral).
+  await page.goto(BASE + '#polanco/san-lazaro', { waitUntil: 'networkidle' });
+  await page.waitForSelector('#results:not([hidden])');
+  await page.waitForTimeout(1200);                       // deja terminar el scroll suave a #results
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(300);
+  await page.mouse.move(200, 400);
+  await page.mouse.wheel(0, 70);                         // scroll "de persona" de 70 px
+  const hdr = await page.evaluate(async () => {
+    const seen = new Set();
+    for (let i = 0; i < 12; i++) { await new Promise(r => setTimeout(r, 100)); seen.add(`${Math.round(scrollY)}/${document.querySelector('header').classList.contains('compact') ? 'compacto' : 'normal'}`); }
+    return [...seen];
+  });
+  check('Scroll de 70 px: el header se compacta y se queda quieto', hdr.length === 1 && hdr[0] === '70/compacto', hdr.join(' '));
 
   console.log('Buscador de estación');
   await page.click('.col-head[data-toggle="lookup-card"]');

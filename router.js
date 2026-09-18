@@ -26,8 +26,9 @@ const ROUTER_DEFAULTS = {
   transferMinutes: 5,   // caminar + esperar al cambiar de línea en una estación
 };
 
-// Cierres. Por ahora vacío; en el futuro se llena desde una API o reportes
-// colaborativos. Una estación cerrada desaparece del grafo (no se puede
+// Cierres por defecto (ninguno). Los cierres reales viven en closures.json,
+// que la app descarga al abrir y pasa por normalizeClosures() antes de
+// construir el grafo. Una estación cerrada desaparece del grafo (no se puede
 // subir, bajar, ni pasar por ella). Una línea cerrada desaparece completa.
 const CLOSURES = {
   stations: [],   // ids de estación, p. ej. ["zocalo-tenochtitlan"]
@@ -35,6 +36,50 @@ const CLOSURES = {
   transfers: [],  // ids de estación donde NO se permite cambiar de línea
                   // (se puede pasar, pero no transbordar). Lo usan las alternativas.
 };
+
+/**
+ * Convierte el contenido de closures.json (un archivo editado a mano, a veces
+ * desde el teléfono) en un objeto de cierres que buildGraph entiende.
+ * Es tolerante: descarta los ids que no existen en los datos y devuelve cada
+ * problema en `warnings` para mostrarlo en pantalla; así un error de dedo no
+ * tumba la app ni pasa desapercibido.
+ *
+ * @param {object} raw   JSON tal como viene del archivo: { updated, message, stations, lines, transfers }
+ * @param {object} data  Contenido de stations.json
+ * @returns {{ closures: object, updated: string, message: string, warnings: string[] }}
+ */
+function normalizeClosures(raw, data) {
+  const warnings = [];
+  const closures = { stations: [], lines: [], transfers: [] };
+  const text = v => (typeof v === 'string' ? v.trim() : '');
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    warnings.push('closures.json debe ser un objeto con las listas "stations", "lines" y "transfers".');
+    return { closures, updated: '', message: '', warnings };
+  }
+  const stationsById = {};
+  for (const s of data.stations) stationsById[s.id] = s;
+  const lineIds = new Set(Object.keys(data.lines));
+
+  // Lee una lista de ids del archivo y conserva solo los que existen.
+  const pick = (key, isValid, label, example) => {
+    const list = raw[key];
+    if (list === undefined || list === null) return;
+    if (!Array.isArray(list)) { warnings.push(`"${key}" debe ser una lista, p. ej. ["${example}"].`); return; }
+    for (const item of list) {
+      const id = String(item).trim();     // acepta 1 o "1" para líneas
+      if (!isValid(id)) { warnings.push(`${label} desconocida en "${key}": "${id}".`); continue; }
+      if (!closures[key].includes(id)) closures[key].push(id);
+    }
+  };
+  pick('stations',  id => id in stationsById, 'Estación', 'pino-suarez');
+  pick('lines',     id => lineIds.has(id),    'Línea',    '12');
+  pick('transfers', id => id in stationsById, 'Estación', 'pino-suarez');
+  // Un cierre de transbordo solo tiene sentido donde se cruzan líneas.
+  for (const id of closures.transfers) {
+    if (!stationsById[id].transfer) warnings.push(`"${id}" está en "transfers" pero no es estación de transbordo.`);
+  }
+  return { closures, updated: text(raw.updated), message: text(raw.message), warnings };
+}
 
 /* ---------- 2. Construcción del grafo ------------------------------------- */
 
@@ -345,6 +390,6 @@ function nearestStation(data, lat, lng) {
 /* ---------- 7. Exportar (solo para pruebas en Node) ------------------------ */
 // En el navegador estas funciones quedan como globales dentro del <script>.
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { ROUTER_DEFAULTS, CLOSURES, buildGraph, findRoute, describeRoute, findAlternatives, routeSignature,
+  module.exports = { ROUTER_DEFAULTS, CLOSURES, normalizeClosures, buildGraph, findRoute, describeRoute, findAlternatives, routeSignature,
                      searchStations, nearestStation, haversine, normalize, nodeKey };
 }

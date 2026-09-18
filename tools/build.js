@@ -9,7 +9,8 @@
 //      (p. ej. 'v2026-09-15-1830'). Con eso el navegador de cada usuario
 //      detecta que hay versión nueva, vuelve a descargar los archivos y
 //      muestra el aviso "Hay una versión nueva".
-//   3. Verifica que stations.json y manifest.json sean JSON válido y que
+//   3. Verifica que stations.json, manifest.json y closures.json sean JSON
+//      válido (y que closures.json solo use ids existentes), y que
 //      service-worker.js e index.html no tengan errores de sintaxis.
 // ============================================================================
 const fs = require('fs');
@@ -34,9 +35,17 @@ if (stamped === sw) { console.error('No encontré la línea CACHE_VERSION en ser
 else { fs.writeFileSync(swPath, stamped, 'utf8'); console.log(`service-worker.js: CACHE_VERSION = '${version}'`); }
 
 // 3. Verificaciones
-for (const name of ['stations.json', 'manifest.json']) {
-  try { JSON.parse(fs.readFileSync(file(name), 'utf8')); console.log(`${name}: JSON válido`); }
+const parsed = {};
+for (const name of ['stations.json', 'manifest.json', 'closures.json']) {
+  try { parsed[name] = JSON.parse(fs.readFileSync(file(name), 'utf8')); console.log(`${name}: JSON válido`); }
   catch (e) { console.error(`${name}: JSON INVÁLIDO → ${e.message}`); problems++; }
+}
+// closures.json: mismos avisos que mostraría la app (ids desconocidos, listas mal formadas).
+if (parsed['stations.json'] && parsed['closures.json']) {
+  const { normalizeClosures } = require(file('router.js'));
+  const { closures, warnings } = normalizeClosures(parsed['closures.json'], parsed['stations.json']);
+  if (warnings.length) { for (const w of warnings) console.error(`closures.json: ${w}`); problems++; }
+  else console.log(`closures.json: OK (${closures.stations.length} estaciones, ${closures.lines.length} líneas, ${closures.transfers.length} transbordos cerrados)`);
 }
 try { execFileSync(process.execPath, ['--check', swPath], { stdio: 'pipe' }); console.log('service-worker.js: sintaxis OK'); }
 catch (e) { console.error('service-worker.js: ERROR de sintaxis\n' + e.stderr); problems++; }

@@ -20,7 +20,8 @@ const check = (label, ok, extra = '') => { console.log(`  ${ok ? '✓' : '✗'} 
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
-  page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+  // Sin red, Chrome reporta como error de consola el fetch fallido de closures.json; es el caso esperado.
+  page.on('console', m => { if (m.type() === 'error' && !(m.location().url || '').includes('closures.json')) errors.push(m.text()); });
   try {
     console.log('1) Manifest');
     const man = await (await page.request.get(BASE + 'manifest.json')).json();
@@ -46,9 +47,14 @@ const check = (label, ok, extra = '') => { console.log(`  ${ok ? '✓' : '✗'} 
     check(`Caché metrocdmx-${curVer}`, cached.keys.includes('metrocdmx-' + curVer), JSON.stringify(cached.keys));
     for (const f of ['index.html', 'manifest.json', 'stations.json', 'icon-192.png', 'icon-512.png']) check(`precargado: ${f}`, cached.urls.some(u => u.endsWith('/' + f)));
     check('fuentes de Google en caché', cached.urls.some(u => u.includes('fonts.googleapis.com')) && cached.urls.some(u => u.includes('fonts.gstatic.com')), cached.urls.filter(u => u.includes('fonts')).length + ' entradas');
+    check('closures.json NO está en caché (siempre va a la red)', !cached.urls.some(u => u.endsWith('/closures.json')));
+    check('Estado del Metro leído de la red', (await page.$eval('#status-body', e => e.innerText)).includes('Sin cierres reportados') && !(await page.$eval('#status-body', e => e.innerText)).includes('No se pudo actualizar'));
 
     console.log('3) Sin conexión');
     await context.setOffline(true);
+    // Pasar por about:blank obliga a una carga completa: ir de index.html a
+    // index.html#… solo cambia el hash y el navegador no recarga nada.
+    await page.goto('about:blank');
     await page.goto(BASE + 'index.html#polanco/chabacano', { waitUntil: 'load' });
     await page.waitForSelector('#results:not([hidden])', { timeout: 10000 });
     check('Recarga offline: la app abre', (await page.title()).includes('Metro CDMX'));
@@ -58,6 +64,8 @@ const check = (label, ok, extra = '') => { console.log(`  ${ok ? '✓' : '✗'} 
     check('Badge: sin conexión', true);
     const font = await page.evaluate(() => document.fonts.check('800 20px "Bricolage Grotesque"'));
     check('Tipografía Bricolage disponible offline', font);
+    const stTxt = await page.$eval('#status-body', e => e.innerText.replace(/\s+/g, ' '));
+    check('Estado del Metro offline: usa la copia guardada y lo dice', stTxt.includes('Sin cierres reportados') && /No se pudo actualizar \(sin red\): se muestran los cierres guardados el \d\d\/\d\d\/\d{4}/.test(stTxt), stTxt);
     await page.screenshot({ path: 'tools/shots/pwa_offline.png' });
     await context.setOffline(false);
 

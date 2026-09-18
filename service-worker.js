@@ -13,7 +13,7 @@
    viendo la versión anterior (es el precio de "cache-first").
    ========================================================================== */
 
-const CACHE_VERSION = 'v2026-09-15-1716';
+const CACHE_VERSION = 'v2026-09-17-1911';
 const CACHE_NAME = 'metrocdmx-' + CACHE_VERSION;
 
 // Archivos que se precargan al instalar. Rutas relativas al service worker.
@@ -53,6 +53,10 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
+  // closures.json cambia seguido (se edita a mano en GitHub): nunca se guarda
+  // en esta caché. Va directo a la red; si no hay red, la app usa la copia
+  // que guardó en localStorage la última vez que sí la consiguió.
+  if (new URL(req.url).pathname.endsWith('/closures.json')) return;
 
   event.respondWith(
     caches.match(req, { ignoreSearch: true }).then(cached => {
