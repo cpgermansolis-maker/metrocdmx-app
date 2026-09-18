@@ -13,16 +13,17 @@ PWA de una sola página (HTML + CSS + JS vanilla, sin frameworks ni backend) que
 - **Fase 2 en curso: cierres en tiempo real** (elegido por Germán el 17-sep sobre Metrobús, reportes colaborativos y destinos no-estación). Plan de 3 pasos:
   1. ✅ `closures.json` + carga con copia en localStorage + tarjeta "Estado del Metro" (`36bf07f`, aprobado).
   2. ✅ Cierres aplicados a rutas, alternativas, favoritas, buscador y autobús; nota "Ruta ajustada por cierres"; avisos de origen/destino cerrado; recálculo con toast si la respuesta llega tarde.
-  3. ⏳ Sección en README de cómo editar `closures.json` desde GitHub en el teléfono + prueba real de Germán.
+  3. 🔄 README §6.3 (guía de edición desde el teléfono), id de estación con botón Copiar en el buscador, `docs/ids-estaciones.md` generado por `build.js`. Falta la **prueba real de Germán** (poner un cierre desde el teléfono, verlo, quitarlo); si la edición web de GitHub no resulta usable en su teléfono, buscar alternativa (app de GitHub, o editar desde PC).
 - Este `CLAUDE.md` sí está en el repo (`5f6ab29`).
 
 ## Por dónde retomar la próxima sesión
 
-1. Preguntar a Germán si en el teléfono vio la tarjeta "Estado del Metro" con "✅ Sin cierres reportados" tras `36bf07f`, y si hubo hallazgos.
-2. Paso 2 de cierres (aplicarlos a las rutas). Mismo método: un paso, evidencia, aprobación.
+1. Preguntar a Germán cómo le fue con la prueba real del paso 3 (editar `closures.json` desde el teléfono con Candelaria + Merced, ver la tarjeta y la ruta San Lázaro → Cuatro Caminos desviada, quitar el cierre). Atender hallazgos.
+2. Si todo bien: cerrar cierres en tiempo real (¿acta de Fase 2 o seguir con el siguiente tema del backlog: Metrobús o destinos no-estación?).
 
 ## Completado (últimas entradas; el historial completo está en git)
 
+- 17-sep-2026 · `ca5e17d` Fase 2 paso 2: rutas/favoritas/buscador/autobús respetan los cierres; nota "Ruta ajustada por cierres"; `findRoute` con `code`; recálculo con toast si la respuesta llega tarde.
 - 17-sep-2026 · `36bf07f` Fase 2 paso 1: `closures.json`, `normalizeClosures()`, tarjeta de cierres, SW deja pasar el archivo, `build.js` lo valida, pruebas `test-closures.js` y `test-closures-ui.js`. Corrección del parpadeo del header (`html{overflow-anchor:none}`) y de la prueba offline de `test-pwa.js` (no recargaba de verdad).
 - 17-sep-2026 · `5f6ab29` `CLAUDE.md` al repo.
 - 15-sep-2026 · `50c85d1` Header sticky compacto al hacer scroll (hallazgo de prueba en Chrome Android).
@@ -32,7 +33,7 @@ PWA de una sola página (HTML + CSS + JS vanilla, sin frameworks ni backend) que
 ## Reglas obligatorias de este repo
 
 1. **`router.js` es la única fuente del motor.** El bloque entre `<!-- ROUTER:BEGIN -->` y `<!-- ROUTER:END -->` en `index.html` se genera; nunca editarlo a mano.
-2. **`node tools/build.js` antes de cualquier commit que se vaya a publicar.** Inyecta el motor, estampa `CACHE_VERSION` con fecha-hora (sin eso los teléfonos no ven la actualización) y valida sintaxis/JSON.
+2. **`node tools/build.js` antes de cualquier commit que se vaya a publicar.** Inyecta el motor, estampa `CACHE_VERSION` con fecha-hora (sin eso los teléfonos no ven la actualización), valida sintaxis/JSON (incluido `closures.json`) y regenera `docs/ids-estaciones.md`. Excepción: editar solo `closures.json` no requiere build ni versión.
 3. **No cambiar `id` de estaciones existentes** en `stations.json`: viajan en la URL (`#origen/destino`) y en `localStorage['metrocdmx-favs']`.
 4. `order` de cada línea va de 1 a N sin huecos; `terminals` = estaciones con `order` 1 y N.
 5. Pruebas: `node tools/test-router.js` y `node tools/test-closures.js` (solo Node) y, con `python -m http.server 8765` corriendo, `test-ui.js`, `test-ui-abc.js`, `test-ui-extras.js`, `test-closures-ui.js`, `test-pwa.js` (Playwright). Correr todo antes de dar algo por terminado.

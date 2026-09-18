@@ -187,6 +187,9 @@
   .nb b{display:block;color:var(--ink);font-size:.88rem;font-weight:700;margin-top:2px}
   .nb .term{font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
   .st-actions{display:flex;gap:8px;margin-top:12px}
+  .st-id{margin-top:12px;font-size:.76rem;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.4}
+  .st-id code{background:var(--bg);border:1px solid var(--line);padding:2px 7px;border-radius:6px;color:var(--ink);font-size:.8rem;user-select:all}
+  .st-id button{background:var(--panel2);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-weight:700;font-size:.72rem;padding:4px 9px;border-radius:7px;cursor:pointer}
   .st-actions button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-family:inherit;font-weight:700;font-size:.84rem;cursor:pointer}
   .result{margin-top:16px;background:var(--panel2);border-radius:14px;padding:14px;display:none}
   .result.show{display:block}
@@ -1574,6 +1577,13 @@ function setupLookup() {
   for (const l of Object.keys(DATA.lines)) LINE_SEQ[l] = DATA.stations.filter(s => s.lines.includes(l)).sort((a, b) => a.order[l] - b.order[l]);
   ac.lookup = setupAutocomplete('lookup', null, st => renderStationInfo(st.id));
   $('lookup-info').addEventListener('click', e => {
+    const cp = e.target.closest('button[data-copy]');
+    if (cp) {   // el id sirve para escribir closures.json desde el teléfono
+      const done = ok => { cp.textContent = ok ? '✓ Copiado' : 'Cópialo a mano'; setTimeout(() => { cp.textContent = 'Copiar'; }, 1500); };
+      if (navigator.clipboard) navigator.clipboard.writeText(cp.dataset.copy).then(() => done(true), () => done(false));
+      else done(false);
+      return;
+    }
     const b = e.target.closest('button[data-use]'); if (!b) return;
     if (b.dataset.use === 'from') ac.from.setById(sel.lookup); else ac.to.setById(sel.lookup);
     $('from').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1598,7 +1608,8 @@ function renderStationInfo(id) {
         <div><span class="term">hacia ${esc(line.terminals[1])} →</span><b>${next ? esc(next.name) : 'Aquí termina la línea'}</b></div>
       </div></div>`;
   }
-  h += `<div class="st-actions"><button type="button" data-use="from">📍 Usar como origen</button><button type="button" data-use="to">🏁 Usar como destino</button></div>`;
+  h += `<div class="st-actions"><button type="button" data-use="from">📍 Usar como origen</button><button type="button" data-use="to">🏁 Usar como destino</button></div>
+    <div class="st-id"><span>🆔 id para <b>closures.json</b>:</span> <code>${esc(id)}</code> <button type="button" data-copy="${esc(id)}">Copiar</button></div>`;
   $('lookup-info').innerHTML = h;
 }
 

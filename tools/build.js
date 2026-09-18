@@ -3,7 +3,7 @@
 //
 //   node tools/build.js
 //
-// Hace tres cosas:
+// Hace cuatro cosas:
 //   1. Inyecta router.js dentro de index.html (tools/sync-router.js).
 //   2. Estampa CACHE_VERSION en service-worker.js con la fecha y hora actual
 //      (p. ej. 'v2026-09-15-1830'). Con eso el navegador de cada usuario
@@ -12,6 +12,8 @@
 //   3. Verifica que stations.json, manifest.json y closures.json sean JSON
 //      válido (y que closures.json solo use ids existentes), y que
 //      service-worker.js e index.html no tengan errores de sintaxis.
+//   4. Regenera docs/ids-estaciones.md (tabla de ids para closures.json) a
+//      partir de stations.json, para que nunca quede desactualizada.
 // ============================================================================
 const fs = require('fs');
 const path = require('path');
@@ -30,9 +32,14 @@ const pad = n => String(n).padStart(2, '0');
 const version = `v${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`;
 const swPath = file('service-worker.js');
 const sw = fs.readFileSync(swPath, 'utf8');
-const stamped = sw.replace(/const CACHE_VERSION = '[^']*';/, `const CACHE_VERSION = '${version}';`);
-if (stamped === sw) { console.error('No encontré la línea CACHE_VERSION en service-worker.js'); problems++; }
-else { fs.writeFileSync(swPath, stamped, 'utf8'); console.log(`service-worker.js: CACHE_VERSION = '${version}'`); }
+const versionLine = /const CACHE_VERSION = '[^']*';/;
+if (!versionLine.test(sw)) { console.error('No encontré la línea CACHE_VERSION en service-worker.js'); problems++; }
+else {
+  // Se compara con la expresión y no con el texto resultante: si se corre dos
+  // veces en el mismo minuto la versión no cambia y eso no es un error.
+  fs.writeFileSync(swPath, sw.replace(versionLine, `const CACHE_VERSION = '${version}';`), 'utf8');
+  console.log(`service-worker.js: CACHE_VERSION = '${version}'`);
+}
 
 // 3. Verificaciones
 const parsed = {};
@@ -61,6 +68,33 @@ scripts.forEach((src, i) => {
 });
 try { fs.unlinkSync(tmp); } catch (e) {}
 if (scripts.length) console.log(`index.html: ${scripts.length} bloques <script> con sintaxis OK`);
+
+// 4. docs/ids-estaciones.md
+if (parsed['stations.json']) {
+  const d = parsed['stations.json'];
+  const byName = [...d.stations].sort((a, b) => a.name.localeCompare(b.name, 'es'));
+  const lines = Object.entries(d.lines);
+  const md = [
+    '# Ids para `closures.json`',
+    '',
+    'Generado por `tools/build.js` desde `stations.json`; no editar a mano. Cómo usarlo: README §6.3.',
+    '',
+    `## Líneas (${lines.length})`,
+    '',
+    '| id | Línea |', '|---|---|',
+    ...lines.map(([id, l]) => `| \`${id}\` | ${l.name} |`),
+    '',
+    `## Estaciones (${byName.length})`,
+    '',
+    '| Estación | id | Líneas | Transbordo |', '|---|---|---|---|',
+    ...byName.map(st => `| ${st.name} | \`${st.id}\` | ${st.lines.join(', ')} | ${st.transfer ? 'sí' : ''} |`),
+    '',
+  ].join('\n');
+  const docsDir = path.join(root, 'docs');
+  fs.mkdirSync(docsDir, { recursive: true });
+  fs.writeFileSync(path.join(docsDir, 'ids-estaciones.md'), md, 'utf8');
+  console.log(`docs/ids-estaciones.md: ${byName.length} estaciones, ${lines.length} líneas`);
+}
 
 console.log(problems ? `\n${problems} problema(s). Corrige antes de publicar.` : '\nListo para publicar. Sube los archivos (git add / commit / push).');
 process.exit(problems ? 1 : 0);

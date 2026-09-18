@@ -23,6 +23,8 @@ Sin frameworks, sin backend, sin base de datos: HTML + CSS + JavaScript vanilla 
 | `tools/build-stations/` | Scripts con los que se generó `stations.json` desde Wikipedia, el portal del STC y Wikidata | Solo para regenerar los datos |
 | `tools/test-*.js` | Pruebas automáticas (ver §8) | No |
 | `tools/referencia/mis-rutas-metro.html` | Prototipo visual original (rutas fijas). Referencia local; está en `.gitignore` y no se publica | — |
+| `docs/ids-estaciones.md` | Tabla de ids de estaciones y líneas para `closures.json`. La regenera `build.js` | No a mano |
+| `docs/ACTA-FASE-1.md` | Acta de cierre de la Fase 1 | — |
 
 ---
 
@@ -145,17 +147,55 @@ const ROUTER_DEFAULTS = {
 
 Como el transbordo "cuesta" 2.5 estaciones, el motor evita cambiar de línea salvo que ahorre tiempo real. Después de editar: `node tools/build.js`.
 
-### 6.3 Cierres (`router.js`)
+### 6.3 Cierres del Metro (`closures.json`) — se edita desde el teléfono, sin `build.js`
 
-```js
-const CLOSURES = {
-  stations:  [],   // ids cerrados por completo (no se puede pasar): ["zocalo-tenochtitlan"]
-  lines:     [],   // líneas fuera de servicio: ["12"]
-  transfers: [],   // estaciones donde NO se puede cambiar de línea, pero sí pasar
-};
+Cuando el STC cierra estaciones o una línea (lo anuncia en [@MetroCDMX](https://twitter.com/MetroCDMX)), se escribe en `closures.json`. La app lo descarga cada vez que abre, lo muestra en la tarjeta **"🚨 Estado del Metro"** y calcula las rutas rodeando lo cerrado. **No hay que correr `build.js` ni cambiar la versión**: ese archivo es el único que nunca pasa por la caché.
+
+**Desde el teléfono (GitHub en el navegador):**
+
+1. Abre este enlace y guárdalo en favoritos: <https://github.com/cpgermansolis-maker/metrocdmx-app/edit/main/closures.json>. La primera vez pide iniciar sesión en GitHub.
+2. Edita el archivo (ver formato abajo). Cambia también `updated` con la fecha y hora.
+3. Toca **Commit changes…** (arriba a la derecha) y confirma en el cuadro que aparece. Listo.
+4. Espera **hasta 10 minutos** (GitHub Pages guarda los archivos en su red de distribución ese tiempo) y abre la app: la tarjeta debe mostrar el cierre. Si aparece **"⚠️ Revisa closures.json"**, ahí dice qué corregir (casi siempre un id mal escrito).
+
+Desde la computadora: edita el archivo y súbelo (`git add closures.json && git commit -m "Cierre …" && git push`, o arrastrándolo en la web de GitHub). Correr `build.js` no hace falta, pero si lo corres valida el archivo antes de subirlo.
+
+**Formato, con un cierre real de ejemplo** (L1 sin servicio entre San Lázaro y Pino Suárez):
+
+```json
+{
+  "_ayuda": "…(instrucciones, no lo borres)…",
+  "updated": "18 de septiembre de 2026, 07:30",
+  "message": "L1 sin servicio entre San Lázaro y Pino Suárez por obras",
+  "stations": ["candelaria", "merced"],
+  "lines": [],
+  "transfers": []
+}
 ```
 
-Hoy se llena a mano; está diseñado para alimentarse desde una API o reportes colaborativos en el futuro (el motor recibe el objeto, no lo lee de un archivo).
+| Campo | Qué es | Efecto en las rutas |
+|---|---|---|
+| `message` | Texto libre que ve la gente en la tarjeta | Ninguno (solo informa) |
+| `updated` | Texto libre con fecha/hora; se muestra como "Cierres al …" | Ninguno |
+| `stations` | Estaciones **cerradas por completo**: no se puede subir, bajar ni pasar por ellas | La línea queda cortada ahí. Para un tramo cerrado, lista **todas las estaciones intermedias** (las de los extremos siguen abiertas: hasta ahí llega el tren). Si el origen o destino está en la lista, la app avisa "está cerrada" |
+| `lines` | Líneas fuera de servicio completas | Desaparecen del cálculo. Una estación cuya única línea está cerrada queda "sin servicio" |
+| `transfers` | Estaciones donde **no se puede cambiar de línea**, pero sí pasar | Se usan para rodear, no para transbordar |
+
+**Cómo saber el id de una estación:** en la app, abre **🔎 Buscar estación**, escribe el nombre y abajo aparece **"🆔 id para closures.json: `pino-suarez`"** con un botón **Copiar**. También están todos en [docs/ids-estaciones.md](docs/ids-estaciones.md). Los ids van en minúsculas, sin acentos y con guiones; las líneas son `"1"` a `"12"`, `"A"` y `"B"` (también vale `1` sin comillas).
+
+**Lo que rompe el archivo** (el teclado del teléfono ayuda a equivocarse): comillas curvas `“ ”` en vez de rectas `"`, una coma después del último elemento (`["merced",]`), o una coma que falta entre dos. Si pasa, la app avisa **"closures.json tiene un error de sintaxis"** y sigue con la última copia buena, así que nadie se queda sin rutas; solo hay que corregirlo.
+
+**Para levantar el cierre:** deja las tres listas vacías (`[]`), `message` en `""` y cambia `updated`.
+
+**Lo que hace la app con un cierre** (todo probado en `tools/test-closures-ui.js`):
+
+- La ruta óptima rodea y lo explica: *"⚠️ Ruta ajustada por cierres: evita Candelaria, Merced (cerradas). Sin cierres serían ~37 min (esta tarda 3 más)"*.
+- Origen o destino cerrado: *"🚫 Merced está cerrada según el Estado del Metro. Elige otra estación…"*.
+- Sin forma de llegar: *"🚫 No hay ruta con los cierres vigentes: la ruta normal (~23 min) pasa por Puebla (cerrada)"*.
+- Favoritas, buscador de estación y módulo de autobús muestran el estado (🚫 / ⚠️).
+- Sin internet, usa la última copia que consiguió y lo dice. Si la red tarda más de 3 s, abre con la copia y se actualiza sola al llegar la respuesta (recalculando la ruta en pantalla si cambió).
+
+**Limitaciones:** la app solo sabe lo que alguien escribió en el archivo (no lee Twitter); no interpreta horarios ("cerrado de 10 a 14"), hay que poner y quitar el cierre a mano; y el retraso de hasta 10 min de GitHub Pages.
 
 ### 6.4 Destinos de autobús (`index.html`, `BUS_DESTINATIONS`)
 
@@ -219,7 +259,7 @@ Si Playwright no está instalado en este proyecto: `npm i playwright && npx play
 ## 9. Para el futuro (Metrobús, reportes, etc.)
 
 - **Otro sistema de transporte:** agrega sus estaciones a `stations.json` con `"system": "metrobus"` y líneas con ids que no choquen con las del Metro (p. ej. `"mb-1"`). El motor no distingue sistemas: solo ve líneas, `order` y transbordos. Para conectar Metro con Metrobús, una "estación" que pertenezca a líneas de ambos sistemas funciona como transbordo.
-- **Cierres en tiempo real:** se leen de `closures.json` y se aplican a rutas, alternativas, favoritas, buscador y módulo de autobús (Fase 2). Si un cierre cambia la ruta, la tarjeta lo dice ("Ruta ajustada por cierres: evita …"). Falta documentar la edición desde el teléfono.
+- **Cierres en tiempo real:** hecho en Fase 2 (§6.3). Para automatizarlo algún día, lo que haya que conectar (API, reportes) solo tiene que producir el mismo `closures.json`.
 - **Tiempos reales por tramo:** hoy todas las aristas pesan lo mismo; `buildGraph` es el único lugar que asigna pesos, así que se pueden leer de un campo por estación sin tocar Dijkstra.
 - **Destinos que no son estación:** `nearestStation(DATA, lat, lng)` ya devuelve la estación más cercana a una coordenada.
 

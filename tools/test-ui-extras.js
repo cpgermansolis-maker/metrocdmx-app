@@ -87,6 +87,12 @@ const check = (label, ok, extra = '') => { console.log(`  ${ok ? '✓' : '✗'} 
   await page.waitForFunction(() => document.querySelector('#lookup-info').innerText.includes('Zócalo'));
   const info2 = await page.$eval('#lookup-info', e => e.innerText.replace(/\s+/g, ' '));
   check('Zócalo: paso, L2 13 de 24, vecinas Allende y Pino Suárez', info2.includes('Estación de paso') && info2.includes('estación 13 de 24') && info2.includes('Allende') && info2.includes('Pino Suárez'));
+  // Id para closures.json con botón Copiar (así se escribe el archivo desde el teléfono).
+  check('Muestra "id para closures.json: zocalo-tenochtitlan"', info2.includes('id para closures.json: zocalo-tenochtitlan'), info2.match(/id para[^📍]*/)?.[0]);
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.click('#lookup-info button[data-copy]');
+  await page.waitForFunction(() => document.querySelector('#lookup-info button[data-copy]').textContent === '✓ Copiado', null, { timeout: 1400 });
+  check('Copiar → "✓ Copiado" y el portapapeles tiene el id', (await page.evaluate(() => navigator.clipboard.readText())) === 'zocalo-tenochtitlan');
   await page.click('#lookup-info button[data-use="to"]');
   check('"Usar como destino" llena el campo Hasta', (await page.inputValue('#to')) === 'Zócalo/Tenochtitlan');
 
